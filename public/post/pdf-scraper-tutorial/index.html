@@ -1,0 +1,249 @@
+<!doctype html>
+<html lang="en"><head>
+    <title>Reliable PDF Scraping with tabula-py</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="" />
+
+    
+    
+    
+    <link rel="stylesheet" href="../../css/theme.min.css">
+
+    
+    
+    
+
+    
+</head>
+<body>
+        <div id="content" class="mx-auto"><header class="container mt-sm-5 mt-4 mb-4 mt-xs-1">
+    <div class="row">
+        <div class="col-sm-4 col-12 text-sm-right text-center pt-sm-4">
+            <a href="../../" class="text-decoration-none">
+                <img id="home-image" class="rounded-circle"
+                    
+                        
+                            src="../../images/Peter_Amerkhanian_Headshot_square_lower_qual.jpg"
+                        
+                    
+                />
+            </a>
+        </div>
+        <div class="col-sm-8 col-12 text-sm-left text-center">
+            <h2 class="m-0 mb-2 mt-4">
+                <a href="../../" class="text-decoration-none">
+                    
+                        Peter Amerkhanian
+                    
+                </a>
+            </h2>
+            <p class="text-muted mb-1">
+                
+                    MPP &#39;23 @ UC Berkeley Goldman School
+                
+            </p>
+            <ul id="nav-links" class="list-inline mb-2">
+                
+                
+                    <li class="list-inline-item">
+                        <a class="badge badge-white " href="../../" title="About">About</a>
+                    </li>
+                
+                    <li class="list-inline-item">
+                        <a class="badge badge-white " href="../../post/" title="Blog">Blog</a>
+                    </li>
+                
+            </ul>
+            <ul id="nav-social" class="list-inline">
+                
+                    <li class="list-inline-item mr-3">
+                        <a href="mailto:peteramerkhanian@berkeley.edu" target="_blank">
+                            <i class="fas fa-at fa-lg text-muted"></i>
+                        </a>
+                    </li>
+                
+                    <li class="list-inline-item mr-3">
+                        <a href="https://www.linkedin.com/in/peteramerkhanian/" target="_blank">
+                            <i class="fab fa-linkedin-in fa-lg text-muted"></i>
+                        </a>
+                    </li>
+                
+                    <li class="list-inline-item mr-3">
+                        <a href="https://github.com/peter-amerkhanian" target="_blank">
+                            <i class="fab fa-github fa-lg text-muted"></i>
+                        </a>
+                    </li>
+                
+                    <li class="list-inline-item mr-3">
+                        <a href="documents/Amerkhanian_Peter_Resume_6_2022.pdf" target="_blank">
+                            <i class="fas fa-file-alt fa-lg text-muted"></i>
+                        </a>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+    <hr />
+</header>
+<div class="container">
+    <div class="pl-sm-2">
+        <div class="mb-3">
+            <h3 class="mb-0">Reliable PDF Scraping with tabula-py</h3>
+            
+            <small class="text-muted">Published July 20, 2022</small>
+        </div>
+
+        <article>
+            <h3 id="summary">Summary</h3>
+<ul>
+<li>Use a combination of <code>tabula</code>&rsquo;s <code>read_pdf()</code> function  and <code>pandas</code>&rsquo; various data manipulation functions in Python to accurately scrape .pdf files</li>
+</ul>
+<h3 id="prerequisitesassumptions">Prerequisites/Assumptions</h3>
+<ul>
+<li>Windows 10 with administrator privileges (for setting environmental variables)</li>
+<li>Java SE Development Kit installed on your machine (<a href="https://www.oracle.com/java/technologies/downloads/">download</a>)
+<ul>
+<li>set Java&rsquo;s <code>PATH</code> environmental variable to point to the Java directory (see more <a href="https://tabula-py.readthedocs.io/en/latest/getting_started.html#installation">here</a> under &ldquo;Get tabula-py working (Windows 10)&rdquo;)</li>
+</ul>
+</li>
+<li>Python version ~3.8 ish (I&rsquo;m using <code>Python 3.9.12</code> in Anaconda)
+<ul>
+<li>Anaconda included packages - Pandas and NumPy</li>
+<li>Libraries maybe not included in Anaconda: <a href="https://requests.readthedocs.io/en/latest/">requests</a>, <a href="https://github.com/chezou/tabula-py">tabula-py</a></li>
+</ul>
+</li>
+</ul>
+<h3 id="problem-narrative">Problem Narrative</h3>
+<p>I&rsquo;m interested in conducting a data analysis that involves the market value of single family homes in San Mateo County, California. This data can be hard to come by, but I&rsquo;ve found a good county level resource &ndash; The San Mateo Association of Realtors&rsquo; &ldquo;Market Data&rdquo; page. </p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center"><img src="images/1-smr.png" alt="downloader"></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center"><em>Fig 1: San Mateo Realtors Data Download Page</em></td>
+</tr>
+</tbody>
+</table>
+<p>However, to my dismay, I find that when I download one of these reports, I am confronted with a .pdf containing a single table. It seems to be some sort of export of an Excel table, but the Association of Realtors has not made the actual spreadsheet available. Here is an example of one of their .pdf reports &ndash; in this case for April 2022:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center"><img src="images/2-smr.png" alt="pdf"></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center"><em>Fig 2: Example PDF report :(</em></td>
+</tr>
+</tbody>
+</table>
+<p>I have a solid data source on my hands, but there are a few key issues:</p>
+<ul>
+<li>The data are in .pdf files</li>
+<li>You can only download monthly data files one at a time</li>
+</ul>
+<h3 id="solution">Solution</h3>
+<p>I&rsquo;ll solve this issue by writing a script to do the following:</p>
+<ul>
+<li>Iterate through the urls of each of the monthly reports going back to 2011. For each report:
+<ul>
+<li>download its .pdf</li>
+<li>parse and save the data from its .pdf</li>
+</ul>
+</li>
+</ul>
+<p>Start with loading in the necessary libraries:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff79c6">import</span> pandas <span style="color:#ff79c6">as</span> pd
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> numpy <span style="color:#ff79c6">as</span> np
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> requests
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">from</span> tabula <span style="color:#ff79c6">import</span> read_pdf
+</span></span></code></pre></div><p>Get right into the script, which implements the pseudo-code I outlined above:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>agent <span style="color:#ff79c6">=</span> [<span style="color:#f1fa8c">&#39;Mozilla/5.0 (Windows NT 10.0; Win64; x64)&#39;</span>,
+</span></span><span style="display:flex;"><span>         <span style="color:#f1fa8c">&#39;AppleWebKit/537.36 (KHTML, like Gecko)&#39;</span>,
+</span></span><span style="display:flex;"><span>         <span style="color:#f1fa8c">&#39;Chrome/91.0.4472.114 Safari/537.36&#39;</span>]
+</span></span><span style="display:flex;"><span>rows <span style="color:#ff79c6">=</span> []
+</span></span><span style="display:flex;"><span>headers <span style="color:#ff79c6">=</span> {<span style="color:#f1fa8c">&#39;user-agent&#39;</span>: <span style="color:#f1fa8c">&#34; &#34;</span><span style="color:#ff79c6">.</span>join(agent)}
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">for</span> year <span style="color:#ff79c6">in</span> <span style="color:#8be9fd;font-style:italic">range</span>(<span style="color:#bd93f9">2011</span>, <span style="color:#bd93f9">2021</span>):
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">for</span> month <span style="color:#ff79c6">in</span> <span style="color:#8be9fd;font-style:italic">range</span>(<span style="color:#bd93f9">1</span>, <span style="color:#bd93f9">12</span>):
+</span></span><span style="display:flex;"><span>        base <span style="color:#ff79c6">=</span> <span style="color:#f1fa8c">&#34;https://www.samcar.org/userfiles/file/salesstats/&#34;</span>
+</span></span><span style="display:flex;"><span>        url <span style="color:#ff79c6">=</span> base <span style="color:#ff79c6">+</span> <span style="color:#f1fa8c">f</span><span style="color:#f1fa8c">&#34;SF_</span><span style="color:#f1fa8c">{</span>year<span style="color:#f1fa8c">}{</span><span style="color:#8be9fd;font-style:italic">str</span>(month)<span style="color:#ff79c6">.</span>zfill(<span style="color:#bd93f9">2</span>) <span style="color:#f1fa8c">}</span><span style="color:#f1fa8c">.pdf&#34;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#8be9fd;font-style:italic">print</span>(url)
+</span></span><span style="display:flex;"><span>        r <span style="color:#ff79c6">=</span> requests<span style="color:#ff79c6">.</span>get(url,
+</span></span><span style="display:flex;"><span>                         stream<span style="color:#ff79c6">=</span><span style="color:#ff79c6">True</span>,
+</span></span><span style="display:flex;"><span>                         headers<span style="color:#ff79c6">=</span>headers)
+</span></span><span style="display:flex;"><span>        <span style="color:#8be9fd;font-style:italic">open</span>(<span style="color:#f1fa8c">&#39;holder.pdf&#39;</span>, <span style="color:#f1fa8c">&#39;wb&#39;</span>)<span style="color:#ff79c6">.</span>write(r<span style="color:#ff79c6">.</span>content)
+</span></span><span style="display:flex;"><span>        df <span style="color:#ff79c6">=</span> read_pdf(<span style="color:#f1fa8c">&#34;holder.pdf&#34;</span>, pages<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#34;all&#34;</span>)
+</span></span><span style="display:flex;"><span>        table <span style="color:#ff79c6">=</span> df[<span style="color:#bd93f9">0</span>]<span style="color:#ff79c6">.</span>iloc[<span style="color:#ff79c6">-</span><span style="color:#bd93f9">1</span>, :]
+</span></span><span style="display:flex;"><span>        table[<span style="color:#f1fa8c">&#34;date&#34;</span>] <span style="color:#ff79c6">=</span> <span style="color:#f1fa8c">f</span><span style="color:#f1fa8c">&#34;</span><span style="color:#f1fa8c">{</span>year<span style="color:#f1fa8c">}</span><span style="color:#f1fa8c">-</span><span style="color:#f1fa8c">{</span><span style="color:#8be9fd;font-style:italic">str</span>(month)<span style="color:#ff79c6">.</span>zfill(<span style="color:#bd93f9">2</span>)<span style="color:#f1fa8c">}</span><span style="color:#f1fa8c">&#34;</span>
+</span></span><span style="display:flex;"><span>        rows<span style="color:#ff79c6">.</span>append(table)
+</span></span></code></pre></div><p>Note: I&rsquo;m defining <code>agent</code> in order to preempt being blocked by the site (<a href="https://developer.mozilla.org/en-US/docs/Glossary/User_agent">read more</a>).<br>
+What&rsquo;s remarkable about <code>tabula.read_pdf()</code> is that <em>it just works</em>. I didn&rsquo;t have to really do any tinkering or iterating to get it going. Once it had access to the downloaded .pdf files, it easily and quickly parsed them.<br>
+Now I run into something unique to this data &ndash; some of the .pdf tables had slightly different column names over the years. I implement a fix for that with the following code:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>cleaned_rows <span style="color:#ff79c6">=</span> []
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">for</span> row <span style="color:#ff79c6">in</span> rows:
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">try</span>:
+</span></span><span style="display:flex;"><span>        new <span style="color:#ff79c6">=</span> row<span style="color:#ff79c6">.</span>rename(
+</span></span><span style="display:flex;"><span>            {<span style="color:#f1fa8c">&#34;Sales&#34;</span>: <span style="color:#f1fa8c">&#34;Closed Sales&#34;</span>,
+</span></span><span style="display:flex;"><span>             <span style="color:#f1fa8c">&#34;Sold&#34;</span>: <span style="color:#f1fa8c">&#34;Closed Sales&#34;</span>,
+</span></span><span style="display:flex;"><span>             <span style="color:#f1fa8c">&#34;Avg Sales Price&#34;</span>: <span style="color:#f1fa8c">&#34;Average Sales Price&#34;</span>,
+</span></span><span style="display:flex;"><span>             <span style="color:#f1fa8c">&#34;Avg SalePrice&#34;</span>: <span style="color:#f1fa8c">&#34;Average Sales Price&#34;</span>,
+</span></span><span style="display:flex;"><span>             <span style="color:#f1fa8c">&#34;Unnamed: 3&#34;</span>: <span style="color:#f1fa8c">&#34;Closed Sales&#34;</span>,
+</span></span><span style="display:flex;"><span>             <span style="color:#f1fa8c">&#34;Unnamed: 5&#34;</span>: <span style="color:#f1fa8c">&#34;Average Sales Price&#34;</span>})[[<span style="color:#f1fa8c">&#34;date&#34;</span>,
+</span></span><span style="display:flex;"><span>                                                    <span style="color:#f1fa8c">&#34;Closed Sales&#34;</span>,
+</span></span><span style="display:flex;"><span>                                                    <span style="color:#f1fa8c">&#34;Average Sales Price&#34;</span>]]
+</span></span><span style="display:flex;"><span>        cleaned_rows<span style="color:#ff79c6">.</span>append(new<span style="color:#ff79c6">.</span>to_frame())
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">except</span> KeyError:
+</span></span><span style="display:flex;"><span>        <span style="color:#8be9fd;font-style:italic">print</span>(<span style="color:#f1fa8c">&#34;******error&#34;</span>)
+</span></span></code></pre></div><p>With the data retrieved and parsed, I perform some final cleaning and arrangement steps before exporting to a .csv</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>all_years <span style="color:#ff79c6">=</span> pd<span style="color:#ff79c6">.</span>concat(cleaned_rows, axis<span style="color:#ff79c6">=</span><span style="color:#bd93f9">1</span>)
+</span></span><span style="display:flex;"><span><span style="color:#6272a4"># Transpose the data and set `date` as the index</span>
+</span></span><span style="display:flex;"><span>final_df <span style="color:#ff79c6">=</span> all_years<span style="color:#ff79c6">.</span>T<span style="color:#ff79c6">.</span>set_index(<span style="color:#f1fa8c">&#34;date&#34;</span>)
+</span></span><span style="display:flex;"><span><span style="color:#6272a4"># Get the dollar signs and commas out. E.g. $1,658,900 -&gt; 1658900</span>
+</span></span><span style="display:flex;"><span>final_df[<span style="color:#f1fa8c">&#34;Average Sales Price&#34;</span>] <span style="color:#ff79c6">=</span> (final_df[<span style="color:#f1fa8c">&#34;Average Sales Price&#34;</span>]
+</span></span><span style="display:flex;"><span>                                   <span style="color:#ff79c6">.</span>str<span style="color:#ff79c6">.</span>replace(<span style="color:#f1fa8c">&#34;[\$,]&#34;</span>,
+</span></span><span style="display:flex;"><span>                                                <span style="color:#f1fa8c">&#34;&#34;</span>,
+</span></span><span style="display:flex;"><span>                                                regex<span style="color:#ff79c6">=</span><span style="color:#ff79c6">True</span>)
+</span></span><span style="display:flex;"><span>                                   <span style="color:#ff79c6">.</span>astype(<span style="color:#8be9fd;font-style:italic">int</span>))
+</span></span><span style="display:flex;"><span><span style="color:#6272a4"># Closed Sales is discrete count data, so we convert to `int`</span>
+</span></span><span style="display:flex;"><span>final_df[<span style="color:#f1fa8c">&#34;Closed Sales&#34;</span>] <span style="color:#ff79c6">=</span> final_df[<span style="color:#f1fa8c">&#34;Closed Sales&#34;</span>]<span style="color:#ff79c6">.</span>astype(<span style="color:#8be9fd;font-style:italic">int</span>)
+</span></span><span style="display:flex;"><span>final_df<span style="color:#ff79c6">.</span>to_csv(<span style="color:#f1fa8c">&#34;realtors_data_san_mateo.csv&#34;</span>)
+</span></span></code></pre></div><p>The final product is a satisfying time series data set of the number of closed single family home sales and the average price of those sales over time.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center"><img src="images/3-csv.png" alt="pdf"></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center"><em>Fig 3: Final .csv open in Excel</em></td>
+</tr>
+</tbody>
+</table>
+<p>That&rsquo;s surprisingly it.</p>
+<h3 id="conclusion">Conclusion</h3>
+<p>Tabula-py is a very convenient and powerful .pdf parser (ported from <a href="https://tabula.technology/">Java</a>) and easily handled basically all of the .pdfs I put through it.</p>
+<p><a href="">Back to top</a></p>
+
+        </article>
+    </div>
+
+    
+
+            </div>
+        </div><footer class="text-center pb-1">
+    <small class="text-muted">
+        
+            &copy; 2022, Peter Amerkhanian
+        
+        <br>
+        Powered by <a href="https://gohugo.io/" target="_blank">Hugo</a>
+        and <a href="https://github.com/austingebauer/devise" target="_blank">Devise</a>
+    </small>
+</footer>
+</body>
+</html>
