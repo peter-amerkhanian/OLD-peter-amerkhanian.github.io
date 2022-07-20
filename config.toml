@@ -8,6 +8,8 @@ googleAnalytics = ""
 enableRobotsTXT = true
 copyright = "&copy; 2022, Peter Amerkhanian"
 
+
+
 # Main menu items
 [menu]
   [[menu.main]]
@@ -23,6 +25,26 @@ copyright = "&copy; 2022, Peter Amerkhanian"
     url = "/post/"
     weight = -100
 
+[markup]
+  [markup.highlight]
+    anchorLineNos = false
+    codeFences = true
+    guessSyntax = false
+    hl_Lines = ''
+    hl_inline = false
+    lineAnchors = ''
+    lineNoStart = 1
+    lineNos = false
+    lineNumbersInTable = true
+    noClasses = true
+    noHl = false
+    style = 'dracula'
+    tabWidth = 4
+  [markup.tableOfContents]
+    startLevel = 3
+    endLevel = 5
+    ordered = true
+  
 # Configuration Features
 [params]
   description = "Portfolio and personal website"      # Your meta description of the site
@@ -32,7 +54,7 @@ copyright = "&copy; 2022, Peter Amerkhanian"
   recent_posts = 5                           # Max amount of recent posts to show
   mainSections = ["posts", "post", "blog"]   # Main sections to include in recent posts
   [params.style]                             # CSS style overrides
-    backgroundColor = "#f8f9fa"
+    backgroundColor = "#F9FEFF"
     fontColor = "#212529"
   [[params.social]]
     fa_icon = "fas fa-at fa-lg"
@@ -45,4 +67,4 @@ copyright = "&copy; 2022, Peter Amerkhanian"
     href = "https://github.com/peter-amerkhanian"      # Link to associate with icon (http://, https://, mailto:)
   [[params.social]]
     fa_icon = "fas fa-file-alt fa-lg"
-    href = ""
+    href = "documents/Amerkhanian_Peter_Resume_6_2022.pdf"
