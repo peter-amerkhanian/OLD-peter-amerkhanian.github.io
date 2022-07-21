@@ -2,6 +2,8 @@
 title: "Reliable PDF Scraping with tabula-py"
 date: 2022-07-20T09:27:34-07:00
 draft: true
+categories: ['Python',]
+tags: ['Python', 'PDF', 'Scraping']
 ---
 
 ### Summary
@@ -16,18 +18,18 @@ draft: true
   - Libraries maybe not included in Anaconda: [requests](https://requests.readthedocs.io/en/latest/), [tabula-py](https://github.com/chezou/tabula-py)
 
 ### Problem Narrative
-I'm interested in conducting a data analysis that involves the market value of single family homes in San Mateo County, California. This data can be hard to come by, but I've found a good county level resource -- The San Mateo Association of Realtors' "Market Data" page.  
+I'm interested in conducting a data analysis that involves the market value of single family homes in San Mateo County, California. This data can be hard to come by, but I've found a good county level resource -- The San Mateo Association of Realtors' ["Market Data" page](https://www.samcar.org/member-resources/market-data/).  
 |![downloader](images/1-smr.png)| 
 |:--:| 
 | *Fig 1: San Mateo Realtors Data Download Page* |  
 
-However, to my dismay, I find that when I download one of these reports, I am confronted with a .pdf containing a single table. It seems to be some sort of export of an Excel table, but the Association of Realtors has not made the actual spreadsheet available. Here is an example of one of their .pdf reports -- in this case for April 2022:
+However, to my dismay, I find that when I download one of these reports, I only get a .pdf containing a single table. It seems to be some sort of export of an Excel table, but the Association of Realtors has not made the actual spreadsheet available. Here is an example of one of their .pdf reports -- in this case for April 2022:
 
 |![pdf](images/2-smr.png)| 
 |:--:| 
 | *Fig 2: Example PDF report :(* |  
 
-I have a solid data source on my hands, but there are a few key issues:
+This is the exact data I want, but there are a few key issues:
 - The data are in .pdf files
 - You can only download monthly data files one at a time
 ### Solution
