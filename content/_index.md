@@ -7,7 +7,5 @@ I'm a graduate student at the UC Berkeley Goldman School of Public Policy, where
 
 At Goldman I also teach Public Policy 297, *Data Management, Analysis and Visualization*, a graduate level introduction to professional data analysis. 
 
-You can learn more about my professional history in my [resume](documents/Amerkhanian_Peter_Resume_6_2022.pdf).
-
 #### Contact
 You can reach me by email at [peteramerkhanian@berkeley.edu](mailto:peteramerkhanian@berkeley.edu). You can also connect with me on [Linkedin](https://www.linkedin.com/in/peteramerkhanian/) and [Github](https://github.com/peter-amerkhanian).
