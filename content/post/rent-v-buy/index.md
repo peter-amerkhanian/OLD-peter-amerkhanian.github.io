@@ -673,5 +673,3 @@ print(f"Renter after {years} years:", df_rent.loc[12*years-1, "Rent_Profit"])
     
 
 A possible takeaway here is that, as long as you can be confident you'll be able to hold onto the house for more than a year, it's probably better to purchase it. Uncertainty estimates would be useful here, and could be obtained by running the simulation under a wide variety of randomly generated market conditions.
-
-[Back to top]()

@@ -111,4 +111,3 @@ That's surprisingly it.
 ### Conclusion
 Tabula-py is a very convenient and powerful .pdf parser (ported from [Java](https://tabula.technology/)) and easily handled basically all of the .pdfs I put through it.  
   
-[Back to top]()

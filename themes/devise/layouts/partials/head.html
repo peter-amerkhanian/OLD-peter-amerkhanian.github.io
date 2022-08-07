@@ -1,20 +1,73 @@
 <head>
-    <title>{{ .Title }}</title>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="{{if .IsHome}}{{ $.Site.Params.description }}{{else}}{{.Description}}{{end}}" />
-    {{ if .Params.math }}{{ partial "helpers/katex.html" . }}{{ end }}
-    {{/* Adds complete override capability */}}
-    {{ $overrideTemplate := resources.Get "sass/override.scss" }}
-    {{ $override := $overrideTemplate | resources.ExecuteAsTemplate "css/theme.scss" . | toCSS | minify }}
-    <link rel="stylesheet" href="{{ $override.RelPermalink }}">
+  <title>{{ .Title }}</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="{{if .IsHome}}{{ $.Site.Params.description }}{{else}}{{.Description}}{{end}}" />
+  {{ if .Params.math }}{{ partial "helpers/katex.html" . }}{{ end }}
+  {{/* Adds complete override capability */}}
+  {{ $overrideTemplate := resources.Get "sass/override.scss" }}
+  {{ $override := $overrideTemplate | resources.ExecuteAsTemplate "css/theme.scss" . | toCSS | minify }}
+  <link rel="stylesheet" href="{{ $override.RelPermalink }}">
 
-    {{/* Adds custom styles capability */}}
-    {{ $customTemplate := resources.Get "sass/custom.scss" }}
-    {{ if $customTemplate }}
-    {{ $custom := $customTemplate | resources.ExecuteAsTemplate "css/custom.scss" . | toCSS | minify }}
-    <link rel="stylesheet" href="{{ $custom.RelPermalink }}">
-    {{ end }}
+  {{/* Adds custom styles capability */}}
+  {{ $customTemplate := resources.Get "sass/custom.scss" }}
+  {{ if $customTemplate }}
+  {{ $custom := $customTemplate | resources.ExecuteAsTemplate "css/custom.scss" . | toCSS | minify }}
+  <link rel="stylesheet" href="{{ $custom.RelPermalink }}">
+  {{ end }}
 
-    {{ template "_internal/google_analytics.html" . }}
+  {{ template "_internal/google_analytics.html" . }}
+
+  <style>
+    table {
+      display: block;
+      max-width: -moz-fit-content;
+      max-width: fit-content;
+      margin: 0 auto;
+      overflow-x: auto;
+      white-space: nowrap;
+
+      text-align: left;
+      color: rgb(0, 0, 0);
+    }
+
+    .dataframe {
+      font-size: 85%;
+      border-collapse: collapse;
+      width: 100%;
+    }
+
+    .dataframe thead th {
+      text-align: center !important;
+    }
+
+    .dataframe td,
+    .dataframe th {
+      border: 1px solid #ddd;
+      padding: 8px;
+    }
+
+    .dataframe tbody tr {
+      padding: 0.5em;
+      border: 1px solid rgb(175, 175, 175);
+    }
+
+    .dataframe tbody tr:nth-child(even) {
+      background-color: #f2f2f2;
+    }
+
+    .dataframe tr:hover {
+      background-color: #ddd;
+    }
+
+    .dataframe tbody tr th {
+      padding: 0.5em;
+    }
+
+    .dataframe th {
+
+      background-color: #dfdfdf;
+
+    }
+  </style>
 </head>
