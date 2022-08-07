@@ -25,6 +25,9 @@ copyright = "&copy; 2022, Peter Amerkhanian"
     weight = -100
 
 [markup]
+  [markup.goldmark]
+    [markup.goldmark.renderer]
+      unsafe = true
   [markup.highlight]
     anchorLineNos = false
     codeFences = true
