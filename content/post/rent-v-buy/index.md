@@ -14,7 +14,7 @@ This post goes through the following exercises:
   - 2.) renting one instead and investing the dollar amount that would have been your down-payment
 
 ### A Note on `numpy-financial`
-At one point in time, `numpy`, the popular Python numerical analysis library, included 10 specialized functions for financial analysis. Given their specific nature, they were eventually removed from `numpy`, I think in 2019 ([learn about why that is here](https://numpy.org/neps/nep-0032-remove-financial-functions.html)) and are now available in the separate library, `numpy-financial`. The library still seems focused on the same [10 core functions](https://numpy.org/numpy-financial/latest/), which handle tasks like cacluating loan payment amounts given some inputs, and applied financial economics tasks like calculating time value of money. Cool... Anyways, I'll use it to create an amortization schedule for a mortgage.
+At one point in time, `numpy`, the popular Python numerical analysis library, included 10 specialized functions for financial analysis. Given their specific nature, they were eventually removed from `numpy`, I think in 2019 ([learn about why that is here](https://numpy.org/neps/nep-0032-remove-financial-functions.html)) and are now available in the separate library, `numpy-financial`. The library still seems focused on the same [10 core functions](https://numpy.org/numpy-financial/latest/), which handle tasks like calculating loan payment amounts given some inputs, and applied financial economics tasks like calculating time value of money. Cool... Anyways, I'll use it to create an amortization schedule for a mortgage.
 
 
 
@@ -85,7 +85,7 @@ npf.pmt(interest_rate/12, 12*30, principal)
 
 alternatively, we can use `npf.ppt()` to see how much of the payment goes towards the principal, and use `npf.ipmt()` to see how much goes towards interest (see below for applications of those functions).
 
-### Defining Randon Variables
+### Defining Random Variables
 I'll make the simplifying assumption that both "annual home appreciation" and "annual stock appreciation" are generated from normal distributions. This is a kind of strong assumption, but one that seems to be routinely made at least with regards to stock market returns, even if there might be better distribution choices out there ([more here](https://arxiv.org/ftp/arxiv/papers/1906/1906.10325.pdf)). I could alternatively get historical data for these variables (yahoo finance has historical stock data, Zillow's ZHVI index has home appreciation for the past 20 years) and use [the bootstrap](https://en.wikipedia.org/wiki/Bootstrapping_(statistics)) to approximate the true sampling distribution for each, but we'll just use normal distributions and keep this as more of a back-of-the-envelope calculator for now.  
 
 Here's a look at how we'll draw from a normal distribution. Given an average annual return, $\mu = 0.0572$ ($\mu$, or, mu, is a common variable name for average) and a standard deviation $\sigma = 0.1042$ ($\sigma$, or, sigma, is the common variable name for standard deviation), we can draw one sample from a normal distribution as follows:
@@ -121,14 +121,13 @@ mu_home = .0572
 sigma_home = .1042
 ```
 
-Given that stock and home appreciation is probably correlated, I'll have ti sample from a bivariate normal distribution using `numpy.random.Generator.multivariate_normal` - documentation [here](https://numpy.org/doc/stable/reference/random/generated/numpy.random.Generator.multivariate_normal.html), rather than the univariate distribution draw shows above. I am going to assume a correlation coefficient, $\rho_{stock,home}$ of 0.5 - a fairly clear correlation.  
+Given that stock and home appreciation is probably correlated, I'll have ti sample from a bivariate normal distribution using `numpy.random.Generator.multivariate_normal` - documentation [here](https://numpy.org/doc/stable/reference/random/generated/numpy.random.Generator.multivariate_normal.html), rather than the univariate distribution draw shown above. I am going to assume a correlation coefficient, $\rho_{stock,home}$ of 0.5 - a fairly clear correlation.  
 In order to use that numpy function, I'll need to translate my correlation statistic into a covariance statistic, and I'll use the following formula ([source](https://en.wikipedia.org/wiki/Correlation)):  
 $$ \begin{align*}
 cov_{stock,home} &= \rho_{stock,home} \times \sigma_{stock} \sigma_{home} \\\
 cov_{stock,home} &= 0.5 \times .2267 \times .1042 \end{align*} $$
 
 I calculate covariance and confirm that the covariance and correlations match up below:
-
 
 ```python
 cov = 0.5 * sigma_stock * sigma_home
@@ -155,7 +154,7 @@ returns_df = pd.DataFrame(np.random
                           .default_rng(30)
                           .multivariate_normal([mu_stock, mu_home],
                                                cov_matrix,
-                                               360) ,
+                                               1)   ,
                           columns=["Stock_Appreciation", "Home_Appreciation"])
 print("Means:", returns_df.mean(axis=0).values)
 print("Std. Devs:", returns_df.std(axis=0).values)
@@ -647,7 +646,7 @@ sns.despine()
     
 
 
-We can quickly seee that ownership will clearly build more wealth in the medium and long run:
+We can quickly see that ownership will clearly build more wealth in the medium and long run:
 
 
 ```python
@@ -673,6 +672,6 @@ print(f"Renter after {years} years:", df_rent.loc[12*years-1, "Rent_Profit"])
     Renter after 1 years: 115865.99
     
 
-A possible takeaway here is that, as long as you can be confident ou'll be able to hold onto the house for more than a year, it's probably better to purchase it. Uncertainty estimates would be useful here, and could be obtained by running the simulation under a wide variety of randomly generated market conditions.
+A possible takeaway here is that, as long as you can be confident you'll be able to hold onto the house for more than a year, it's probably better to purchase it. Uncertainty estimates would be useful here, and could be obtained by running the simulation under a wide variety of randomly generated market conditions.
 
 [Back to top]()
