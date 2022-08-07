@@ -4,7 +4,7 @@ languageCode = "en-us"
 theme = "devise"
 relativeURLs = true
 enableEmoji = true
-googleAnalytics = ""
+googleAnalytics = "G-V95HGLKTEB"
 enableRobotsTXT = true
 copyright = "&copy; 2022, Peter Amerkhanian"
 
