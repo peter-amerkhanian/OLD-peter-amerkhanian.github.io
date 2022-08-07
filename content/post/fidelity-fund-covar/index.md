@@ -1,5 +1,5 @@
 ---
-title: "Bootstrapping Correlation Coefficients in Python"
+title: "Bootstrapping Mutual Fund Correlation Coefficients in Python"
 date: 2022-03-14
 draft: false
 categories: ['Python']
@@ -18,10 +18,6 @@ import datetime
 import seaborn as sns
 from matplotlib.pyplot import figure
 ```
-
-## Correlation of Fidelity Funds
-*Notebook by Peter Amerkhanian, 3/14/2022*
-
 This notebook is an attempt to look at how different low cost Fidelity funds covary. Please note that this notebook is solely for education purposes and is not financial advice.
 #### Data:
 - `fidelity_funds.xlsx` 92 Fidelity funds that meet the following criteria:

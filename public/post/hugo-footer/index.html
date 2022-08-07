@@ -1,0 +1,243 @@
+<!doctype html>
+<html lang="en"><head>
+  <title>How to Add a &#39;Back to top&#39; Footer to Your Hugo Posts</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="" />
+  
+  
+  
+  
+  <link rel="stylesheet" href="../../css/theme.min.css">
+
+  
+  
+  
+
+  
+
+  <style>
+    table {
+      display: block;
+      max-width: -moz-fit-content;
+      max-width: fit-content;
+      margin: 0 auto;
+      overflow-x: auto;
+      white-space: nowrap;
+
+      text-align: left;
+      color: rgb(0, 0, 0);
+    }
+
+    .dataframe {
+      font-size: 85%;
+      border-collapse: collapse;
+      width: 100%;
+    }
+
+    .dataframe thead th {
+      text-align: center !important;
+    }
+
+    .dataframe td,
+    .dataframe th {
+      border: 1px solid #ddd;
+      padding: 8px;
+    }
+
+    .dataframe tbody tr {
+      padding: 0.5em;
+      border: 1px solid rgb(175, 175, 175);
+    }
+
+    .dataframe tbody tr:nth-child(even) {
+      background-color: #f2f2f2;
+    }
+
+    .dataframe tr:hover {
+      background-color: #ddd;
+    }
+
+    .dataframe tbody tr th {
+      padding: 0.5em;
+    }
+
+    .dataframe th {
+
+      background-color: #dfdfdf;
+
+    }
+  </style>
+</head><body>
+        <div id="content" class="mx-auto"><header class="container mt-sm-5 mt-4 mb-4 mt-xs-1">
+    <div class="row">
+        <div class="col-sm-4 col-12 text-sm-right text-center pt-sm-4">
+            <a href="../../" class="text-decoration-none">
+                <img id="home-image" class="rounded-circle"
+                    
+                        
+                            src="../../images/Peter_Amerkhanian_Headshot_square_lower_qual.jpg"
+                        
+                    
+                />
+            </a>
+        </div>
+        <div class="col-sm-8 col-12 text-sm-left text-center">
+            <h2 class="m-0 mb-2 mt-4">
+                <a href="../../" class="text-decoration-none">
+                    
+                        Peter Amerkhanian
+                    
+                </a>
+            </h2>
+            <p class="text-muted mb-1">
+                
+                    MPP &#39;23 @ UC Berkeley Goldman School
+                
+            </p>
+            <ul id="nav-links" class="list-inline mb-2">
+                
+                
+                    <li class="list-inline-item">
+                        <a class="badge badge-white " href="../../" title="About">About</a>
+                    </li>
+                
+                    <li class="list-inline-item">
+                        <a class="badge badge-white " href="../../post/" title="Blog">Blog</a>
+                    </li>
+                
+            </ul>
+            <ul id="nav-social" class="list-inline">
+                
+                    <li class="list-inline-item mr-3">
+                        <a href="mailto:peteramerkhanian@berkeley.edu" target="_blank">
+                            <i class="fas fa-at fa-lg text-muted"></i>
+                        </a>
+                    </li>
+                
+                    <li class="list-inline-item mr-3">
+                        <a href="https://www.linkedin.com/in/peteramerkhanian/" target="_blank">
+                            <i class="fab fa-linkedin-in fa-lg text-muted"></i>
+                        </a>
+                    </li>
+                
+                    <li class="list-inline-item mr-3">
+                        <a href="https://github.com/peter-amerkhanian" target="_blank">
+                            <i class="fab fa-github fa-lg text-muted"></i>
+                        </a>
+                    </li>
+                
+                    <li class="list-inline-item mr-3">
+                        <a href="https://peter-amerkhanian.github.io/documents/Amerkhanian_Peter_Resume_6_2022.pdf" target="_blank">
+                            <i class="fas fa-file-alt fa-lg text-muted"></i>
+                        </a>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+    <hr />
+</header>
+<div class="container">
+    <div class="pl-sm-2">
+        <div class="mb-3">
+            <h3 class="mb-0">How to Add a &#39;Back to top&#39; Footer to Your Hugo Posts</h3>
+            
+            <small class="text-muted">Published August 7, 2022</small>
+        </div>
+
+        <article>
+            <p>This post will detail how to add a footer that says &ldquo;Back to Top&rdquo; on all of the posts in your Hugo site. This method goes through directly altering html within your theme, which may or may not be advisable. I&rsquo;m sure there are other methods. Anyways&hellip;
+Within my Hugo site&rsquo;s root directory, I have a folder, <code>themes</code>, where <a href="https://github.com/austingebauer/devise">the theme I use</a> lives. If your theme is structured similarly, you&rsquo;ll want to go from <code>themes</code> into your actual theme&rsquo;s folder, in my case <code>devise</code>, then into <code>layouts</code>.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;display:grid;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>themes
+</span></span><span style="display:flex;"><span>└───devise
+</span></span><span style="display:flex;"><span>    ├───archetypes
+</span></span><span style="display:flex;"><span>    ├───assets
+</span></span><span style="display:flex;"><span>    ├───exampleSite
+</span></span><span style="display:flex;"><span>    ├───images
+</span></span><span style="display:flex; background-color:#3d3f4a"><span>    ├───layouts
+</span></span><span style="display:flex;"><span>    │   ├───categories
+</span></span><span style="display:flex;"><span>    │   ├───partials
+</span></span><span style="display:flex;"><span>    │   │   └───helpers
+</span></span><span style="display:flex;"><span>    │   ├───post
+</span></span><span style="display:flex;"><span>    │   ├───tag
+</span></span><span style="display:flex;"><span>    │   └───_default
+</span></span><span style="display:flex;"><span>    ├───node_modules
+</span></span><span style="display:flex;"><span>    │   └───bootstrap
+</span></span><span style="display:flex;"><span>    └───static
+</span></span></code></pre></div><p>In the <code>layouts</code> folder, where you&rsquo;ll see a number of sub-folders. Navigate to partials, within which you should see a file, <code>footer.html</code> that contains the html that defines the footer for every page on the site.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;display:grid;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>layouts
+</span></span><span style="display:flex;"><span>│   404.html
+</span></span><span style="display:flex;"><span>│   index.html
+</span></span><span style="display:flex;"><span>│
+</span></span><span style="display:flex;"><span>├───categories
+</span></span><span style="display:flex;"><span>│       list.html
+</span></span><span style="display:flex;"><span>│
+</span></span><span style="display:flex;"><span>├───partials
+</span></span><span style="display:flex;"><span>│   │   category-posts.html
+</span></span><span style="display:flex; background-color:#3d3f4a"><span>│   │   footer.html
+</span></span><span style="display:flex;"><span>│   │   head.html
+</span></span><span style="display:flex;"><span>│   │   header.html
+</span></span><span style="display:flex;"><span>│   │
+</span></span><span style="display:flex;"><span>│   └───helpers
+</span></span><span style="display:flex;"><span>│           katex.html
+</span></span><span style="display:flex;"><span>│
+</span></span><span style="display:flex;"><span>├───post
+</span></span><span style="display:flex;"><span>│       list.html
+</span></span><span style="display:flex;"><span>│       single.html
+</span></span><span style="display:flex;"><span>│
+</span></span><span style="display:flex;"><span>├───tag
+</span></span><span style="display:flex;"><span>│       list.html
+</span></span><span style="display:flex;"><span>│
+</span></span><span style="display:flex;"><span>└───_default
+</span></span><span style="display:flex;"><span>        baseof.html
+</span></span><span style="display:flex;"><span>        list.html
+</span></span><span style="display:flex;"><span>        single.html
+</span></span></code></pre></div><p>In my case, this file just contains html code for a footer. The code &ndash; lines 2-5 &ndash; are highlighted. Since this footer appears on every page and I only want the &ldquo;Go back to top&rdquo; line to appear on my actual blog posts, I have to add logic that determines whether the footer is being rendered on a blog post. You can accomplish using a <a href="https://gohugo.io/variables/page/">Page Variable in Hugo</a>:</p>
+<blockquote>
+<p>Page-level variables are defined in a content file’s front matter, derived from the content’s file location, or extracted from the content body itself.</p>
+</blockquote>
+<p>The key here is &ldquo;derived from the content&rsquo;s file location. You can use the variable <code>.IsPage</code> to check whether you&rsquo;re on a blog post page vs. your home or index page.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;display:grid;"><code class="language-html" data-lang="html"><span style="display:flex;"><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1</span><span>&lt;<span style="color:#ff79c6">footer</span> <span style="color:#50fa7b">class</span><span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#34;text-center pb-1&#34;</span>&gt;
+</span></span><span style="display:flex; background-color:#3d3f4a"><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2</span><span>    {{ if .IsPage }}
+</span></span><span style="display:flex; background-color:#3d3f4a"><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3</span><span>    &lt;<span style="color:#ff79c6">p</span>&gt;&lt;/<span style="color:#ff79c6">p</span>&gt;
+</span></span><span style="display:flex; background-color:#3d3f4a"><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4</span><span>    &lt;<span style="color:#ff79c6">p</span>&gt;&lt;<span style="color:#ff79c6">a</span> <span style="color:#50fa7b">href</span><span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#34;#content&#34;</span>&gt;&amp;uarr;Back to Top&amp;uarr;&lt;/<span style="color:#ff79c6">a</span>&gt;&lt;/<span style="color:#ff79c6">p</span>&gt;
+</span></span><span style="display:flex; background-color:#3d3f4a"><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5</span><span>    {{ end }}
+</span></span><span style="display:flex;"><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6</span><span>    &lt;<span style="color:#ff79c6">small</span> <span style="color:#50fa7b">class</span><span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#34;text-muted&#34;</span>&gt;
+</span></span><span style="display:flex;"><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7</span><span>        {{ if .Site.Copyright }}
+</span></span><span style="display:flex;"><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8</span><span>            {{ .Site.Copyright | safeHTML }}
+</span></span><span style="display:flex;"><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9</span><span>        {{ else }}
+</span></span><span style="display:flex;"><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10</span><span>            {{ &#34;&amp;copy; Copyright Year, Your Name&#34; | safeHTML }}
+</span></span><span style="display:flex;"><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11</span><span>        {{ end }}
+</span></span><span style="display:flex;"><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12</span><span>        &lt;<span style="color:#ff79c6">br</span>&gt;
+</span></span><span style="display:flex;"><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13</span><span>        Powered by &lt;<span style="color:#ff79c6">a</span> <span style="color:#50fa7b">href</span><span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#34;https://gohugo.io/&#34;</span> <span style="color:#50fa7b">target</span><span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#34;_blank&#34;</span>&gt;Hugo&lt;/<span style="color:#ff79c6">a</span>&gt;
+</span></span><span style="display:flex;"><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14</span><span>        and &lt;<span style="color:#ff79c6">a</span> <span style="color:#50fa7b">href</span><span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#34;https://github.com/austingebauer/devise&#34;</span> <span style="color:#50fa7b">target</span><span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#34;_blank&#34;</span>&gt;Devise&lt;/<span style="color:#ff79c6">a</span>&gt;
+</span></span><span style="display:flex;"><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15</span><span>    &lt;/<span style="color:#ff79c6">small</span>&gt;
+</span></span><span style="display:flex;"><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16</span><span>&lt;/<span style="color:#ff79c6">footer</span>&gt;
+</span></span></code></pre></div><p>With the logic set up (lines 2 and 5), I can put in the actual html I want, in this case:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-html" data-lang="html"><span style="display:flex;"><span>&lt;<span style="color:#ff79c6">p</span>&gt;&lt;/<span style="color:#ff79c6">p</span>&gt;
+</span></span><span style="display:flex;"><span>&lt;<span style="color:#ff79c6">p</span>&gt;&lt;<span style="color:#ff79c6">a</span> <span style="color:#50fa7b">href</span><span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#34;#content&#34;</span>&gt;&amp;uarr;Back to Top&amp;uarr;&lt;/<span style="color:#ff79c6">a</span>&gt;&lt;/<span style="color:#ff79c6">p</span>&gt;
+</span></span></code></pre></div><p>some dead space and the &ldquo;Back to Top&rdquo; text wrapped in up arrows. You can see that rendered at the bottom of this page.</p>
+
+        </article>
+    </div>
+
+    
+
+            </div>
+        </div><footer class="text-center pb-1">
+    
+    <p></p>
+    <p><a href="#content">&uarr;Back to Top&uarr;</a></p>
+    
+    <small class="text-muted">
+        
+            &copy; 2022, Peter Amerkhanian
+        
+        <br>
+        Powered by <a href="https://gohugo.io/" target="_blank">Hugo</a>
+        and <a href="https://github.com/austingebauer/devise" target="_blank">Devise</a>
+    </small>
+</footer>
+</body>
+</html>
