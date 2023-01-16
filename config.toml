@@ -3,6 +3,7 @@ title = "Peter Amerkhanian"
 languageCode = "en-us"
 theme = "devise"
 relativeURLs = true
+canonifyURLs = true
 enableEmoji = true
 googleAnalytics = "G-V95HGLKTEB"
 enableRobotsTXT = true
