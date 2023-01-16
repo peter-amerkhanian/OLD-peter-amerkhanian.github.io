@@ -5,7 +5,6 @@ title: Home
 #### About
 I'm a graduate student at the UC Berkeley Goldman School of Public Policy, where I study policy analysis and applied data science. I have five years of experience working on data problems in government and nonprofit organizations. I'm interested in social policy, program evaluation, and computational methods.
 
-#### Current Work
 I'm currently a [Graduate Student Researcher](https://dlab.berkeley.edu/people/peter-amerkhanian) at the Berkeley Social Science Data Laboratory (D-Lab), where I teach workshops on machine learning, spatial data analysis, and programming fundamentals for graduate students and researchers on campus.
 
 #### Contact
