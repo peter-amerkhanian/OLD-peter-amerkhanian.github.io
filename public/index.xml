@@ -7,7 +7,17 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>&amp;copy; 2022, Peter Amerkhanian</copyright>
-    <lastBuildDate>Sun, 07 Aug 2022 12:38:11 -0700</lastBuildDate><atom:link href="https://peter-amerkhanian.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 15 Jan 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://peter-amerkhanian.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>An SIR Modeling Application in Python</title>
+      <link>https://peter-amerkhanian.github.io/post/sir-modeling/</link>
+      <pubDate>Sun, 15 Jan 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://peter-amerkhanian.github.io/post/sir-modeling/</guid>
+      <description>The following is a memo that I prepared for Jesse Rothstein&amp;rsquo;s &amp;ldquo;Economic Policy for Pandemics&amp;rdquo; Course at Goldman. I&amp;rsquo;m posting it here because I think it presents a simple but effective implementation of the Susceptible, Infected, Recovered (SIR) Model in Python. This is all applied to the COVID-19 pandemic in an effort to produce a policy-relevant simulation of virus spread.
+from datetime import datetime import matplotlib.pyplot as plt import numpy as np import pandas as pd import seaborn as sns from IPython.</description>
+    </item>
+    
     <item>
       <title>How to Add a &#39;Back to top&#39; Footer to Your Hugo Posts</title>
       <link>https://peter-amerkhanian.github.io/post/hugo-footer/</link>

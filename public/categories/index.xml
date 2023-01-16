@@ -7,22 +7,22 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>&amp;copy; 2022, Peter Amerkhanian</copyright>
-    <lastBuildDate>Sun, 07 Aug 2022 12:38:11 -0700</lastBuildDate><atom:link href="https://peter-amerkhanian.github.io/categories/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 15 Jan 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://peter-amerkhanian.github.io/categories/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Python</title>
+      <link>https://peter-amerkhanian.github.io/categories/python/</link>
+      <pubDate>Sun, 15 Jan 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://peter-amerkhanian.github.io/categories/python/</guid>
+      <description></description>
+    </item>
+    
     <item>
       <title>Hugo</title>
       <link>https://peter-amerkhanian.github.io/categories/hugo/</link>
       <pubDate>Sun, 07 Aug 2022 12:38:11 -0700</pubDate>
       
       <guid>https://peter-amerkhanian.github.io/categories/hugo/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Python</title>
-      <link>https://peter-amerkhanian.github.io/categories/python/</link>
-      <pubDate>Sat, 06 Aug 2022 14:14:01 -0700</pubDate>
-      
-      <guid>https://peter-amerkhanian.github.io/categories/python/</guid>
       <description></description>
     </item>
     
