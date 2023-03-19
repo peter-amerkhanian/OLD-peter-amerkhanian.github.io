@@ -7,15 +7,23 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>&amp;copy; 2022, Peter Amerkhanian</copyright>
-    <lastBuildDate>Sun, 15 Jan 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://peter-amerkhanian.github.io/tags/statistics/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 18 Mar 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://peter-amerkhanian.github.io/tags/statistics/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Basic Instrumental Variables</title>
+      <link>https://peter-amerkhanian.github.io/post/instrumental-variables/</link>
+      <pubDate>Sat, 18 Mar 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://peter-amerkhanian.github.io/post/instrumental-variables/</guid>
+      <description>Import Statements# Wooldridge (2019) datasets import wooldridge as woo # Base scientific computing import numpy as np import pandas as pd import matplotlib.pyplot as plt # Stats packages import linearmodels.iv as iv from linearmodels.iv import IV2SLS import statsmodels.formula.api as smf import scipy as sp # Drawing DAGS import graphviz as gr The following are my notes on the use of instrumental variables for finding causal effects. These are largely notes on the following:</description>
+    </item>
+    
     <item>
       <title>An SIR Modeling Application in Python</title>
       <link>https://peter-amerkhanian.github.io/post/sir-modeling/</link>
       <pubDate>Sun, 15 Jan 2023 00:00:00 +0000</pubDate>
       
       <guid>https://peter-amerkhanian.github.io/post/sir-modeling/</guid>
-      <description>The following is a memo that I prepared for Jesse Rothstein&amp;rsquo;s &amp;ldquo;Economic Policy for Pandemics&amp;rdquo; Course at Goldman. I&amp;rsquo;m posting it here because I think it presents a simple but effective implementation of the Susceptible, Infected, Recovered (SIR) Model in Python. This is all applied to the COVID-19 pandemic in an effort to produce a policy-relevant simulation of virus spread.
-from datetime import datetime import matplotlib.pyplot as plt import numpy as np import pandas as pd import seaborn as sns from IPython.</description>
+      <description>The following is a memo that I prepared for Jesse Rothstein&amp;rsquo;s &amp;ldquo;Economic Policy for Pandemics&amp;rdquo; Course at Goldman. I&amp;rsquo;m posting it here because I think it presents a simple but effective implementation of the Susceptible, Infected, Recovered (SIR) Model in Python. This is all applied to the COVID-19 pandemic in an effort to produce a policy-relevant simulation of virus spread. Import statementsfrom datetime import datetime import matplotlib.pyplot as plt import numpy as np import pandas as pd import seaborn as sns from IPython.</description>
     </item>
     
     <item>

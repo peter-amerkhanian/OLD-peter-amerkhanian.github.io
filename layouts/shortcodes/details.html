@@ -1,0 +1,10 @@
+<div style="
+padding: 0em 0em 1em 0em;
+color: darkred;
+font-weight: bold;
+">
+<details>
+    <summary>{{ (.Get 0) | markdownify }}</summary>
+    {{ .Inner | markdownify }}
+  </details>
+</div>

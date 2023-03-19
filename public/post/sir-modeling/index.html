@@ -50,7 +50,7 @@ if (!doNotTrack) {
       display: block;
       max-width: -moz-fit-content;
       max-width: fit-content;
-      margin: 0 auto;
+      margin: 1em auto;
       overflow-x: auto;
       white-space: nowrap;
       text-align: left;
@@ -60,6 +60,24 @@ if (!doNotTrack) {
     .katex-display {
       overflow-x: auto;
       overflow-y: clip;
+      margin: 0.5em auto;
+    }
+    .simpletable {
+      font-size: 95%;
+      border-collapse: collapse;
+      width: 100%;
+    }
+    .simpletable th {
+      border: 1px solid #ddd;
+      padding: 0.6em;
+    }
+    .simpletable tbody tr {
+      padding: 0em;
+       
+    }
+    .simpletable tbody td {
+      border: 1px solid #ddd;
+      padding: 0.3em;
     }
 
     .dataframe {
@@ -92,7 +110,7 @@ if (!doNotTrack) {
     }
 
     .dataframe tbody tr th {
-      padding: 0.5em;
+      padding: .5em;
     }
 
     .dataframe th {
@@ -182,14 +200,24 @@ if (!doNotTrack) {
         </div>
 
         <article>
-            <p>The following is a memo that I prepared for Jesse Rothstein&rsquo;s &ldquo;Economic Policy for Pandemics&rdquo; Course at Goldman. I&rsquo;m posting it here because I think it presents a simple but effective implementation of the Susceptible, Infected, Recovered (SIR) Model in Python. This is all applied to the COVID-19 pandemic in an effort to produce a policy-relevant simulation of virus spread.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff79c6">from</span> datetime <span style="color:#ff79c6">import</span> datetime
+            <p>The following is a memo that I prepared for Jesse Rothstein&rsquo;s &ldquo;Economic Policy for Pandemics&rdquo; Course at Goldman. I&rsquo;m posting it here because I think it presents a simple but effective implementation of the Susceptible, Infected, Recovered (SIR) Model in Python. This is all applied to the COVID-19 pandemic in an effort to produce a policy-relevant simulation of virus spread.
+<div style="
+padding: 0em 0em 1em 0em;
+color: darkred;
+font-weight: bold;
+">
+<details>
+    <summary>Import statements</summary>
+    <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff79c6">from</span> datetime <span style="color:#ff79c6">import</span> datetime
 </span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> matplotlib.pyplot <span style="color:#ff79c6">as</span> plt
 </span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> numpy <span style="color:#ff79c6">as</span> np
 </span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> pandas <span style="color:#ff79c6">as</span> pd
 </span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> seaborn <span style="color:#ff79c6">as</span> sns
 </span></span><span style="display:flex;"><span><span style="color:#ff79c6">from</span> IPython.display <span style="color:#ff79c6">import</span> Markdown <span style="color:#ff79c6">as</span> md
-</span></span></code></pre></div><h2 id="the-policy-problem">The Policy Problem</h2>
+</span></span></code></pre></div>
+  </details>
+</div></p>
+<h2 id="the-policy-problem">The Policy Problem</h2>
 <p>During the COVID-19 pandemic, policy makers around the world have developed a variety of tools for combating the virus: lockdowns and strategic re-openings, testing, contact-tracing,  masking, and vaccination, to name a few <cite id="wdqcj"><a href="#zotero%7C13006908%2FRFIEEU9E">(“The Hammer and the Dance,” 2020)</a></cite>. In this memo, I will examine the effectiveness of lockdowns and vaccination specifically, with an eye towards how they might be used during future pandemics. I find that lockdowns are an effective pandemic response in so far as they considerably reduce infections. I also find that a vaccine that provides temporary immunity cannot effectively end a pandemic with only one vaccination campaign. During future pandemics, policy makers should be ready to institute lockdowns, especially early in the pandemic, and prepare the public for yearly vaccine boosters once a vaccine has been developed.</p>
 <h2 id="the-simple-sir-model">The Simple SIR Model</h2>
 <p>In order to model various pandemic responses, I implement an altered version of a simple &ldquo;SIR&rdquo; model - <em>Susceptible–Infectious–Recovered</em> - as defined in <cite id="2krjb"><a href="#zotero%7C13006908%2FIWAXMKM8">(Bird, 2020)</a></cite>. I adapt the SIR model to include a number of specific characteristics of the COVID-19 pandemic: diminishing immunity for those who have recovered from the virus, policy responses in the form of limited-length lock-downs with diminishing effectiveness, and the eventual introduction of a vaccination campaign. The key features of the model are defined as follows.</p>
@@ -226,7 +254,14 @@ S_t &amp;= 1 - I_t - R_t
 <p>I apply the model to two distinct scenarios under which rolling lockdowns are implemented: one where no vaccine is ever developed to combat the virus and one where a vaccine is developed after one year and rolled out incrementally.</p>
 <h1 id="scenario-1-lockdowns-no-vaccination">Scenario 1: Lockdowns, No Vaccination</h1>
 <p>The first scenario I examine is the use of rolling lockdowns, motivated by infections growing beyond a 5% threshold. In this scenario a vaccine is never developed, so lockdowns are essentially the only tool available to policy makers.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff79c6">def</span> <span style="color:#50fa7b">SIR_dataframe</span>(infected, reproduction_rate, susceptible, periods):
+<p><div style="
+padding: 0em 0em 1em 0em;
+color: darkred;
+font-weight: bold;
+">
+<details>
+    <summary>SIR setup</summary>
+    <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff79c6">def</span> <span style="color:#50fa7b">SIR_dataframe</span>(infected, reproduction_rate, susceptible, periods):
 </span></span><span style="display:flex;"><span>    <span style="color:#f1fa8c">&#34;&#34;&#34;Create the Dataframe that will hold the SIR model results&#34;&#34;&#34;</span>
 </span></span><span style="display:flex;"><span>    reproduction_rate <span style="color:#ff79c6">=</span> contact_rate <span style="color:#ff79c6">*</span> infection_probability
 </span></span><span style="display:flex;"><span>    susceptible <span style="color:#ff79c6">=</span> <span style="color:#bd93f9">1</span> <span style="color:#ff79c6">-</span> infected
@@ -345,7 +380,17 @@ S_t &amp;= 1 - I_t - R_t
 </span></span><span style="display:flex;"><span>                lockdown_timer <span style="color:#ff79c6">+=</span> <span style="color:#bd93f9">1</span>
 </span></span><span style="display:flex;"><span>    df_simple_SIR <span style="color:#ff79c6">=</span> df_simple_SIR<span style="color:#ff79c6">.</span>set_index(<span style="color:#f1fa8c">&#34;date&#34;</span>)
 </span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">return</span> df_simple_SIR
-</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#6272a4"># Set Key Parameters</span>
+</span></span></code></pre></div>
+  </details>
+</div>
+<div style="
+padding: 0em 0em 1em 0em;
+color: darkred;
+font-weight: bold;
+">
+<details>
+    <summary>Scenario 1 parameters</summary>
+    <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#6272a4"># Set Key Parameters</span>
 </span></span><span style="display:flex;"><span>contact_rate <span style="color:#ff79c6">=</span> <span style="color:#bd93f9">10</span>
 </span></span><span style="display:flex;"><span>infection_probability <span style="color:#ff79c6">=</span> <span style="color:#bd93f9">0.02</span>
 </span></span><span style="display:flex;"><span>recovery_probability <span style="color:#ff79c6">=</span> <span style="color:#bd93f9">1</span> <span style="color:#ff79c6">/</span> <span style="color:#bd93f9">10</span>  <span style="color:#6272a4"># Recover in 10 days</span>
@@ -368,7 +413,17 @@ S_t &amp;= 1 - I_t - R_t
 </span></span><span style="display:flex;"><span>    periods<span style="color:#ff79c6">=</span>periods,
 </span></span><span style="display:flex;"><span>    output<span style="color:#ff79c6">=</span><span style="color:#ff79c6">False</span>,
 </span></span><span style="display:flex;"><span>)
-</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#6272a4"># Plot the results</span>
+</span></span></code></pre></div>
+  </details>
+</div>
+<div style="
+padding: 0em 0em 1em 0em;
+color: darkred;
+font-weight: bold;
+">
+<details>
+    <summary>Figure 1 code</summary>
+    <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#6272a4"># Plot the results</span>
 </span></span><span style="display:flex;"><span><span style="color:#ff79c6">def</span> <span style="color:#50fa7b">plot_SIR</span>(df_simple_SIR, title, threshold<span style="color:#ff79c6">=</span><span style="color:#ff79c6">True</span>):
 </span></span><span style="display:flex;"><span>    sns<span style="color:#ff79c6">.</span>set()
 </span></span><span style="display:flex;"><span>    fig, axes <span style="color:#ff79c6">=</span> plt<span style="color:#ff79c6">.</span>subplots(<span style="color:#bd93f9">1</span>, <span style="color:#bd93f9">2</span>, figsize<span style="color:#ff79c6">=</span>(<span style="color:#bd93f9">10</span>, <span style="color:#bd93f9">4</span>), sharey<span style="color:#ff79c6">=</span><span style="color:#ff79c6">False</span>, sharex<span style="color:#ff79c6">=</span><span style="color:#ff79c6">True</span>)
@@ -394,10 +449,20 @@ S_t &amp;= 1 - I_t - R_t
 </span></span><span style="display:flex;"><span>    axes[<span style="color:#bd93f9">1</span>]<span style="color:#ff79c6">.</span>set_ylim(<span style="color:#bd93f9">0</span>, <span style="color:#bd93f9">1</span>)
 </span></span><span style="display:flex;"><span>    axes[<span style="color:#bd93f9">1</span>]<span style="color:#ff79c6">.</span>tick_params(axis<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#34;x&#34;</span>, rotation<span style="color:#ff79c6">=</span><span style="color:#bd93f9">45</span>)
 </span></span><span style="display:flex;"><span>    axes[<span style="color:#bd93f9">1</span>]<span style="color:#ff79c6">.</span>legend();
-</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>plot_SIR(df_simple_SIR, <span style="color:#f1fa8c">&#34;Figure 1: Lockdowns (No Vaccine)&#34;</span>)
+</span></span></code></pre></div>
+  </details>
+</div></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>plot_SIR(df_simple_SIR, <span style="color:#f1fa8c">&#34;Figure 1: Lockdowns (No Vaccine)&#34;</span>)
 </span></span></code></pre></div><p><img src="images/output_7_0.png" alt="one"></p>
 <p><strong>Figure 1</strong> shows the outcome of this scenario. As infection transmission passes the threshold, the government calls for a lockdown, which promptly reduces infections. However, transmission has enough momentum to quickly grow again, triggering a series of lockdowns with diminishing effect. The policy does largely keep the infected population below 5%, and after the initial wave of infections subside the government doesn&rsquo;t have to call for any more lockdowns. The population experiences a much smaller second wave before the pandemic settles into a sort of equilibrium. About 2.5% of the population stays infected as different individuals contract the virus, recover, gain immunity, and slowly lose that immunity. This equilibrium is unfortunate - the pandemic doesn&rsquo;t really end in this scenario. However, this strategy is effective, and we can see that most clearly by comparing it to the alternative in which no lockdowns are instituted.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>df_simple_SIR_no_lock <span style="color:#ff79c6">=</span> SIR_model(
+<p><div style="
+padding: 0em 0em 1em 0em;
+color: darkred;
+font-weight: bold;
+">
+<details>
+    <summary>No lockdown setup</summary>
+    <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>df_simple_SIR_no_lock <span style="color:#ff79c6">=</span> SIR_model(
 </span></span><span style="display:flex;"><span>    infected<span style="color:#ff79c6">=</span>infected,
 </span></span><span style="display:flex;"><span>    recovery_probability<span style="color:#ff79c6">=</span>recovery_probability,
 </span></span><span style="display:flex;"><span>    contact_rate<span style="color:#ff79c6">=</span>contact_rate,
@@ -407,7 +472,17 @@ S_t &amp;= 1 - I_t - R_t
 </span></span><span style="display:flex;"><span>    open_threshold<span style="color:#ff79c6">=</span><span style="color:#bd93f9">0</span>,
 </span></span><span style="display:flex;"><span>    periods<span style="color:#ff79c6">=</span>periods,
 </span></span><span style="display:flex;"><span>)
-</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>sns<span style="color:#ff79c6">.</span>set()
+</span></span></code></pre></div>
+  </details>
+</div>
+<div style="
+padding: 0em 0em 1em 0em;
+color: darkred;
+font-weight: bold;
+">
+<details>
+    <summary>Figure 2 code</summary>
+    <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>sns<span style="color:#ff79c6">.</span>set()
 </span></span><span style="display:flex;"><span>fig, axes <span style="color:#ff79c6">=</span> plt<span style="color:#ff79c6">.</span>subplots(<span style="color:#bd93f9">1</span>, <span style="color:#bd93f9">1</span>, figsize<span style="color:#ff79c6">=</span>(<span style="color:#bd93f9">10</span>, <span style="color:#bd93f9">4</span>), sharey<span style="color:#ff79c6">=</span><span style="color:#ff79c6">False</span>, sharex<span style="color:#ff79c6">=</span><span style="color:#ff79c6">True</span>)
 </span></span><span style="display:flex;"><span>fig<span style="color:#ff79c6">.</span>suptitle(<span style="color:#f1fa8c">&#34;Figure 2&#34;</span>)
 </span></span><span style="display:flex;"><span>axes<span style="color:#ff79c6">.</span>plot(df_simple_SIR[[<span style="color:#f1fa8c">&#34;Infected&#34;</span>]], <span style="color:#f1fa8c">&#34;-&#34;</span>, c<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#34;b&#34;</span>, label<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#34;Infections with lockdowns&#34;</span>)
@@ -429,8 +504,18 @@ S_t &amp;= 1 - I_t - R_t
 </span></span><span style="display:flex;"><span>    label<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">f</span><span style="color:#f1fa8c">&#34;Threshold for Lockdown Start: </span><span style="color:#f1fa8c">{</span>lockdown_threshold<span style="color:#f1fa8c">}</span><span style="color:#f1fa8c">&#34;</span>,
 </span></span><span style="display:flex;"><span>)
 </span></span><span style="display:flex;"><span>axes<span style="color:#ff79c6">.</span>legend();
-</span></span></code></pre></div><p><img src="images/output_10_0.png" alt="two"></p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>difference <span style="color:#ff79c6">=</span> <span style="color:#8be9fd;font-style:italic">round</span>(
+</span></span></code></pre></div>
+  </details>
+</div></p>
+<p><img src="images/output_10_0.png" alt="two"></p>
+<div style="
+padding: 0em 0em 1em 0em;
+color: darkred;
+font-weight: bold;
+">
+<details>
+    <summary>Scenario 1 effect analysis</summary>
+    <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>difference <span style="color:#ff79c6">=</span> <span style="color:#8be9fd;font-style:italic">round</span>(
 </span></span><span style="display:flex;"><span>    (
 </span></span><span style="display:flex;"><span>        (df_simple_SIR_no_lock[<span style="color:#f1fa8c">&#34;Infected&#34;</span>])<span style="color:#ff79c6">.</span>diff()<span style="color:#ff79c6">.</span>clip(lower<span style="color:#ff79c6">=</span><span style="color:#bd93f9">0</span>)<span style="color:#ff79c6">.</span>sum()
 </span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">-</span> (df_simple_SIR[<span style="color:#f1fa8c">&#34;Infected&#34;</span>])<span style="color:#ff79c6">.</span>diff()<span style="color:#ff79c6">.</span>clip(lower<span style="color:#ff79c6">=</span><span style="color:#bd93f9">0</span>)<span style="color:#ff79c6">.</span>sum()
@@ -448,7 +533,10 @@ S_t &amp;= 1 - I_t - R_t
 </span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">we see that lockdowns lead to </span><span style="color:#f1fa8c">{</span><span style="color:#8be9fd;font-style:italic">int</span>(<span style="color:#bd93f9">100</span><span style="color:#ff79c6">*</span>difference)<span style="color:#f1fa8c">}</span><span style="color:#f1fa8c">% fewer infections.
 </span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">&#34;&#34;&#34;</span>
 </span></span><span style="display:flex;"><span>)
-</span></span></code></pre></div><p><strong>Figure 2</strong> shows that in the absence of any lockdowns,
+</span></span></code></pre></div>
+  </details>
+</div>
+<p><strong>Figure 2</strong> shows that in the absence of any lockdowns,
 infections grow over 3 times as high during the first wave,
 and the population later experiences
 more pronounced second and third waves of infection.
@@ -456,7 +544,14 @@ If we compare the sum of infections over this full time period,
 we see that lockdowns lead to 44% fewer infections.</p>
 <h1 id="scenario-2-lockdowns-vaccination">Scenario 2: Lockdowns, Vaccination</h1>
 <p>The second scenario I examine again involves the use of rolling lockdowns with a 5% threshold, but now a vaccine is introduced one year into the pandemic. The government&rsquo;s vaccination campaign is able to vaccinate 1% of the susceptible population each day and once 100% of the susceptible population is vaccinated the government ceases their campaign. Immunity through vaccination wears off after 6 months.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>df_simple_SIR_vax_no_lock <span style="color:#ff79c6">=</span> SIR_model(
+<p><div style="
+padding: 0em 0em 1em 0em;
+color: darkred;
+font-weight: bold;
+">
+<details>
+    <summary>Scenario 2 setup</summary>
+    <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>df_simple_SIR_vax_no_lock <span style="color:#ff79c6">=</span> SIR_model(
 </span></span><span style="display:flex;"><span>    infected<span style="color:#ff79c6">=</span>infected,
 </span></span><span style="display:flex;"><span>    recovery_probability<span style="color:#ff79c6">=</span>recovery_probability,
 </span></span><span style="display:flex;"><span>    contact_rate<span style="color:#ff79c6">=</span>contact_rate,
@@ -479,7 +574,17 @@ we see that lockdowns lead to 44% fewer infections.</p>
 </span></span><span style="display:flex;"><span>    vaccination_rollout<span style="color:#ff79c6">=</span><span style="color:#bd93f9">0.01</span>,
 </span></span><span style="display:flex;"><span>    periods<span style="color:#ff79c6">=</span>periods,
 </span></span><span style="display:flex;"><span>)
-</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>fig, axes <span style="color:#ff79c6">=</span> plt<span style="color:#ff79c6">.</span>subplots(<span style="color:#bd93f9">1</span>, <span style="color:#bd93f9">1</span>, figsize<span style="color:#ff79c6">=</span>(<span style="color:#bd93f9">10</span>, <span style="color:#bd93f9">4</span>), sharey<span style="color:#ff79c6">=</span><span style="color:#ff79c6">False</span>, sharex<span style="color:#ff79c6">=</span><span style="color:#ff79c6">True</span>)
+</span></span></code></pre></div>
+  </details>
+</div>
+<div style="
+padding: 0em 0em 1em 0em;
+color: darkred;
+font-weight: bold;
+">
+<details>
+    <summary>Figure 3 code</summary>
+    <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>fig, axes <span style="color:#ff79c6">=</span> plt<span style="color:#ff79c6">.</span>subplots(<span style="color:#bd93f9">1</span>, <span style="color:#bd93f9">1</span>, figsize<span style="color:#ff79c6">=</span>(<span style="color:#bd93f9">10</span>, <span style="color:#bd93f9">4</span>), sharey<span style="color:#ff79c6">=</span><span style="color:#ff79c6">False</span>, sharex<span style="color:#ff79c6">=</span><span style="color:#ff79c6">True</span>)
 </span></span><span style="display:flex;"><span>fig<span style="color:#ff79c6">.</span>suptitle(<span style="color:#f1fa8c">&#34;Figure 3&#34;</span>)
 </span></span><span style="display:flex;"><span>axes<span style="color:#ff79c6">.</span>plot(
 </span></span><span style="display:flex;"><span>    df_simple_SIR_vax_lock[[<span style="color:#f1fa8c">&#34;Infected&#34;</span>]], <span style="color:#f1fa8c">&#34;-&#34;</span>, c<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#34;b&#34;</span>, label<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#34;Infections with lockdown&#34;</span>
@@ -508,8 +613,18 @@ we see that lockdowns lead to 44% fewer infections.</p>
 </span></span><span style="display:flex;"><span>    label<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#34;Vaccine Introduced&#34;</span>,
 </span></span><span style="display:flex;"><span>)
 </span></span><span style="display:flex;"><span>axes<span style="color:#ff79c6">.</span>legend();
-</span></span></code></pre></div><p><img src="images/output_15_0.png" alt="three"></p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>difference <span style="color:#ff79c6">=</span> <span style="color:#8be9fd;font-style:italic">round</span>(
+</span></span></code></pre></div>
+  </details>
+</div></p>
+<p><img src="images/output_15_0.png" alt="three"></p>
+<div style="
+padding: 0em 0em 1em 0em;
+color: darkred;
+font-weight: bold;
+">
+<details>
+    <summary>Scenario 2 effect analysis</summary>
+    <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>difference <span style="color:#ff79c6">=</span> <span style="color:#8be9fd;font-style:italic">round</span>(
 </span></span><span style="display:flex;"><span>    (
 </span></span><span style="display:flex;"><span>        (df_simple_SIR_vax_no_lock[<span style="color:#f1fa8c">&#34;Infected&#34;</span>])<span style="color:#ff79c6">.</span>diff()<span style="color:#ff79c6">.</span>clip(lower<span style="color:#ff79c6">=</span><span style="color:#bd93f9">0</span>)<span style="color:#ff79c6">.</span>sum()
 </span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">-</span> (df_simple_SIR_vax_lock[<span style="color:#f1fa8c">&#34;Infected&#34;</span>])<span style="color:#ff79c6">.</span>diff()<span style="color:#ff79c6">.</span>clip(lower<span style="color:#ff79c6">=</span><span style="color:#bd93f9">0</span>)<span style="color:#ff79c6">.</span>sum()
@@ -530,7 +645,10 @@ we see that lockdowns lead to 44% fewer infections.</p>
 </span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c"></span><span style="color:#f1fa8c">{</span><span style="color:#8be9fd;font-style:italic">int</span>(<span style="color:#bd93f9">100</span><span style="color:#ff79c6">*</span>difference)<span style="color:#f1fa8c">}</span><span style="color:#f1fa8c">% fewer new infections.
 </span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">&#34;&#34;&#34;</span>
 </span></span><span style="display:flex;"><span>)
-</span></span></code></pre></div><p><strong>Figure 3</strong> shows that the virus initially grows as previously shown in Figures 1 and 2,
+</span></span></code></pre></div>
+  </details>
+</div>
+<p><strong>Figure 3</strong> shows that the virus initially grows as previously shown in Figures 1 and 2,
 but once the vaccine is released in early 2021, the pandemic begins to subside fairly quickly.
 By late 2021 the pandemic is effectively over. However, vaccine immunity wears off,
 and given no future vaccination campaigns, there is eventually another wave of infections,

@@ -1,0 +1,777 @@
+<!doctype html>
+<html lang="en"><head>
+  <title>Basic Instrumental Variables</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.0/dist/katex.min.css" integrity="sha384-Xi8rHCmBmhbuyyhbI88391ZKP2dmfnOl4rT9ZfRI7mLTdk1wblIUnrIq35nqwEvC" crossorigin="anonymous">
+
+    
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.0/dist/katex.min.js" integrity="sha384-X/XCfMm41VSsqRNQgDerQczD69XqmjOOOwYQvr/uuC+j4OPoNhVgjdGFwhvN02Ja" crossorigin="anonymous"></script>
+
+    
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.0/dist/contrib/auto-render.min.js" integrity="sha384-+XBljXPPiv+OzfbB3cVmLHf4hdUFHlWNZN5spNQ7rmHTXpd7WvJum6fIACpNNfIR" crossorigin="anonymous"
+        onload="renderMathInElement(document.body);"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        renderMathInElement(document.body, {
+            delimiters: [
+                {left: "$$", right: "$$", display: true},
+                {left: "$", right: "$", display: false}
+            ]
+        });
+    });
+</script>
+
+  
+  
+  
+  <link rel="stylesheet" href="../../css/theme.min.css">
+
+  
+  
+  
+
+  
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-V95HGLKTEB"></script>
+<script>
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.dataLayer = window.dataLayer || [];
+	function gtag(){dataLayer.push(arguments);}
+	gtag('js', new Date());
+	gtag('config', 'G-V95HGLKTEB', { 'anonymize_ip': false });
+}
+</script>
+
+
+  <style>
+    table {
+      display: block;
+      max-width: -moz-fit-content;
+      max-width: fit-content;
+      margin: 1em auto;
+      overflow-x: auto;
+      white-space: nowrap;
+      text-align: left;
+      color: rgb(0, 0, 0);
+    }
+
+    .katex-display {
+      overflow-x: auto;
+      overflow-y: clip;
+      margin: 0.5em auto;
+    }
+    .simpletable {
+      font-size: 95%;
+      border-collapse: collapse;
+      width: 100%;
+    }
+    .simpletable th {
+      border: 1px solid #ddd;
+      padding: 0.6em;
+    }
+    .simpletable tbody tr {
+      padding: 0em;
+       
+    }
+    .simpletable tbody td {
+      border: 1px solid #ddd;
+      padding: 0.3em;
+    }
+
+    .dataframe {
+      font-size: 85%;
+      border-collapse: collapse;
+      width: 100%;
+    }
+
+    .dataframe thead th {
+      text-align: center !important;
+    }
+
+    .dataframe td,
+    .dataframe th {
+      border: 1px solid #ddd;
+      padding: 8px;
+    }
+
+    .dataframe tbody tr {
+      padding: 0.5em;
+      border: 1px solid rgb(175, 175, 175);
+    }
+
+    .dataframe tbody tr:nth-child(even) {
+      background-color: #f2f2f2;
+    }
+
+    .dataframe tr:hover {
+      background-color: #ddd;
+    }
+
+    .dataframe tbody tr th {
+      padding: .5em;
+    }
+
+    .dataframe th {
+
+      background-color: #dfdfdf;
+
+    }
+  </style>
+</head><body>
+        <div id="content" class="mx-auto"><header class="container mt-sm-5 mt-4 mb-4 mt-xs-1">
+    <div class="row">
+        <div class="col-sm-4 col-12 text-sm-right text-center pt-sm-4">
+            <a href="../../" class="text-decoration-none">
+                <img id="home-image" class="rounded-circle"
+                    
+                        
+                            
+                            src="../../images/blog.jpg"
+                            
+                        
+                    
+                />
+            </a>
+        </div>
+        <div class="col-sm-8 col-12 text-sm-left text-center">
+            <h2 class="m-0 mb-2 mt-4">
+                <a href="../../" class="text-decoration-none">
+                    
+                        Peter Amerkhanian
+                    
+                </a>
+            </h2>
+            <p class="text-muted mb-1">
+                
+                    MPP &#39;23 @ UC Berkeley Goldman School
+                
+            </p>
+            <ul id="nav-links" class="list-inline mb-2">
+                
+                
+                    <li class="list-inline-item">
+                        <a class="badge badge-white " href="../../" title="About">About</a>
+                    </li>
+                
+                    <li class="list-inline-item">
+                        <a class="badge badge-white " href="../../post/" title="Blog">Blog</a>
+                    </li>
+                
+            </ul>
+            <ul id="nav-social" class="list-inline">
+                
+                    <li class="list-inline-item mr-3">
+                        <a href="mailto:peteramerkhanian@berkeley.edu" target="_blank">
+                            <i class="fas fa-at fa-lg text-muted"></i>
+                        </a>
+                    </li>
+                
+                    <li class="list-inline-item mr-3">
+                        <a href="https://www.linkedin.com/in/peteramerkhanian/" target="_blank">
+                            <i class="fab fa-linkedin-in fa-lg text-muted"></i>
+                        </a>
+                    </li>
+                
+                    <li class="list-inline-item mr-3">
+                        <a href="https://github.com/peter-amerkhanian" target="_blank">
+                            <i class="fab fa-github fa-lg text-muted"></i>
+                        </a>
+                    </li>
+                
+                    <li class="list-inline-item mr-3">
+                        <a href="https://peter-amerkhanian.github.io/documents/Amerkhanian_Peter_Resume.pdf" target="_blank">
+                            <i class="fas fa-file-alt fa-lg text-muted"></i>
+                        </a>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+    <hr />
+</header>
+<div class="container">
+    <div class="pl-sm-2">
+        <div class="mb-3">
+            <h3 class="mb-0">Basic Instrumental Variables</h3>
+            
+            <small class="text-muted">Published March 18, 2023</small>
+        </div>
+
+        <article>
+            <div style="
+padding: 0em 0em 1em 0em;
+color: darkred;
+font-weight: bold;
+">
+<details>
+    <summary>Import Statements</summary>
+    <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#6272a4"># Wooldridge (2019) datasets</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> wooldridge <span style="color:#ff79c6">as</span> woo
+</span></span><span style="display:flex;"><span><span style="color:#6272a4"># Base scientific computing</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> numpy <span style="color:#ff79c6">as</span> np
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> pandas <span style="color:#ff79c6">as</span> pd
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> matplotlib.pyplot <span style="color:#ff79c6">as</span> plt
+</span></span><span style="display:flex;"><span><span style="color:#6272a4"># Stats packages</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> linearmodels.iv <span style="color:#ff79c6">as</span> iv
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">from</span> linearmodels.iv <span style="color:#ff79c6">import</span> IV2SLS
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> statsmodels.formula.api <span style="color:#ff79c6">as</span> smf
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> scipy <span style="color:#ff79c6">as</span> sp
+</span></span><span style="display:flex;"><span><span style="color:#6272a4"># Drawing DAGS</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> graphviz <span style="color:#ff79c6">as</span> gr
+</span></span></code></pre></div>
+  </details>
+</div>
+<p>The following are my notes on the use of instrumental variables for finding causal effects. These are largely notes on the following:</p>
+<ul>
+<li>Chapter 15 in (Wooldridge 2019), including the computer exercises <a href="#1">[1]</a></li>
+<li>Chapter 8 in (Alves 2022) <a href="#2">[2]</a></li>
+<li>Chapter 7 in (Cunningham 2021) <a href="#3">[3]</a></li>
+</ul>
+<p>I&rsquo;m writing this mostly for my own future reference, but hope it might be helpful to others.</p>
+<h2 id="why-iv">Why IV?</h2>
+<p>Like most quasi-experimental methods, IV gives us access to a &ldquo;long regression model&rdquo; &ndash; one without omitted variables &ndash; without having to actually observe those omitted variables (we only have access to the &ldquo;short regression model&rdquo;).</p>
+<p>(Wooldridge 2019) introduces IV after fixed effects and panel data models &ndash; in my view more intuitive causal models. The following is a useful comparison of IV to panel data methods from (Wooldridge 2019):</p>
+<blockquote>
+<p>In the previous two chapters, we explained how fixed effects estimation or first differencing can
+be used with panel data to <strong>estimate the effects of time-varying independent variables in the presence
+of time-constant omitted variables</strong>. Although such methods are very useful, <strong>we do not always have
+access to panel data</strong>. Even if we can obtain panel data, it does us little good if we are interested in <strong>the
+effect of a variable that does not change over time</strong>: first differencing or fixed effects estimation eliminates time-constant explanatory variables.</p>
+</blockquote>
+<p>Thus, unlike fixed effects (FE) models, IV can be used with cross sectional data. Also unlike FE, IV allows us to examine the effects of time-fixed variables.</p>
+<p>The big takeaway as I see it is that, like FE, IV can remove omitted variable bias, specifically selection bias in impact evaluation. FE can also remove omitted variable bias, but only for variables that are fixed in time, and FE can only evaluate the impact of variables that vary over time. IV can remove bias from variables that vary with time (in a panel data setting) and can evaluate the impact of time-fixed variables. Let&rsquo;s see how this looks with actual data&hellip;.</p>
+<h1 id="whats-the-causal-effect-of-schooling-on-wages">What&rsquo;s the causal effect of schooling on wages?</h1>
+<p>I&rsquo;ll load some data included in (Wooldridge 2019)  &ndash; originally from the <a href="https://www.bls.gov/nls/original-cohorts/older-and-young-men.htm">Young Men&rsquo;s Cohort of the
+National Longitudinal Survey (NLS)</a> but pre-processed for students.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>woo<span style="color:#ff79c6">.</span>dataWoo(<span style="color:#f1fa8c">&#34;wage2&#34;</span>, description<span style="color:#ff79c6">=</span><span style="color:#ff79c6">True</span>)
+</span></span></code></pre></div><pre><code>name of dataset: wage2
+no of variables: 17
+no of observations: 935
+
++----------+-------------------------------+
+| variable | label                         |
++----------+-------------------------------+
+| wage     | monthly earnings              |
+| hours    | average weekly hours          |
+| IQ       | IQ score                      |
+| KWW      | knowledge of world work score |
+| educ     | years of education            |
+| exper    | years of work experience      |
+| tenure   | years with current employer   |
+| age      | age in years                  |
+| married  | =1 if married                 |
+| black    | =1 if black                   |
+| south    | =1 if live in south           |
+| urban    | =1 if live in SMSA            |
+| sibs     | number of siblings            |
+| brthord  | birth order                   |
+| meduc    | mother's education            |
+| feduc    | father's education            |
+| lwage    | natural log of wage           |
++----------+-------------------------------+
+
+M. Blackburn and D. Neumark (1992), “Unobserved Ability, Efficiency
+Wages, and Interindustry Wage Differentials,” Quarterly Journal of
+Economics 107, 1421-1436. Professor Neumark kindly provided the data,
+of which I used just the data for 1980.
+</code></pre>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>wage <span style="color:#ff79c6">=</span> woo<span style="color:#ff79c6">.</span>dataWoo(<span style="color:#f1fa8c">&#34;wage2&#34;</span>, description<span style="color:#ff79c6">=</span><span style="color:#ff79c6">False</span>)
+</span></span><span style="display:flex;"><span>wage<span style="color:#ff79c6">.</span>head()
+</span></span></code></pre></div><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+<pre><code>.dataframe tbody tr th {
+    vertical-align: top;
+}
+
+.dataframe thead th {
+    text-align: right;
+}
+</code></pre>
+<p></style></p>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>wage</th>
+      <th>hours</th>
+      <th>IQ</th>
+      <th>KWW</th>
+      <th>educ</th>
+      <th>exper</th>
+      <th>tenure</th>
+      <th>age</th>
+      <th>married</th>
+      <th>black</th>
+      <th>south</th>
+      <th>urban</th>
+      <th>sibs</th>
+      <th>brthord</th>
+      <th>meduc</th>
+      <th>feduc</th>
+      <th>lwage</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>769</td>
+      <td>40</td>
+      <td>93</td>
+      <td>35</td>
+      <td>12</td>
+      <td>11</td>
+      <td>2</td>
+      <td>31</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>1</td>
+      <td>2.0</td>
+      <td>8.0</td>
+      <td>8.0</td>
+      <td>6.645091</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>808</td>
+      <td>50</td>
+      <td>119</td>
+      <td>41</td>
+      <td>18</td>
+      <td>11</td>
+      <td>16</td>
+      <td>37</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>1</td>
+      <td>NaN</td>
+      <td>14.0</td>
+      <td>14.0</td>
+      <td>6.694562</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>825</td>
+      <td>40</td>
+      <td>108</td>
+      <td>46</td>
+      <td>14</td>
+      <td>11</td>
+      <td>9</td>
+      <td>33</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>1</td>
+      <td>2.0</td>
+      <td>14.0</td>
+      <td>14.0</td>
+      <td>6.715384</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>650</td>
+      <td>40</td>
+      <td>96</td>
+      <td>32</td>
+      <td>12</td>
+      <td>13</td>
+      <td>7</td>
+      <td>32</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>4</td>
+      <td>3.0</td>
+      <td>12.0</td>
+      <td>12.0</td>
+      <td>6.476973</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>562</td>
+      <td>40</td>
+      <td>74</td>
+      <td>27</td>
+      <td>11</td>
+      <td>14</td>
+      <td>5</td>
+      <td>34</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>10</td>
+      <td>6.0</td>
+      <td>6.0</td>
+      <td>11.0</td>
+      <td>6.331502</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+<h2 id="using-ols">Using OLS</h2>
+<p>I estimate the regression, $log(wage) = \beta_0 + \beta_1 educ + u$, which should tell me the effect of education on wages. The results are as follows:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>(smf<span style="color:#ff79c6">.</span>ols(<span style="color:#f1fa8c">&#34;lwage ~ educ&#34;</span>,
+</span></span><span style="display:flex;"><span>         data<span style="color:#ff79c6">=</span>wage)
+</span></span><span style="display:flex;"><span> <span style="color:#ff79c6">.</span>fit()
+</span></span><span style="display:flex;"><span> <span style="color:#ff79c6">.</span>summary()
+</span></span><span style="display:flex;"><span> <span style="color:#ff79c6">.</span>tables[<span style="color:#bd93f9">1</span>]
+</span></span><span style="display:flex;"><span>)
+</span></span></code></pre></div><table class="simpletable">
+<tr>
+      <td></td>         <th>coef</th>     <th>std err</th>      <th>t</th>      <th>P>|t|</th>  <th>[0.025</th>    <th>0.975]</th>  
+</tr>
+<tr>
+  <th>Intercept</th> <td>    5.9731</td> <td>    0.081</td> <td>   73.403</td> <td> 0.000</td> <td>    5.813</td> <td>    6.133</td>
+</tr>
+<tr>
+  <th>educ</th>      <td>    0.0598</td> <td>    0.006</td> <td>   10.035</td> <td> 0.000</td> <td>    0.048</td> <td>    0.072</td>
+</tr>
+</table>
+<p>Note that the <code>educ</code> coefficient can be interepreted as the following percentage increase in wages for each year of education:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>(np<span style="color:#ff79c6">.</span>exp(<span style="color:#bd93f9">0.0598</span>) <span style="color:#ff79c6">-</span> <span style="color:#bd93f9">1</span>) <span style="color:#ff79c6">*</span> <span style="color:#bd93f9">100</span>
+</span></span></code></pre></div><pre><code>6.162420047136585
+</code></pre>
+<p>I have an estimate in hand, but it&rsquo;s fairly clear that this isn&rsquo;t really the causal effect of education on wages. I&rsquo;m not adjusting the equation for any other variables, so the influence of unobserved characteristics, e.g. location, race, parental income, etc., are all contained in the error term, $u$. <strong>Years of education is probably related to a number of those unobserved characteristics, thus $\text{Cov}(educ, u) \neq 0$ and OLS will yield biased estimates.</strong></p>
+<p>The Directed Acyclic Graph (DAG) below illustrates the situation:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>g <span style="color:#ff79c6">=</span> gr<span style="color:#ff79c6">.</span>Digraph()
+</span></span><span style="display:flex;"><span>educ_ <span style="color:#ff79c6">=</span> <span style="color:#f1fa8c">&#39;years of education&#39;</span>
+</span></span><span style="display:flex;"><span>other_ <span style="color:#ff79c6">=</span> <span style="color:#f1fa8c">&#39;other stuff</span><span style="color:#f1fa8c">\n</span><span style="color:#f1fa8c">(location, race, parent income, etc.)&#39;</span>
+</span></span><span style="display:flex;"><span>wages_ <span style="color:#ff79c6">=</span> <span style="color:#f1fa8c">&#39;wages&#39;</span>
+</span></span><span style="display:flex;"><span>g<span style="color:#ff79c6">.</span>edge(other_, educ_, style <span style="color:#ff79c6">=</span> <span style="color:#f1fa8c">&#39;dashed&#39;</span>)
+</span></span><span style="display:flex;"><span>g<span style="color:#ff79c6">.</span>edge(other_, wages_, style <span style="color:#ff79c6">=</span> <span style="color:#f1fa8c">&#39;dashed&#39;</span> )
+</span></span><span style="display:flex;"><span>g<span style="color:#ff79c6">.</span>edge(educ_, wages_)
+</span></span><span style="display:flex;"><span>g
+</span></span></code></pre></div><p><img src="images/output_10_0.svg" alt="svg"></p>
+<p>Note that the dashed lines represent unobserved relationships (Cunningham 2021)</p>
+<h2 id="using-iv">Using IV</h2>
+<p>To fix this, I can try using instrumental variables as outlined in (Wooldridge 2019):</p>
+<blockquote>
+<p><strong>In order to obtain consistent estimators of $\beta_0$ and $\beta_1$ when x and u are correlated, we need some
+additional information.</strong><br>
+The information comes by way of a new variable that satisfies certain properties. Suppose that we have an observable variable z that satisfies these two assumptions:</p>
+<ol>
+<li>z is uncorrelated with u, that is, $\text{Cov}(z, u) = 0$</li>
+<li>z is correlated with x, that is, $\text{Cov}(z, x) \neq 0$</li>
+</ol>
+<p>Then, <strong>we call z an instrumental variable for x, or sometimes simply an instrument for x</strong></p>
+</blockquote>
+<p>(1) above satisifies &ldquo;instrument exogeneity,&rdquo; meaning that the instrument, z, is exogenous. (2) satisfies &ldquo;instrument relevance,&rdquo; meaning that z is relevant for explaining variation in x &ndash; this is sometimes referred to as the <strong>first stage</strong>. (2) is explicitly testable, whereas (1) is unfortunately not testable. Justifying (1) typically relys on theoretical rather than empirical arguments, <strong>unless $z$ is something that was randomly assigned, in which case (1) is proven.</strong></p>
+<h3 id="iv-1---number-of-siblings">IV 1 - Number of Siblings</h3>
+<p>In my case, I might hypothesize that the number of siblings that a person in this dataset has is not related to unobervables like location, race, parental income, etc. (this is probably tenuous). If I accepted that as true, I can directly test (2) via regression or correlation test</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>smf<span style="color:#ff79c6">.</span>ols(<span style="color:#f1fa8c">&#34;educ ~ sibs&#34;</span>, data<span style="color:#ff79c6">=</span>wage)<span style="color:#ff79c6">.</span>fit()<span style="color:#ff79c6">.</span>summary()<span style="color:#ff79c6">.</span>tables[<span style="color:#bd93f9">1</span>]
+</span></span></code></pre></div><table class="simpletable">
+<tr>
+      <td></td>         <th>coef</th>     <th>std err</th>      <th>t</th>      <th>P>|t|</th>  <th>[0.025</th>    <th>0.975]</th>  
+</tr>
+<tr>
+  <th>Intercept</th> <td>   14.1388</td> <td>    0.113</td> <td>  124.969</td> <td> 0.000</td> <td>   13.917</td> <td>   14.361</td>
+</tr>
+<tr>
+  <th>sibs</th>      <td>   -0.2279</td> <td>    0.030</td> <td>   -7.528</td> <td> 0.000</td> <td>   -0.287</td> <td>   -0.168</td>
+</tr>
+</table>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>sp<span style="color:#ff79c6">.</span>stats<span style="color:#ff79c6">.</span>pearsonr(wage[<span style="color:#f1fa8c">&#39;educ&#39;</span>], wage[<span style="color:#f1fa8c">&#39;sibs&#39;</span>])
+</span></span></code></pre></div><pre><code>PearsonRResult(statistic=-0.23928810445331095, pvalue=1.215402261762968e-13)
+</code></pre>
+<p>Sibling count is moderately correlated with education and statistically significant. This weak correlation means this is a fairly <strong>weak instrument</strong>, which isn&rsquo;t good. One of my favorite visuals of the effect of weak instruments on IV estimates can be found in <a href="https://matheusfacure.github.io/python-causality-handbook/08-Instrumental-Variables.html#weakness-of-instruments">Causal Inference for The Brave and True, by Matheus Facure Alves</a> (see &ldquo;Variance of the IV Estimates by 1st Stage Strength&rdquo;):</p>
+<p><img src="https://matheusfacure.github.io/python-causality-handbook/_images/08-Instrumental-Variables_36_0.png" alt="iv_corr"></p>
+<p>Thus, the low correlation between my instrument and my outcome will increase the variance of my average treatment effect estimates. That said, I&rsquo;ll continue with using siblings as my instrument for now, and estimate the IV model using the following DAG:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>g <span style="color:#ff79c6">=</span> gr<span style="color:#ff79c6">.</span>Digraph()
+</span></span><span style="display:flex;"><span>sib_ <span style="color:#ff79c6">=</span> <span style="color:#f1fa8c">&#39;instrument</span><span style="color:#f1fa8c">\n</span><span style="color:#f1fa8c">(# siblings)&#39;</span>
+</span></span><span style="display:flex;"><span>g<span style="color:#ff79c6">.</span>edge(other_, educ_, style<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#39;dashed&#39;</span>)
+</span></span><span style="display:flex;"><span>g<span style="color:#ff79c6">.</span>edge(sib_, educ_, label<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#34;1st stage&#34;</span>)
+</span></span><span style="display:flex;"><span>g<span style="color:#ff79c6">.</span>edge(other_, wages_, style<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#39;dashed&#39;</span> )
+</span></span><span style="display:flex;"><span>g<span style="color:#ff79c6">.</span>edge(educ_, wages_)
+</span></span><span style="display:flex;"><span>g
+</span></span></code></pre></div><p><img src="images/output_17_0.svg" alt="svg"></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>reg_iv <span style="color:#ff79c6">=</span> iv<span style="color:#ff79c6">.</span>IV2SLS<span style="color:#ff79c6">.</span>from_formula(formula<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#34;lwage ~ 1 + [educ ~ sibs]&#34;</span>,
+</span></span><span style="display:flex;"><span>                                data<span style="color:#ff79c6">=</span>wage)
+</span></span><span style="display:flex;"><span>results_iv <span style="color:#ff79c6">=</span> reg_iv<span style="color:#ff79c6">.</span>fit(cov_type<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#34;unadjusted&#34;</span>,
+</span></span><span style="display:flex;"><span>                        debiased<span style="color:#ff79c6">=</span><span style="color:#ff79c6">True</span>)
+</span></span><span style="display:flex;"><span>results_iv<span style="color:#ff79c6">.</span>summary
+</span></span></code></pre></div><table class="simpletable">
+<caption>IV-2SLS Estimation Summary</caption>
+<tr>
+  <th>Dep. Variable:</th>          <td>lwage</td>      <th>  R-squared:         </th>  <td>-0.0092</td>
+</tr>
+<tr>
+  <th>Estimator:</th>             <td>IV-2SLS</td>     <th>  Adj. R-squared:    </th>  <td>-0.0103</td>
+</tr>
+<tr>
+  <th>No. Observations:</th>        <td>935</td>       <th>  F-statistic:       </th>  <td>21.588</td> 
+</tr>
+<tr>
+  <th>Date:</th>             <td>Sat, Mar 18 2023</td> <th>  P-value (F-stat)   </th>  <td>0.0000</td> 
+</tr>
+<tr>
+  <th>Time:</th>                 <td>12:44:41</td>     <th>  Distribution:      </th> <td>F(1,933)</td>
+</tr>
+<tr>
+  <th>Cov. Estimator:</th>      <td>unadjusted</td>    <th>                     </th>     <td></td>    
+</tr>
+<tr>
+  <th></th>                          <td></td>         <th>                     </th>     <td></td>    
+</tr>
+</table>
+<table class="simpletable">
+<caption>Parameter Estimates</caption>
+<tr>
+      <td></td>      <th>Parameter</th> <th>Std. Err.</th> <th>T-stat</th> <th>P-value</th> <th>Lower CI</th> <th>Upper CI</th>
+</tr>
+<tr>
+  <th>Intercept</th>  <td>5.1300</td>    <td>0.3552</td>   <td>14.444</td> <td>0.0000</td>   <td>4.4330</td>   <td>5.8271</td> 
+</tr>
+<tr>
+  <th>educ</th>       <td>0.1224</td>    <td>0.0264</td>   <td>4.6463</td> <td>0.0000</td>   <td>0.0707</td>   <td>0.1741</td> 
+</tr>
+</table>
+<p><strong>IV yields an estimate of 0.1224 &ndash; more than double the OLS estimate!</strong>. In percentage terms, that&rsquo;s a 13.02 ppt increase per year.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>(np<span style="color:#ff79c6">.</span>exp(<span style="color:#bd93f9">0.1224</span>) <span style="color:#ff79c6">-</span> <span style="color:#bd93f9">1</span>) <span style="color:#ff79c6">*</span> <span style="color:#bd93f9">100</span>
+</span></span></code></pre></div><pre><code>13.020609381341085
+</code></pre>
+<p>I&rsquo;ll note from (Wooldridge 2019) regarding the negative R^2 value:</p>
+<blockquote>
+<p>[When using IV], the <strong>R-squared has no natural interpretation</strong> [&hellip;] If our goal was to produce the largest R-squared, we would always use OLS. IV methods are intended to provide better estimates of the ceteris paribus effect of x on y when x and u are correlated; goodness-of-fit is not a factor</p>
+</blockquote>
+<h3 id="iv-2---birth-order">IV 2 - Birth Order</h3>
+<p>I&rsquo;ll try this whole process again with a different instrument, this time birth order (where one is a first born child and so on).<br>
+I believe that birth order and educational attainment might be negatively correlated &ndash; namely that the later-birthed children in a family obtain fewer years of education. This could be due to budget contraints for the family. I regress <code>educ</code> on <code>brthord</code> and do find negative linear relationship:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#6272a4"># Note - birth order has missing values</span>
+</span></span><span style="display:flex;"><span>wage_clean <span style="color:#ff79c6">=</span> wage<span style="color:#ff79c6">.</span>dropna(subset<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#39;brthord&#39;</span>)
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>(smf<span style="color:#ff79c6">.</span>ols(<span style="color:#f1fa8c">&#34;educ ~ brthord&#34;</span>, data<span style="color:#ff79c6">=</span>wage_clean)
+</span></span><span style="display:flex;"><span> <span style="color:#ff79c6">.</span>fit()
+</span></span><span style="display:flex;"><span> <span style="color:#ff79c6">.</span>summary()
+</span></span><span style="display:flex;"><span> <span style="color:#ff79c6">.</span>tables[<span style="color:#bd93f9">1</span>]
+</span></span><span style="display:flex;"><span>)
+</span></span></code></pre></div><table class="simpletable">
+<tr>
+      <td></td>         <th>coef</th>     <th>std err</th>      <th>t</th>      <th>P>|t|</th>  <th>[0.025</th>    <th>0.975]</th>  
+</tr>
+<tr>
+  <th>Intercept</th> <td>   14.1494</td> <td>    0.129</td> <td>  109.962</td> <td> 0.000</td> <td>   13.897</td> <td>   14.402</td>
+</tr>
+<tr>
+  <th>brthord</th>   <td>   -0.2826</td> <td>    0.046</td> <td>   -6.106</td> <td> 0.000</td> <td>   -0.373</td> <td>   -0.192</td>
+</tr>
+</table>
+<p>A correlation test shows in different units that there is a mild negative correlation that is statistically significant.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>sp<span style="color:#ff79c6">.</span>stats<span style="color:#ff79c6">.</span>pearsonr(wage_clean[<span style="color:#f1fa8c">&#39;educ&#39;</span>], wage_clean[<span style="color:#f1fa8c">&#39;brthord&#39;</span>])
+</span></span></code></pre></div><pre><code>PearsonRResult(statistic=-0.2049924622323121, pvalue=1.5507919847937432e-09)
+</code></pre>
+<p>Given that I&rsquo;ve established at least weak correlation, I&rsquo;ll go ahead and try estimating IV:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>reg_iv <span style="color:#ff79c6">=</span> iv<span style="color:#ff79c6">.</span>IV2SLS<span style="color:#ff79c6">.</span>from_formula(
+</span></span><span style="display:flex;"><span>    formula<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#34;lwage ~ 1 + [educ ~ brthord]&#34;</span>,
+</span></span><span style="display:flex;"><span>    data<span style="color:#ff79c6">=</span>wage_clean)
+</span></span><span style="display:flex;"><span>results_iv <span style="color:#ff79c6">=</span> reg_iv<span style="color:#ff79c6">.</span>fit(cov_type<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#34;unadjusted&#34;</span>,
+</span></span><span style="display:flex;"><span>                        debiased<span style="color:#ff79c6">=</span><span style="color:#ff79c6">True</span>)
+</span></span><span style="display:flex;"><span>results_iv<span style="color:#ff79c6">.</span>summary
+</span></span></code></pre></div><table class="simpletable">
+<caption>IV-2SLS Estimation Summary</caption>
+<tr>
+  <th>Dep. Variable:</th>          <td>lwage</td>      <th>  R-squared:         </th>  <td>-0.0286</td>
+</tr>
+<tr>
+  <th>Estimator:</th>             <td>IV-2SLS</td>     <th>  Adj. R-squared:    </th>  <td>-0.0298</td>
+</tr>
+<tr>
+  <th>No. Observations:</th>        <td>852</td>       <th>  F-statistic:       </th>  <td>16.628</td> 
+</tr>
+<tr>
+  <th>Date:</th>             <td>Sat, Mar 18 2023</td> <th>  P-value (F-stat)   </th>  <td>0.0000</td> 
+</tr>
+<tr>
+  <th>Time:</th>                 <td>12:44:47</td>     <th>  Distribution:      </th> <td>F(1,850)</td>
+</tr>
+<tr>
+  <th>Cov. Estimator:</th>      <td>unadjusted</td>    <th>                     </th>     <td></td>    
+</tr>
+<tr>
+  <th></th>                          <td></td>         <th>                     </th>     <td></td>    
+</tr>
+</table>
+<table class="simpletable">
+<caption>Parameter Estimates</caption>
+<tr>
+      <td></td>      <th>Parameter</th> <th>Std. Err.</th> <th>T-stat</th> <th>P-value</th> <th>Lower CI</th> <th>Upper CI</th>
+</tr>
+<tr>
+  <th>Intercept</th>  <td>5.0304</td>    <td>0.4329</td>   <td>11.619</td> <td>0.0000</td>   <td>4.1806</td>   <td>5.8802</td> 
+</tr>
+<tr>
+  <th>educ</th>       <td>0.1306</td>    <td>0.0320</td>   <td>4.0777</td> <td>0.0000</td>   <td>0.0678</td>   <td>0.1935</td> 
+</tr>
+</table>
+This yields 0.1306, a similar estimate as when I used sibling count as an instument (0.1224). Again, this is more than double the OLS estimate, but it would be nice if the first stage were stronger, and I don't feel so confident about the instrument exogeneity assumption (I think birth order might be correlated with income with the error term, and I think birth order might be correlated with wages via mechanisms other than education -- like getting more attention from your parents or something).   
+<h1 id="iv-calculation-notes">IV Calculation Notes</h1>
+<p>As notes, I&rsquo;ll write out some of the equations of IV to shed some more light on what it is. Note that all of these &ldquo;by hand&rdquo; calculations will return incorrect standard errors.</p>
+<h2 id="iv-as-two-stage-least-squares">IV as two stage least squares</h2>
+<ol>
+<li>Estimate the following:
+$$ \hat{educ} = \pi_0 + \pi_1 brthord $$</li>
+<li>Then use the predicted values of $\hat{educ}$ as the explanatory variable
+$$ log(wage) = \beta_0 + \beta_1 \hat{educ} $$</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#6272a4"># 1. in code</span>
+</span></span><span style="display:flex;"><span>educ_hat <span style="color:#ff79c6">=</span> smf<span style="color:#ff79c6">.</span>ols(<span style="color:#f1fa8c">&#34;educ ~ brthord&#34;</span>, data<span style="color:#ff79c6">=</span>wage_clean)<span style="color:#ff79c6">.</span>fit()<span style="color:#ff79c6">.</span>predict()
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#6272a4"># 2. in code</span>
+</span></span><span style="display:flex;"><span>iv_subset <span style="color:#ff79c6">=</span> wage_clean[[<span style="color:#f1fa8c">&#39;lwage&#39;</span>]]<span style="color:#ff79c6">.</span>assign(educ_hat <span style="color:#ff79c6">=</span> educ_hat)
+</span></span><span style="display:flex;"><span>smf<span style="color:#ff79c6">.</span>ols(<span style="color:#f1fa8c">&#34;lwage ~ educ_hat&#34;</span>, data<span style="color:#ff79c6">=</span>iv_subset)<span style="color:#ff79c6">.</span>fit()<span style="color:#ff79c6">.</span>summary()<span style="color:#ff79c6">.</span>tables[<span style="color:#bd93f9">1</span>]
+</span></span></code></pre></div><table class="simpletable">
+<tr>
+      <td></td>         <th>coef</th>     <th>std err</th>      <th>t</th>      <th>P>|t|</th>  <th>[0.025</th>    <th>0.975]</th>  
+</tr>
+<tr>
+  <th>Intercept</th> <td>    5.0304</td> <td>    0.423</td> <td>   11.904</td> <td> 0.000</td> <td>    4.201</td> <td>    5.860</td>
+</tr>
+<tr>
+  <th>educ_hat</th>  <td>    0.1306</td> <td>    0.031</td> <td>    4.178</td> <td> 0.000</td> <td>    0.069</td> <td>    0.192</td>
+</tr>
+</table>
+<h3 id="iv-as-the-ratio-of-reduced-form-and-first-stage-estimates">IV as the ratio of reduced form and first stage estimates</h3>
+<p>$ATE_{IV} = \dfrac{\text{Reduced Form}}{\text{1st Stage}}$</p>
+<p>(or in longer terms: $\kappa = \dfrac{\text{Reduced Form}}{\text{1st Stage}} = \dfrac{Cov(Y_i, Z_i)/V(Z_i)}{Cov(T_i, Z_i)/V(Z_i)} = \dfrac{Cov(Y_i, Z_i)}{Cov(T_i, Z_i)}$)</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>iv_est <span style="color:#ff79c6">=</span> (
+</span></span><span style="display:flex;"><span>    <span style="color:#6272a4"># The reduced form</span>
+</span></span><span style="display:flex;"><span>    np<span style="color:#ff79c6">.</span>cov(wage_clean[<span style="color:#f1fa8c">&#39;brthord&#39;</span>], wage_clean[<span style="color:#f1fa8c">&#39;lwage&#39;</span>])[<span style="color:#bd93f9">0</span>][<span style="color:#bd93f9">1</span>]
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">/</span> 
+</span></span><span style="display:flex;"><span>    <span style="color:#6272a4"># the first stage</span>
+</span></span><span style="display:flex;"><span>    np<span style="color:#ff79c6">.</span>cov(wage_clean[<span style="color:#f1fa8c">&#39;brthord&#39;</span>], wage_clean[<span style="color:#f1fa8c">&#39;educ&#39;</span>])[<span style="color:#bd93f9">0</span>][<span style="color:#bd93f9">1</span>]
+</span></span><span style="display:flex;"><span>)
+</span></span><span style="display:flex;"><span>iv_est
+</span></span></code></pre></div><pre><code>0.13064482653341536
+</code></pre>
+<h1 id="multiple-regresssion-iv">Multiple regresssion IV</h1>
+<p>Let&rsquo;s say we&rsquo;re given the following multiple regression equation:<br>
+$$y_1 = \beta_0 + \beta_1 y_2 + \beta_2 z_1 + u_1 $$<br>
+We are interested in the effect of $y_2$ on $y_1$, thus we want to estimate $\beta_1$. Let&rsquo;s also say that I know that there is omitted variable bias on $y_2$ - thus $\text{Cov}(y_2, u_1) \neq 0 $. OLS  estimates will be biased. IV is appropriate here, but the instrument cannot also be used as a covariate in the equation (thus $z_1$ cannot be an intrument). <strong>I&rsquo;ll need to find a different instrument which I&rsquo;ll call $z_2$</strong>. Wooldridge explains some of the requirements for this instrument as follows:</p>
+<blockquote>
+<p>We still need the instrumental variable $z_2$ to be correlated with $y_2$, but the sense in which these two variables must be correlated is complicated by the presence of $z_1$ in the equation. We now need to state the assumption in terms of partial correlation. The easiest way to state the condition is to write the endogenous explanatory variable as a linear function of the exogenous variables and an error term:
+$$y_2 = \pi_0 + \pi_1 z_1 + \pi_2 z_2 + v_2$$</p>
+</blockquote>
+<p>That equation is the &ldquo;reduced form&rdquo; equation, which describes the first stage of IV estimation (using the instrument to predict the explanatory variable $y_2$). As is typical in IV, the identifying assumption is that $\pi_2 \neq 0$, or in words, that $z_2$ is still correlated with $y_2$ after &ldquo;partialing out&rdquo;/holding constant $z_1$ (note that $\pi_1$ can be zero, it doesn&rsquo;t matter). (Wooldridge 2019) also mentions the following extra assumption:</p>
+<blockquote>
+<p>A minor additional assumption is that there are no perfect linear relationships among the exogenous variables; this is analogous to the assumption of no perfect collinearity in the context of OLS.</p>
+</blockquote>
+<h2 id="what-happens-when-an-instrument-is-collinear-with-a-covariate">What happens when an instrument is collinear with a covariate?</h2>
+<p>That last bit about perfect linear relationships can seem like an afterthought, but it comes up in an example from (Wooldridge 2019) in this data. Supose I again want to use birth order as an instrument, but this time in a multiple regression model where sibling number is also included. The following DAG describes my model:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>g <span style="color:#ff79c6">=</span> gr<span style="color:#ff79c6">.</span>Digraph()
+</span></span><span style="display:flex;"><span>sib_ <span style="color:#ff79c6">=</span> <span style="color:#f1fa8c">&#39;# siblings&#39;</span>
+</span></span><span style="display:flex;"><span>birthord_ <span style="color:#ff79c6">=</span> <span style="color:#f1fa8c">&#39;instrument</span><span style="color:#f1fa8c">\n</span><span style="color:#f1fa8c">(birth order)&#39;</span>
+</span></span><span style="display:flex;"><span>g<span style="color:#ff79c6">.</span>edge(other_, educ_, style<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#39;dashed&#39;</span>)
+</span></span><span style="display:flex;"><span>g<span style="color:#ff79c6">.</span>edge(birthord_, educ_, label<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#34;1st stage&#34;</span>)
+</span></span><span style="display:flex;"><span>g<span style="color:#ff79c6">.</span>edge(other_, wages_, style<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#39;dashed&#39;</span> )
+</span></span><span style="display:flex;"><span>g<span style="color:#ff79c6">.</span>edge(educ_, wages_)
+</span></span><span style="display:flex;"><span>g<span style="color:#ff79c6">.</span>edge(sib_, wages_)
+</span></span><span style="display:flex;"><span>g
+</span></span></code></pre></div><p><img src="images/output_36_0.svg" alt="svg"></p>
+<p>In order to check for a strong first-stage, I have to include that covariate, which I do here:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>educ_hat <span style="color:#ff79c6">=</span> smf<span style="color:#ff79c6">.</span>ols(<span style="color:#f1fa8c">&#34;educ ~ sibs + brthord&#34;</span>, data<span style="color:#ff79c6">=</span>wage_clean)<span style="color:#ff79c6">.</span>fit()
+</span></span><span style="display:flex;"><span>educ_hat<span style="color:#ff79c6">.</span>summary()<span style="color:#ff79c6">.</span>tables[<span style="color:#bd93f9">1</span>]
+</span></span></code></pre></div><table class="simpletable">
+<tr>
+      <td></td>         <th>coef</th>     <th>std err</th>      <th>t</th>      <th>P>|t|</th>  <th>[0.025</th>    <th>0.975]</th>  
+</tr>
+<tr>
+  <th>Intercept</th> <td>   14.2965</td> <td>    0.133</td> <td>  107.260</td> <td> 0.000</td> <td>   14.035</td> <td>   14.558</td>
+</tr>
+<tr>
+  <th>sibs</th>      <td>   -0.1529</td> <td>    0.040</td> <td>   -3.834</td> <td> 0.000</td> <td>   -0.231</td> <td>   -0.075</td>
+</tr>
+<tr>
+  <th>brthord</th>   <td>   -0.1527</td> <td>    0.057</td> <td>   -2.675</td> <td> 0.008</td> <td>   -0.265</td> <td>   -0.041</td>
+</tr>
+</table>
+<p>Note that these two independent variables, are very correlated,</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>sp<span style="color:#ff79c6">.</span>stats<span style="color:#ff79c6">.</span>pearsonr(wage_clean[<span style="color:#f1fa8c">&#39;brthord&#39;</span>], wage_clean[<span style="color:#f1fa8c">&#39;sibs&#39;</span>])
+</span></span></code></pre></div><pre><code>PearsonRResult(statistic=0.5939137991740893, pvalue=2.3591232608321073e-82)
+</code></pre>
+<p>But my estimates from OLS are still pretty stable and <code>brthord</code> still has a statistically significant negative correlation, so I can proceed to estimate with IV:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>reg_iv <span style="color:#ff79c6">=</span> iv<span style="color:#ff79c6">.</span>IV2SLS<span style="color:#ff79c6">.</span>from_formula(formula<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#34;lwage ~ 1 + sibs + [educ ~ brthord]&#34;</span>,
+</span></span><span style="display:flex;"><span>                                data<span style="color:#ff79c6">=</span>wage_clean)
+</span></span><span style="display:flex;"><span>results_iv <span style="color:#ff79c6">=</span> reg_iv<span style="color:#ff79c6">.</span>fit(cov_type<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#34;unadjusted&#34;</span>,
+</span></span><span style="display:flex;"><span>                        debiased<span style="color:#ff79c6">=</span><span style="color:#ff79c6">True</span>)
+</span></span><span style="display:flex;"><span>results_iv<span style="color:#ff79c6">.</span>summary
+</span></span></code></pre></div><table class="simpletable">
+<caption>IV-2SLS Estimation Summary</caption>
+<tr>
+  <th>Dep. Variable:</th>          <td>lwage</td>      <th>  R-squared:         </th>  <td>-0.0543</td>
+</tr>
+<tr>
+  <th>Estimator:</th>             <td>IV-2SLS</td>     <th>  Adj. R-squared:    </th>  <td>-0.0568</td>
+</tr>
+<tr>
+  <th>No. Observations:</th>        <td>852</td>       <th>  F-statistic:       </th>  <td>10.897</td> 
+</tr>
+<tr>
+  <th>Date:</th>             <td>Sat, Mar 18 2023</td> <th>  P-value (F-stat)   </th>  <td>0.0000</td> 
+</tr>
+<tr>
+  <th>Time:</th>                 <td>13:38:51</td>     <th>  Distribution:      </th> <td>F(2,849)</td>
+</tr>
+<tr>
+  <th>Cov. Estimator:</th>      <td>unadjusted</td>    <th>                     </th>     <td></td>    
+</tr>
+<tr>
+  <th></th>                          <td></td>         <th>                     </th>     <td></td>    
+</tr>
+</table>
+<table class="simpletable">
+<caption>Parameter Estimates</caption>
+<tr>
+      <td></td>      <th>Parameter</th> <th>Std. Err.</th> <th>T-stat</th> <th>P-value</th> <th>Lower CI</th> <th>Upper CI</th>
+</tr>
+<tr>
+  <th>Intercept</th>  <td>4.9385</td>    <td>1.0557</td>   <td>4.6780</td> <td>0.0000</td>   <td>2.8665</td>   <td>7.0106</td> 
+</tr>
+<tr>
+  <th>sibs</th>       <td>0.0021</td>    <td>0.0174</td>   <td>0.1215</td> <td>0.9033</td>   <td>-0.0320</td>  <td>0.0362</td> 
+</tr>
+<tr>
+  <th>educ</th>       <td>0.1370</td>    <td>0.0747</td>   <td>1.8344</td> <td>0.0669</td>   <td>-0.0096</td>  <td>0.2836</td> 
+</tr>
+</table>
+<p>Here I find that the estimate of education&rsquo;s effect is pretty similar to what I got before with the bivariate examples, but this time it&rsquo;s not statistically significant, and the estimate for sibs is extremely noisy. This is a result of multicollinearity, which poses an even bigger issue for IV than it does for OLS (see (Wooldridge 2019), section 15-3b).</p>
+<p>I can check out why this is by examining the correlation between my first stage predictions and siblings:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>sp<span style="color:#ff79c6">.</span>stats<span style="color:#ff79c6">.</span>pearsonr(educ_hat<span style="color:#ff79c6">.</span>predict(), wage_clean[<span style="color:#f1fa8c">&#39;sibs&#39;</span>])
+</span></span></code></pre></div><pre><code>PearsonRResult(statistic=-0.9294817639918425, pvalue=0.0)
+</code></pre>
+<p>Meaning that the second stage of the 2SLS is estimating a regression in the presence of almost perfect correlation between independent variables. This leads to extremely variable estimates.</p>
+<h1 id="references">References</h1>
+<p><a id="1">[1]</a> Wooldridge, Jeffrey M. Introductory Econometrics. Mason, OH: Cengage, 2019. Print.<br>
+<a id="2">[2]</a> Alves, Matheus Facure. Causal Inference for the Brave and True. Online, 2022.<br>
+<a id="3">[3]</a> Cunningham, Scott. Causal Inference Mixtape. Online, 2021.</p>
+
+        </article>
+    </div>
+
+    
+
+            </div>
+        </div><footer class="text-center pb-1">
+    
+    <p></p>
+    <p><a href="#content">&uarr;Back to Top&uarr;</a></p>
+    
+    <small class="text-muted">
+        
+            &copy; 2022, Peter Amerkhanian
+        
+        <br>
+        Powered by <a href="https://gohugo.io/" target="_blank">Hugo</a>
+        and <a href="https://github.com/austingebauer/devise" target="_blank">Devise</a>
+    </small>
+</footer>
+</body>
+</html>

@@ -9,6 +9,7 @@ math: true
 ---
 
 The following is a memo that I prepared for Jesse Rothstein's "Economic Policy for Pandemics" Course at Goldman. I'm posting it here because I think it presents a simple but effective implementation of the Susceptible, Infected, Recovered (SIR) Model in Python. This is all applied to the COVID-19 pandemic in an effort to produce a policy-relevant simulation of virus spread.
+{{< details "Import statements" >}}
 ```python
 from datetime import datetime
 import matplotlib.pyplot as plt
@@ -17,7 +18,7 @@ import pandas as pd
 import seaborn as sns
 from IPython.display import Markdown as md
 ```
-
+{{< /details >}}
 
 ## The Policy Problem
 During the COVID-19 pandemic, policy makers around the world have developed a variety of tools for combating the virus: lockdowns and strategic re-openings, testing, contact-tracing,  masking, and vaccination, to name a few <cite id="wdqcj"><a href="#zotero%7C13006908%2FRFIEEU9E">(“The Hammer and the Dance,” 2020)</a></cite>. In this memo, I will examine the effectiveness of lockdowns and vaccination specifically, with an eye towards how they might be used during future pandemics. I find that lockdowns are an effective pandemic response in so far as they considerably reduce infections. I also find that a vaccine that provides temporary immunity cannot effectively end a pandemic with only one vaccination campaign. During future pandemics, policy makers should be ready to institute lockdowns, especially early in the pandemic, and prepare the public for yearly vaccine boosters once a vaccine has been developed.
@@ -67,7 +68,7 @@ I apply the model to two distinct scenarios under which rolling lockdowns are im
 # Scenario 1: Lockdowns, No Vaccination
 The first scenario I examine is the use of rolling lockdowns, motivated by infections growing beyond a 5% threshold. In this scenario a vaccine is never developed, so lockdowns are essentially the only tool available to policy makers.
 
-
+{{< details "SIR setup" >}}
 ```python
 def SIR_dataframe(infected, reproduction_rate, susceptible, periods):
     """Create the Dataframe that will hold the SIR model results"""
@@ -193,8 +194,8 @@ def SIR_model(
     df_simple_SIR = df_simple_SIR.set_index("date")
     return df_simple_SIR
 ```
-
-
+{{< /details >}}
+{{< details "Scenario 1 parameters" >}}
 ```python
 # Set Key Parameters
 contact_rate = 10
@@ -224,8 +225,8 @@ df_simple_SIR = SIR_model(
     output=False,
 )
 ```
-
-
+{{< /details >}}
+{{< details "Figure 1 code" >}}
 ```python
 # Plot the results
 def plot_SIR(df_simple_SIR, title, threshold=True):
@@ -254,7 +255,7 @@ def plot_SIR(df_simple_SIR, title, threshold=True):
     axes[1].tick_params(axis="x", rotation=45)
     axes[1].legend();
 ```
-
+{{< /details >}}
 
 ```python
 plot_SIR(df_simple_SIR, "Figure 1: Lockdowns (No Vaccine)")
@@ -268,7 +269,7 @@ plot_SIR(df_simple_SIR, "Figure 1: Lockdowns (No Vaccine)")
 
 **Figure 1** shows the outcome of this scenario. As infection transmission passes the threshold, the government calls for a lockdown, which promptly reduces infections. However, transmission has enough momentum to quickly grow again, triggering a series of lockdowns with diminishing effect. The policy does largely keep the infected population below 5%, and after the initial wave of infections subside the government doesn't have to call for any more lockdowns. The population experiences a much smaller second wave before the pandemic settles into a sort of equilibrium. About 2.5% of the population stays infected as different individuals contract the virus, recover, gain immunity, and slowly lose that immunity. This equilibrium is unfortunate - the pandemic doesn't really end in this scenario. However, this strategy is effective, and we can see that most clearly by comparing it to the alternative in which no lockdowns are instituted.
 
-
+{{< details "No lockdown setup" >}}
 ```python
 df_simple_SIR_no_lock = SIR_model(
     infected=infected,
@@ -281,8 +282,8 @@ df_simple_SIR_no_lock = SIR_model(
     periods=periods,
 )
 ```
-
-
+{{< /details >}}
+{{< details "Figure 2 code" >}}
 ```python
 sns.set()
 fig, axes = plt.subplots(1, 1, figsize=(10, 4), sharey=False, sharex=True)
@@ -307,14 +308,14 @@ axes.axhline(
 )
 axes.legend();
 ```
-
+{{< /details >}}
 
     
 ![two](images/output_10_0.png)
     
 
 
-
+{{< details "Scenario 1 effect analysis" >}}
 ```python
 difference = round(
     (
@@ -335,7 +336,7 @@ we see that lockdowns lead to {int(100*difference)}% fewer infections.
 """
 )
 ```
-
+{{< /details >}}
 
 
 
@@ -353,7 +354,7 @@ we see that lockdowns lead to 44% fewer infections.
 # Scenario 2: Lockdowns, Vaccination
 The second scenario I examine again involves the use of rolling lockdowns with a 5% threshold, but now a vaccine is introduced one year into the pandemic. The government's vaccination campaign is able to vaccinate 1% of the susceptible population each day and once 100% of the susceptible population is vaccinated the government ceases their campaign. Immunity through vaccination wears off after 6 months.
 
-
+{{< details "Scenario 2 setup" >}}
 ```python
 df_simple_SIR_vax_no_lock = SIR_model(
     infected=infected,
@@ -383,7 +384,8 @@ df_simple_SIR_vax_lock = SIR_model(
     periods=periods,
 )
 ```
-
+{{< /details >}}
+{{< details "Figure 3 code" >}}
 
 ```python
 fig, axes = plt.subplots(1, 1, figsize=(10, 4), sharey=False, sharex=True)
@@ -417,13 +419,13 @@ plt.axvline(
 axes.legend();
 ```
 
-
+{{< /details >}}
     
 ![three](images/output_15_0.png)
     
 
 
-
+{{< details "Scenario 2 effect analysis" >}}
 ```python
 difference = round(
     (
@@ -447,7 +449,7 @@ In this scenario, I find that lockdowns lead to
 """
 )
 ```
-
+{{< /details >}}
 
 
 
