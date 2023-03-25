@@ -1,5 +1,5 @@
 ---
-title: "Bootstrapping Mutual Fund Correlation Coefficients in Python"
+title: "Bootstrapping a Correlation Test in Python"
 date: 2022-03-14
 draft: false
 categories: ['Python']

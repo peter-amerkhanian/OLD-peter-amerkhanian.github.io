@@ -6,12 +6,21 @@
     <description>Recent content in Tags on Peter Amerkhanian</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <copyright>&amp;copy; 2022, Peter Amerkhanian</copyright>
-    <lastBuildDate>Sat, 18 Mar 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://peter-amerkhanian.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
+    <copyright>&amp;copy; 2023, Peter Amerkhanian</copyright>
+    <lastBuildDate>Sat, 25 Mar 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://peter-amerkhanian.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Causal Inference</title>
+      <link>https://peter-amerkhanian.github.io/tags/causal-inference/</link>
+      <pubDate>Sat, 25 Mar 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://peter-amerkhanian.github.io/tags/causal-inference/</guid>
+      <description></description>
+    </item>
+    
     <item>
       <title>Econometrics</title>
       <link>https://peter-amerkhanian.github.io/tags/econometrics/</link>
-      <pubDate>Sat, 18 Mar 2023 00:00:00 +0000</pubDate>
+      <pubDate>Sat, 25 Mar 2023 00:00:00 +0000</pubDate>
       
       <guid>https://peter-amerkhanian.github.io/tags/econometrics/</guid>
       <description></description>
@@ -20,18 +29,9 @@
     <item>
       <title>Python</title>
       <link>https://peter-amerkhanian.github.io/tags/python/</link>
-      <pubDate>Sat, 18 Mar 2023 00:00:00 +0000</pubDate>
+      <pubDate>Sat, 25 Mar 2023 00:00:00 +0000</pubDate>
       
       <guid>https://peter-amerkhanian.github.io/tags/python/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Statistics</title>
-      <link>https://peter-amerkhanian.github.io/tags/statistics/</link>
-      <pubDate>Sat, 18 Mar 2023 00:00:00 +0000</pubDate>
-      
-      <guid>https://peter-amerkhanian.github.io/tags/statistics/</guid>
       <description></description>
     </item>
     
@@ -50,6 +50,15 @@
       <pubDate>Sun, 15 Jan 2023 00:00:00 +0000</pubDate>
       
       <guid>https://peter-amerkhanian.github.io/tags/sir/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Statistics</title>
+      <link>https://peter-amerkhanian.github.io/tags/statistics/</link>
+      <pubDate>Sun, 15 Jan 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://peter-amerkhanian.github.io/tags/statistics/</guid>
       <description></description>
     </item>
     

@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="en"><head>
-  <title>Basic Instrumental Variables</title>
+  <title>Instrumental Variables (IV) Basics</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta name="description" content="" />
@@ -194,9 +194,9 @@ if (!doNotTrack) {
 <div class="container">
     <div class="pl-sm-2">
         <div class="mb-3">
-            <h3 class="mb-0">Basic Instrumental Variables</h3>
+            <h3 class="mb-0">Instrumental Variables (IV) Basics</h3>
             
-            <small class="text-muted">Published March 18, 2023</small>
+            <small class="text-muted">Published March 25, 2023</small>
         </div>
 
         <article>
@@ -206,7 +206,7 @@ color: darkred;
 font-weight: bold;
 ">
 <details>
-    <summary>Import Statements</summary>
+    <summary>Import statements</summary>
     <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#6272a4"># Wooldridge (2019) datasets</span>
 </span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> wooldridge <span style="color:#ff79c6">as</span> woo
 </span></span><span style="display:flex;"><span><span style="color:#6272a4"># Base scientific computing</span>
@@ -231,6 +231,15 @@ font-weight: bold;
 </ul>
 <p>I&rsquo;m writing this mostly for my own future reference, but hope it might be helpful to others.</p>
 <h2 id="why-iv">Why IV?</h2>
+<h3 id="iv-versus-rcts">IV versus RCTs</h3>
+<p>What do we do if we cannot run an experiment and block all &ldquo;back-door&rdquo; paths by conditioning on observed variables?</p>
+<ul>
+<li>One answer: get better/more complete data</li>
+<li>But that&rsquo;s often not possible.
+In particular, if we are worried about selection &ndash; namely that people select different &ldquo;treatment&rdquo; based on anticipated effects &ndash; that isn&rsquo;t measurable, we cannot simply get better data.</li>
+</ul>
+<p>A &ldquo;natural experiment&rdquo; leverages variation in the treatment that is random with respect to potential outcomes (e.g. there is no selection on un-observables) and occurs without research intervention.</p>
+<h3 id="iv-versus-other-quasi-experiments">IV versus other quasi-experiments</h3>
 <p>Like most quasi-experimental methods, IV gives us access to a &ldquo;long regression model&rdquo; &ndash; one without omitted variables &ndash; without having to actually observe those omitted variables (we only have access to the &ldquo;short regression model&rdquo;).</p>
 <p>(Wooldridge 2019) introduces IV after fixed effects and panel data models &ndash; in my view more intuitive causal models. The following is a useful comparison of IV to panel data methods from (Wooldridge 2019):</p>
 <blockquote>
@@ -513,10 +522,10 @@ The information comes by way of a new variable that satisfies certain properties
   <th>No. Observations:</th>        <td>935</td>       <th>  F-statistic:       </th>  <td>21.588</td> 
 </tr>
 <tr>
-  <th>Date:</th>             <td>Sat, Mar 18 2023</td> <th>  P-value (F-stat)   </th>  <td>0.0000</td> 
+  <th>Date:</th>             <td>Sat, Mar 25 2023</td> <th>  P-value (F-stat)   </th>  <td>0.0000</td> 
 </tr>
 <tr>
-  <th>Time:</th>                 <td>12:44:41</td>     <th>  Distribution:      </th> <td>F(1,933)</td>
+  <th>Time:</th>                 <td>11:28:29</td>     <th>  Distribution:      </th> <td>F(1,933)</td>
 </tr>
 <tr>
   <th>Cov. Estimator:</th>      <td>unadjusted</td>    <th>                     </th>     <td></td>    
@@ -589,10 +598,10 @@ I believe that birth order and educational attainment might be negatively correl
   <th>No. Observations:</th>        <td>852</td>       <th>  F-statistic:       </th>  <td>16.628</td> 
 </tr>
 <tr>
-  <th>Date:</th>             <td>Sat, Mar 18 2023</td> <th>  P-value (F-stat)   </th>  <td>0.0000</td> 
+  <th>Date:</th>             <td>Sat, Mar 25 2023</td> <th>  P-value (F-stat)   </th>  <td>0.0000</td> 
 </tr>
 <tr>
-  <th>Time:</th>                 <td>12:44:47</td>     <th>  Distribution:      </th> <td>F(1,850)</td>
+  <th>Time:</th>                 <td>11:28:29</td>     <th>  Distribution:      </th> <td>F(1,850)</td>
 </tr>
 <tr>
   <th>Cov. Estimator:</th>      <td>unadjusted</td>    <th>                     </th>     <td></td>    
@@ -613,7 +622,7 @@ I believe that birth order and educational attainment might be negatively correl
   <th>educ</th>       <td>0.1306</td>    <td>0.0320</td>   <td>4.0777</td> <td>0.0000</td>   <td>0.0678</td>   <td>0.1935</td> 
 </tr>
 </table>
-This yields 0.1306, a similar estimate as when I used sibling count as an instument (0.1224). Again, this is more than double the OLS estimate, but it would be nice if the first stage were stronger, and I don't feel so confident about the instrument exogeneity assumption (I think birth order might be correlated with income with the error term, and I think birth order might be correlated with wages via mechanisms other than education -- like getting more attention from your parents or something).   
+<p>This yields 0.1306, a similar estimate as when I used sibling count as an instument (0.1224). Again, this is more than double the OLS estimate, but it would be nice if the first stage were stronger, and I don&rsquo;t feel so confident about the instrument exogeneity assumption (I think birth order might be correlated with income with the error term, and I think birth order might be correlated with wages via mechanisms other than education &ndash; like getting more attention from your parents or something).</p>
 <h1 id="iv-calculation-notes">IV Calculation Notes</h1>
 <p>As notes, I&rsquo;ll write out some of the equations of IV to shed some more light on what it is. Note that all of these &ldquo;by hand&rdquo; calculations will return incorrect standard errors.</p>
 <h2 id="iv-as-two-stage-least-squares">IV as two stage least squares</h2>
@@ -640,7 +649,8 @@ $$ log(wage) = \beta_0 + \beta_1 \hat{educ} $$</li>
 </tr>
 </table>
 <h3 id="iv-as-the-ratio-of-reduced-form-and-first-stage-estimates">IV as the ratio of reduced form and first stage estimates</h3>
-<p>$ATE_{IV} = \dfrac{\text{Reduced Form}}{\text{1st Stage}}$</p>
+<p>$ATE_{IV} = \dfrac{\text{Reduced Form}}
+{\text{1st Stage}}$</p>
 <p>(or in longer terms: $\kappa = \dfrac{\text{Reduced Form}}{\text{1st Stage}} = \dfrac{Cov(Y_i, Z_i)/V(Z_i)}{Cov(T_i, Z_i)/V(Z_i)} = \dfrac{Cov(Y_i, Z_i)}{Cov(T_i, Z_i)}$)</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>iv_est <span style="color:#ff79c6">=</span> (
 </span></span><span style="display:flex;"><span>    <span style="color:#6272a4"># The reduced form</span>
@@ -673,6 +683,7 @@ $$y_2 = \pi_0 + \pi_1 z_1 + \pi_2 z_2 + v_2$$</p>
 </span></span><span style="display:flex;"><span>g<span style="color:#ff79c6">.</span>edge(birthord_, educ_, label<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#34;1st stage&#34;</span>)
 </span></span><span style="display:flex;"><span>g<span style="color:#ff79c6">.</span>edge(other_, wages_, style<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#39;dashed&#39;</span> )
 </span></span><span style="display:flex;"><span>g<span style="color:#ff79c6">.</span>edge(educ_, wages_)
+</span></span><span style="display:flex;"><span>g<span style="color:#ff79c6">.</span>edge(sib_, educ_)
 </span></span><span style="display:flex;"><span>g<span style="color:#ff79c6">.</span>edge(sib_, wages_)
 </span></span><span style="display:flex;"><span>g
 </span></span></code></pre></div><p><img src="images/output_36_0.svg" alt="svg"></p>
@@ -697,7 +708,7 @@ $$y_2 = \pi_0 + \pi_1 z_1 + \pi_2 z_2 + v_2$$</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>sp<span style="color:#ff79c6">.</span>stats<span style="color:#ff79c6">.</span>pearsonr(wage_clean[<span style="color:#f1fa8c">&#39;brthord&#39;</span>], wage_clean[<span style="color:#f1fa8c">&#39;sibs&#39;</span>])
 </span></span></code></pre></div><pre><code>PearsonRResult(statistic=0.5939137991740893, pvalue=2.3591232608321073e-82)
 </code></pre>
-<p>But my estimates from OLS are still pretty stable and <code>brthord</code> still has a statistically significant negative correlation, so I can proceed to estimate with IV:</p>
+<p>This suggests that there are issues with my DAG, but my estimates from OLS are still pretty stable and <code>brthord</code> still has a statistically significant negative correlation, so I proceed to estimate with IV anyways:</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>reg_iv <span style="color:#ff79c6">=</span> iv<span style="color:#ff79c6">.</span>IV2SLS<span style="color:#ff79c6">.</span>from_formula(formula<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#34;lwage ~ 1 + sibs + [educ ~ brthord]&#34;</span>,
 </span></span><span style="display:flex;"><span>                                data<span style="color:#ff79c6">=</span>wage_clean)
 </span></span><span style="display:flex;"><span>results_iv <span style="color:#ff79c6">=</span> reg_iv<span style="color:#ff79c6">.</span>fit(cov_type<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#34;unadjusted&#34;</span>,
@@ -715,10 +726,10 @@ $$y_2 = \pi_0 + \pi_1 z_1 + \pi_2 z_2 + v_2$$</p>
   <th>No. Observations:</th>        <td>852</td>       <th>  F-statistic:       </th>  <td>10.897</td> 
 </tr>
 <tr>
-  <th>Date:</th>             <td>Sat, Mar 18 2023</td> <th>  P-value (F-stat)   </th>  <td>0.0000</td> 
+  <th>Date:</th>             <td>Sat, Mar 25 2023</td> <th>  P-value (F-stat)   </th>  <td>0.0000</td> 
 </tr>
 <tr>
-  <th>Time:</th>                 <td>13:38:51</td>     <th>  Distribution:      </th> <td>F(2,849)</td>
+  <th>Time:</th>                 <td>11:28:30</td>     <th>  Distribution:      </th> <td>F(2,849)</td>
 </tr>
 <tr>
   <th>Cov. Estimator:</th>      <td>unadjusted</td>    <th>                     </th>     <td></td>    
@@ -766,7 +777,7 @@ $$y_2 = \pi_0 + \pi_1 z_1 + \pi_2 z_2 + v_2$$</p>
     
     <small class="text-muted">
         
-            &copy; 2022, Peter Amerkhanian
+            &copy; 2023, Peter Amerkhanian
         
         <br>
         Powered by <a href="https://gohugo.io/" target="_blank">Hugo</a>

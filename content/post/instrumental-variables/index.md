@@ -1,12 +1,12 @@
 ---
-title: "Basic Instrumental Variables"
-date: 2023-03-18
+title: "Instrumental Variables (IV) Basics"
+date: 2023-03-25
 draft: false
-categories: ['Python']
-tags: ['Python', 'Statistics', 'Econometrics']
+categories: ['Python',]
+tags: ['Econometrics', 'Python', 'Causal Inference']
 math: true
 ---
-{{< details "Import Statements" >}}
+{{< details "Import statements" >}}
 ```python
 # Wooldridge (2019) datasets
 import wooldridge as woo
@@ -29,9 +29,19 @@ The following are my notes on the use of instrumental variables for finding caus
 - Chapter 8 in (Alves 2022) [[2]](#2)
 - Chapter 7 in (Cunningham 2021) [[3]](#3)
 
-I'm writing this mostly for my own future reference, but hope it might be helpful to others.  
+I'm writing this mostly for my own future reference, but hope it might be helpful to others.   
 
 ## Why IV?
+
+### IV versus RCTs
+What do we do if we cannot run an experiment and block all "back-door" paths by conditioning on observed variables?
+- One answer: get better/more complete data
+- But that's often not possible.
+In particular, if we are worried about selection -- namely that people select different "treatment" based on anticipated effects -- that isn't measurable, we cannot simply get better data.
+
+A "natural experiment" leverages variation in the treatment that is random with respect to potential outcomes (e.g. there is no selection on un-observables) and occurs without research intervention.
+
+### IV versus other quasi-experiments
 Like most quasi-experimental methods, IV gives us access to a "long regression model" -- one without omitted variables -- without having to actually observe those omitted variables (we only have access to the "short regression model").  
 
 (Wooldridge 2019) introduces IV after fixed effects and panel data models -- in my view more intuitive causal models. The following is a useful comparison of IV to panel data methods from (Wooldridge 2019):
@@ -44,6 +54,7 @@ effect of a variable that does not change over time**: first differencing or fix
 Thus, unlike fixed effects (FE) models, IV can be used with cross sectional data. Also unlike FE, IV allows us to examine the effects of time-fixed variables.
 
 The big takeaway as I see it is that, like FE, IV can remove omitted variable bias, specifically selection bias in impact evaluation. FE can also remove omitted variable bias, but only for variables that are fixed in time, and FE can only evaluate the impact of variables that vary over time. IV can remove bias from variables that vary with time (in a panel data setting) and can evaluate the impact of time-fixed variables. Let's see how this looks with actual data....
+
 
 # What's the causal effect of schooling on wages?
 I'll load some data included in (Wooldridge 2019)  -- originally from the [Young Men's Cohort of the
@@ -300,6 +311,10 @@ g.edge(educ_, wages_)
 g
 ```
 
+
+
+
+    
 ![svg](images/output_10_0.svg)
     
 
@@ -409,10 +424,10 @@ results_iv.summary
   <th>No. Observations:</th>        <td>935</td>       <th>  F-statistic:       </th>  <td>21.588</td> 
 </tr>
 <tr>
-  <th>Date:</th>             <td>Sat, Mar 18 2023</td> <th>  P-value (F-stat)   </th>  <td>0.0000</td> 
+  <th>Date:</th>             <td>Sat, Mar 25 2023</td> <th>  P-value (F-stat)   </th>  <td>0.0000</td> 
 </tr>
 <tr>
-  <th>Time:</th>                 <td>12:44:41</td>     <th>  Distribution:      </th> <td>F(1,933)</td>
+  <th>Time:</th>                 <td>11:28:29</td>     <th>  Distribution:      </th> <td>F(1,933)</td>
 </tr>
 <tr>
   <th>Cov. Estimator:</th>      <td>unadjusted</td>    <th>                     </th>     <td></td>    
@@ -433,6 +448,7 @@ results_iv.summary
   <th>educ</th>       <td>0.1224</td>    <td>0.0264</td>   <td>4.6463</td> <td>0.0000</td>   <td>0.0707</td>   <td>0.1741</td> 
 </tr>
 </table>
+
 
 
 **IV yields an estimate of 0.1224 -- more than double the OLS estimate!**. In percentage terms, that's a 13.02 ppt increase per year.
@@ -529,10 +545,10 @@ results_iv.summary
   <th>No. Observations:</th>        <td>852</td>       <th>  F-statistic:       </th>  <td>16.628</td> 
 </tr>
 <tr>
-  <th>Date:</th>             <td>Sat, Mar 18 2023</td> <th>  P-value (F-stat)   </th>  <td>0.0000</td> 
+  <th>Date:</th>             <td>Sat, Mar 25 2023</td> <th>  P-value (F-stat)   </th>  <td>0.0000</td> 
 </tr>
 <tr>
-  <th>Time:</th>                 <td>12:44:47</td>     <th>  Distribution:      </th> <td>F(1,850)</td>
+  <th>Time:</th>                 <td>11:28:29</td>     <th>  Distribution:      </th> <td>F(1,850)</td>
 </tr>
 <tr>
   <th>Cov. Estimator:</th>      <td>unadjusted</td>    <th>                     </th>     <td></td>    
@@ -553,6 +569,9 @@ results_iv.summary
   <th>educ</th>       <td>0.1306</td>    <td>0.0320</td>   <td>4.0777</td> <td>0.0000</td>   <td>0.0678</td>   <td>0.1935</td> 
 </tr>
 </table>
+
+
+
 This yields 0.1306, a similar estimate as when I used sibling count as an instument (0.1224). Again, this is more than double the OLS estimate, but it would be nice if the first stage were stronger, and I don't feel so confident about the instrument exogeneity assumption (I think birth order might be correlated with income with the error term, and I think birth order might be correlated with wages via mechanisms other than education -- like getting more attention from your parents or something).   
 
 # IV Calculation Notes
@@ -594,7 +613,8 @@ smf.ols("lwage ~ educ_hat", data=iv_subset).fit().summary().tables[1]
 
 
 ### IV as the ratio of reduced form and first stage estimates
-$ATE_{IV} = \dfrac{\text{Reduced Form}}{\text{1st Stage}}$  
+$ATE_{IV} = \dfrac{\text{Reduced Form}} 
+{\text{1st Stage}}$  
 
 (or in longer terms: $\kappa = \dfrac{\text{Reduced Form}}{\text{1st Stage}} = \dfrac{Cov(Y_i, Z_i)/V(Z_i)}{Cov(T_i, Z_i)/V(Z_i)} = \dfrac{Cov(Y_i, Z_i)}{Cov(T_i, Z_i)}$)
 
@@ -641,6 +661,7 @@ g.edge(other_, educ_, style='dashed')
 g.edge(birthord_, educ_, label="1st stage")
 g.edge(other_, wages_, style='dashed' )
 g.edge(educ_, wages_)
+g.edge(sib_, educ_)
 g.edge(sib_, wages_)
 g
 ```
@@ -648,7 +669,6 @@ g
 
 
 
-    
 ![svg](images/output_36_0.svg)
     
 
@@ -696,7 +716,7 @@ sp.stats.pearsonr(wage_clean['brthord'], wage_clean['sibs'])
 
 
 
-But my estimates from OLS are still pretty stable and `brthord` still has a statistically significant negative correlation, so I can proceed to estimate with IV:
+This suggests that there are issues with my DAG, but my estimates from OLS are still pretty stable and `brthord` still has a statistically significant negative correlation, so I proceed to estimate with IV anyways:
 
 
 ```python
@@ -722,10 +742,10 @@ results_iv.summary
   <th>No. Observations:</th>        <td>852</td>       <th>  F-statistic:       </th>  <td>10.897</td> 
 </tr>
 <tr>
-  <th>Date:</th>             <td>Sat, Mar 18 2023</td> <th>  P-value (F-stat)   </th>  <td>0.0000</td> 
+  <th>Date:</th>             <td>Sat, Mar 25 2023</td> <th>  P-value (F-stat)   </th>  <td>0.0000</td> 
 </tr>
 <tr>
-  <th>Time:</th>                 <td>13:38:51</td>     <th>  Distribution:      </th> <td>F(2,849)</td>
+  <th>Time:</th>                 <td>11:28:30</td>     <th>  Distribution:      </th> <td>F(2,849)</td>
 </tr>
 <tr>
   <th>Cov. Estimator:</th>      <td>unadjusted</td>    <th>                     </th>     <td></td>    
@@ -749,6 +769,8 @@ results_iv.summary
   <th>educ</th>       <td>0.1370</td>    <td>0.0747</td>   <td>1.8344</td> <td>0.0669</td>   <td>-0.0096</td>  <td>0.2836</td> 
 </tr>
 </table>
+
+
 
 Here I find that the estimate of education's effect is pretty similar to what I got before with the bivariate examples, but this time it's not statistically significant, and the estimate for sibs is extremely noisy. This is a result of multicollinearity, which poses an even bigger issue for IV than it does for OLS (see (Wooldridge 2019), section 15-3b).
 
