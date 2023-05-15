@@ -2,7 +2,7 @@
 title: "Instrumental Variables (IV) Basics"
 date: 2023-03-25
 draft: false
-categories: ['Python',]
+categories: ['Notes on Methods',]
 tags: ['Econometrics', 'Python', 'Causal Inference']
 math: true
 ---

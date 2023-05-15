@@ -2,7 +2,7 @@
 title: "Bootstrapping a Correlation Test in Python"
 date: 2022-03-14
 draft: false
-categories: ['Python']
+categories: ['Python Projects']
 tags: ['Python', 'Statistics', 'Finance', 'Bootstrap']
 math: true
 ---

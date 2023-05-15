@@ -9,20 +9,29 @@
     <copyright>&amp;copy; 2023, Peter Amerkhanian</copyright>
     <lastBuildDate>Sat, 25 Mar 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://peter-amerkhanian.github.io/categories/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>Python</title>
-      <link>https://peter-amerkhanian.github.io/categories/python/</link>
+      <title>Notes on Methods</title>
+      <link>https://peter-amerkhanian.github.io/categories/notes-on-methods/</link>
       <pubDate>Sat, 25 Mar 2023 00:00:00 +0000</pubDate>
       
-      <guid>https://peter-amerkhanian.github.io/categories/python/</guid>
+      <guid>https://peter-amerkhanian.github.io/categories/notes-on-methods/</guid>
       <description></description>
     </item>
     
     <item>
-      <title>Hugo</title>
-      <link>https://peter-amerkhanian.github.io/categories/hugo/</link>
+      <title>Python Projects</title>
+      <link>https://peter-amerkhanian.github.io/categories/python-projects/</link>
+      <pubDate>Sun, 15 Jan 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://peter-amerkhanian.github.io/categories/python-projects/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Hugo Development</title>
+      <link>https://peter-amerkhanian.github.io/categories/hugo-development/</link>
       <pubDate>Sun, 07 Aug 2022 12:38:11 -0700</pubDate>
       
-      <guid>https://peter-amerkhanian.github.io/categories/hugo/</guid>
+      <guid>https://peter-amerkhanian.github.io/categories/hugo-development/</guid>
       <description></description>
     </item>
     

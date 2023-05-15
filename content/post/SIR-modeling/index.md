@@ -1,9 +1,8 @@
-
 ---
 title: "An SIR Modeling Application in Python"
 date: 2023-01-15
 draft: false
-categories: ['Python']
+categories: ['Python Projects']
 tags: ['Python', 'Statistics', 'Epidemiology', 'SIR']
 math: true
 ---

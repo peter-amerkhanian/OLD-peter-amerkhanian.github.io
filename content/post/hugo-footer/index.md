@@ -2,7 +2,7 @@
 title: "How to Add a 'Back to top' Footer to Your Hugo Posts"
 date: 2022-08-07T12:38:11-07:00
 draft: false
-categories: ['Hugo',]
+categories: ['Hugo Development',]
 tags: ['Hugo', 'HTML', 'Web Development']
 ---
 This post will detail how to add a footer that says "Back to Top" on all of the posts in your Hugo site. This method involves taking advantage of Hugo's "partials" feature, which allows you to add customizations to your Hugo page without directly altering your theme's html. Partials are utilized in a hierarchical system, where Hugo sees if you have a custom file written for a given partial (e.g., your `footer.html`), and if not,renders the partial included in your theme. [Hugo docs](https://gohugo.io/templates/partials/) explain the partials hierarchy as follows:
