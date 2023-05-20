@@ -2,12 +2,13 @@
 title: Home
 ---
 
-#### About
+#### About &nbsp;<i class="fa fa-user"></i>
 I recently finished graduate school at the UC Berkeley Goldman School of Public Policy, where I studied policy analysis and applied data science. I'm interested in social policy, program evaluation, and computational methods.
 
 You can reach me by email at [peteramerkhanian@berkeley.edu](mailto:peteramerkhanian@berkeley.edu). You can also connect with me on [Linkedin](https://www.linkedin.com/in/peteramerkhanian/) and [Github](https://github.com/peter-amerkhanian).
 
-#### Projects and Publications
+#### Projects and Publications  &nbsp;<i class="fa fa-book-open"></i>
+<i class="fa-sharp fa-regular fa-book-open-cover"></i>
 [A Reexamination of Proposition 13 Using Parcel Level Data](https://youngamericans.berkeley.edu/wp-content/uploads/2023/02/Report_A-Reexamination-of-Proposition-13-Using-Parcel-Level-Data_final.pdf)  
 
 Peter Amerkhanian, Max Zhang, and James Hawkins (2023), *Berkeley Institute for Young Americans Working Paper*.  
