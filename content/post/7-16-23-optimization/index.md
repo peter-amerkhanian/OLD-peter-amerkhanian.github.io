@@ -7,14 +7,14 @@ tags: ['Python', 'Math', 'Calculus']
 math: true
 ---
 
+
 ```python
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 import numpy as np
 ```
 
-
-The following are my notes on a basic Calculus 1 homework question. I liked the question a lot, so decided to write out some more extended notes on it for my future use.
+The following are my notes on a basic calculus 1 homework question. I liked the question a lot, so decided to write out it all out for my future use.
 
 Question: **If 2000 square centimeters of material is available to make a box with a square base and an open top, what is the largest box that you can possibly create?**
 
@@ -60,8 +60,15 @@ ax.text(0, -1.5, -h, r"$x$")
 ax.text(1.5, 0, -h, r"$x$")
 ax.text(1.2, 1, 0, r"$h$");
 ```
+
+
+    
 {{< /details >}}
-![d](images/output_2_0.png)
+    
+
+
+![png](index_files/index_3_0.png)
+
 
 
 This is a fairly straightforward constrained optimization function. We want to maximize the volume of an open box -- $V(x, h) = hx^2$ (the fact that the box is open makes no difference for the volume) -- but within the constraint that the surface area of the open box -- $A(x, h)$ -- not exceed 2,000 $cm^2$. We establish what $A(x, h)$ looks like in the case of an open box below.
@@ -70,7 +77,7 @@ This is a fairly straightforward constrained optimization function. We want to m
 
 
 ```python
-fig, ax = plt.subplots(1, 3, figsize=(8, 10), subplot_kw={"projection": "3d"})
+fig, ax = plt.subplots(1, 3, subplot_kw={"projection": "3d"})
 r = [-1,1]
 X, Y = np.meshgrid(r, r)
 one = np.ones(4).reshape(2, 2)
@@ -110,13 +117,13 @@ ax[2].set_title(r"$A=A_1 + 4A_2=x^2 + 4xh$")
 fig.tight_layout()
 ```
 
+
+    
 {{< /details >}}
     
-![png](images/output_4_0.png)
-    
 
 
-
+![png](index_files/index_6_0.png)
 
 We have two multivariate functions: $A(x, h) = x^2 + 4xh$, and $V(x, h) = x^2h$, but to optimize, we will ideally just work with one, single variable function. We obtain that function via a two step process:  
 1. Substitute our surface area constraint into $A(x, h)$ and find $h(x)$:
@@ -134,17 +141,19 @@ V &= \frac{2000x - x^3}{4} \\\
 V(x) &= 500x - \frac{1}{4}x^3
 \end{align}$$
 With this function in hand, we can find the value of $x$ that maximizes the volume -- we'll call this $x^\star$. Before we optimize, we'll establish the domain of our search.  
-We know that the range of $V(x)$ is $0<V(x)<V(x^\star)$, and the domain of $V(x)$ is obtained as follows:  
+We know that the range of $V(x)$ is $0<V(x) \leq V(x^\star)$, and the domain of $V(x)$ is obtained as follows:  
 $$\begin{align}
 0 &< V \\\
 0 &< 500x - \frac{1}{4}x^3 \\\
 \frac{1}{4}x^3 &< 500x \\\
 x^2 &< 2000 \\\
-\text{Note that x must be positive, thus} \\\
+\end{align}$$ 
+Note that x must be positive, so
+$$\begin{align}
 0 < x &< 20\sqrt{5}
 \end{align}$$  
 
-Thus, we are looking for the side length $x^\star \in (0, 20\sqrt{5})$ that will maximize the volume of our open box. We compute this objective function's first and second derivatives, $V'(x)$ and $V''(x)$, to find and analyze the optimal value. All resulting functions are plotted over the original function's domain below.
+In other words, we are looking for the side length $x^\star \in (0, 20\sqrt{5})$ that will maximize the volume of our open box. We compute this objective function's first and second derivatives, $V'(x)$ and $V''(x)$, to find and analyze the optimal value. All resulting functions are plotted over the original function's domain below.
 
 {{< details "Code for derivatives figure" >}}
 
@@ -153,10 +162,9 @@ Thus, we are looking for the side length $x^\star \in (0, 20\sqrt{5})$ that will
 V = lambda x: 500*x - (x**3)*.25
 V_1 = lambda x: 500 - (x**2)*.75
 V_2 = lambda x: -1.5 * x
-
 x = np.linspace(0, np.sqrt(2000), 1000)
 
-fig, ax = plt.subplots(1, 3, figsize=(9, 3), sharex=True)
+fig, ax = plt.subplots(1, 3, sharex=True)
 ax[0].plot(x, V(x))
 ax[0].grid(alpha=.5)
 ax[0].set_title(r"$V(x) = 500x - \frac{1}{4}x^3$")
@@ -175,14 +183,14 @@ ax[2].set_title(r"$V''(x) = -\frac{3}{2}x$")
 
 fig.tight_layout();
 ```
-{{< /details >}} 
+
 
     
-![png](images/output_6_0.png)
+{{< /details >}}  
     
 
 
- 
+![png](index_files/index_9_0.png)
 
 To optimize the function and find the maximizing side length, we set $V'(x)=0$ to determine the $x$ at which the function $V(x)$ has a slope of zero:  
 $$\begin{align}
@@ -194,6 +202,7 @@ x &= \frac{\sqrt{400 \times 5}}{\sqrt{3}} \\\
 x &= \frac{20\sqrt{5} \sqrt{3}}{3} \\\
 x &= \pm\frac{20\sqrt{15}}{3} \\\
 \text{Given} \quad 0 &< x \\\
+x &= \frac{20\sqrt{15}}{3} \\\
 x^\star &\approx 25.82
 \end{align}$$
 
@@ -248,14 +257,16 @@ print(V(x_critical), "cm^3")
     
 
 ---
-**A note on the second derivative test**  
+
+## A note on the second derivative test
+ 
 When we determined $V''(x^\star)<0$, we determined that coming off of this critical value, the slope of the function is decreasing -- we are *coming down* from a maximum. In the figure below, the critical value is plotted as a black point. It's clear that if we were to move slightly to the right of the critical value, the slope of the function would decrease, and we see this directly in the plots of the first and second derivatives.
 
 {{< details "Code for critical-point figure" >}}
 
 
 ```python
-fig, ax = plt.subplots(1, 3, figsize=(9, 3))
+fig, ax = plt.subplots(1, 3)
 ax[0].plot(x, V(x))
 ax[0].grid(alpha=.5)
 ax[0].set_title(r"$V(x^*) = 8606.62$")
@@ -280,8 +291,15 @@ ax[2].plot(x_critical, V_2(x_critical), "o", alpha=1, color="red", markeredgecol
 
 fig.tight_layout();
 ```
+
+
+    
 {{< /details >}}  
-![png](images/output_15_0.png)
+    
+
+
+![png](index_files/index_19_0.png)
+
 
 Expanding on this point, consider another arbitrary function that has more than one critical point, $f(x)=2x^3 - 100x^2$. In this case the function has one maximum and one minimum, so the second derivative test will be more important for analyzing each point. The function is plotted below, along with its first and second derivative.
 
@@ -295,7 +313,7 @@ f_2 = lambda x: 12*x - 200
 
 x = np.linspace(-25, 50, 100)
 
-fig, ax = plt.subplots(1, 3, figsize=(9, 3))
+fig, ax = plt.subplots(1, 3)
 ax[0].plot(x, f(x))
 ax[0].grid(alpha=.5)
 ax[0].plot(100/3, f(100/3), ">", color="grey", markeredgecolor="black")
@@ -326,12 +344,12 @@ fig.suptitle(r"$f(x) = 2x^3 - 100x^2$")
 fig.tight_layout()
 ```
 
+
+    
 {{< /details >}}
     
-![png](images/output_17_0.png)
-    
 
 
-
+![png](index_files/index_22_0.png)
 
 If we were to want to maximize this function by taking the first derivative and solving for 0, we would find two critical values -- a maximum and a minimum. In this case, the second derivative test would be used to conclude which of these points is the maximum and which is the minimum. We substitute each critical value into the second derivative- $f''(x^\star)<0$ denotes the maximum (the slope of the function is decreasing off of this point), while $f''(x^\star)>0$ denotes the maximum (the slope of the function is increasing off of this point).

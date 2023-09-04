@@ -14,7 +14,7 @@
       <pubDate>Tue, 04 Jul 2023 00:00:00 +0000</pubDate>
       
       <guid>https://peter-amerkhanian.github.io/post/7-16-23-optimization/</guid>
-      <description>import matplotlib.pyplot as plt from mpl_toolkits.mplot3d import Axes3D import numpy as np The following are my notes on a basic Calculus 1 homework question. I liked the question a lot, so decided to write out some more extended notes on it for my future use.
+      <description>import matplotlib.pyplot as plt from mpl_toolkits.mplot3d import Axes3D import numpy as np The following are my notes on a basic calculus 1 homework question. I liked the question a lot, so decided to write out it all out for my future use.
 Question: If 2000 square centimeters of material is available to make a box with a square base and an open top, what is the largest box that you can possibly create?</description>
     </item>
     
