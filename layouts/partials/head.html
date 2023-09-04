@@ -3,7 +3,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta name="description" content="{{if .IsHome}}{{ $.Site.Params.description }}{{else}}{{.Description}}{{end}}" />
-  {{ if .Params.math }}{{ partial "helpers/katex.html" . }}{{ end }}
+  {{ if .Params.math }}{{ partial "helpers/mathjax.html" . }}{{ end }}
   {{/* Adds complete override capability */}}
   {{ $overrideTemplate := resources.Get "sass/override.scss" }}
   {{ $override := $overrideTemplate | resources.ExecuteAsTemplate "css/theme.scss" . | toCSS | minify }}
@@ -38,6 +38,12 @@
       overflow-y: clip;
       margin: 0.5em auto;
     }
+    .katex-display {
+    -webkit-font-smoothing: antialiased;
+    background: inherit !important;
+    border: none !important;
+    font-size: 100%;
+}
     .simpletable {
       font-size: 95%;
       border-collapse: collapse;

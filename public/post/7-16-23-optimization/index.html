@@ -1,0 +1,520 @@
+<!doctype html>
+<html lang="en"><head>
+  <title>Calc 1: Simple Constrained Optimization</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="" />
+  <script type="text/javascript" id="MathJax-script" async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+<script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$','$$'], ['\\[', '\\]']],
+        processEscapes: true,
+        processEnvironments: true
+      },
+      options: {
+        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+      }
+    };
+  
+    window.addEventListener('load', (event) => {
+        document.querySelectorAll("mjx-container").forEach(function(x){
+          x.parentElement.classList += 'has-jax'})
+      });
+  
+  </script>
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script type="text/javascript" id="MathJax-script" async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  
+  
+  
+  <link rel="stylesheet" href="../../css/theme.min.css">
+
+  
+  
+  
+
+  
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-V95HGLKTEB"></script>
+<script>
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.dataLayer = window.dataLayer || [];
+	function gtag(){dataLayer.push(arguments);}
+	gtag('js', new Date());
+	gtag('config', 'G-V95HGLKTEB', { 'anonymize_ip': false });
+}
+</script>
+
+
+  <style>
+    body { font-size: 110%; }
+
+
+    table {
+      display: block;
+      max-width: -moz-fit-content;
+      max-width: fit-content;
+      margin: 1em auto;
+      overflow-x: auto;
+      white-space: nowrap;
+      text-align: left;
+      color: rgb(0, 0, 0);
+    }
+
+    .katex-display {
+      overflow-x: auto;
+      overflow-y: clip;
+      margin: 0.5em auto;
+    }
+    .katex-display {
+    -webkit-font-smoothing: antialiased;
+    background: inherit !important;
+    border: none !important;
+    font-size: 100%;
+}
+    .simpletable {
+      font-size: 95%;
+      border-collapse: collapse;
+      width: 100%;
+    }
+    .simpletable th {
+      border: 1px solid #ddd;
+      padding: 0.6em;
+    }
+    .simpletable tbody tr {
+      padding: 0em;
+       
+    }
+    .simpletable tbody td {
+      border: 1px solid #ddd;
+      padding: 0.3em;
+    }
+
+    .dataframe {
+      font-size: 85%;
+      border-collapse: collapse;
+      width: 100%;
+    }
+
+    .dataframe thead th {
+      text-align: center !important;
+    }
+
+    .dataframe td,
+    .dataframe th {
+      border: 1px solid #ddd;
+      padding: 8px;
+    }
+
+    .dataframe tbody tr {
+      padding: 0.5em;
+      border: 1px solid rgb(175, 175, 175);
+    }
+
+    .dataframe tbody tr:nth-child(even) {
+      background-color: #f2f2f2;
+    }
+
+    .dataframe tr:hover {
+      background-color: #ddd;
+    }
+
+    .dataframe tbody tr th {
+      padding: .5em;
+    }
+
+    .dataframe th {
+
+      background-color: #dfdfdf;
+
+    }
+  </style>
+</head><body>
+        <div id="content" class="mx-auto"><header class="container mt-sm-5 mt-4 mb-4 mt-xs-1">
+    <div class="row">
+        <div class="col-sm-4 col-12 text-sm-right text-center pt-sm-4">
+            <a href="../../" class="text-decoration-none">
+                <img id="home-image" class="rounded-circle"
+                    
+                        
+                            
+                            src="../../images/blog.jpg"
+                            
+                        
+                    
+                />
+            </a>
+        </div>
+        <div class="col-sm-8 col-12 text-sm-left text-center">
+            <h2 class="m-0 mb-2 mt-4">
+                <a href="../../" class="text-decoration-none">
+                    
+                        Peter Amerkhanian
+                    
+                </a>
+            </h2>
+            <p class="text-muted mb-1">
+                
+                    Data Scientist @ CA Department of Social Services
+UC Berkeley MPP &#39;23, BA &#39;16
+                
+            </p>
+            <ul id="nav-links" class="list-inline mb-2">
+                
+                
+                    <li class="list-inline-item">
+                        <a class="badge badge-white " href="../../" title="About">About</a>
+                    </li>
+                
+                    <li class="list-inline-item">
+                        <a class="badge badge-white " href="../../post/" title="Blog">Blog</a>
+                    </li>
+                
+            </ul>
+            <ul id="nav-social" class="list-inline">
+                
+                    <li class="list-inline-item mr-3">
+                        <a href="mailto:peteramerkhanian@berkeley.edu" target="_blank">
+                            <i class="fas fa-at fa-lg text-muted"></i>
+                        </a>
+                    </li>
+                
+                    <li class="list-inline-item mr-3">
+                        <a href="https://www.linkedin.com/in/peteramerkhanian/" target="_blank">
+                            <i class="fab fa-linkedin-in fa-lg text-muted"></i>
+                        </a>
+                    </li>
+                
+                    <li class="list-inline-item mr-3">
+                        <a href="https://github.com/peter-amerkhanian" target="_blank">
+                            <i class="fab fa-github fa-lg text-muted"></i>
+                        </a>
+                    </li>
+                
+                    <li class="list-inline-item mr-3">
+                        <a href="https://peter-amerkhanian.github.io/documents/Amerkhanian_Peter_Resume.pdf" target="_blank">
+                            <i class="fas fa-file-alt fa-lg text-muted"></i>
+                        </a>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+    <hr />
+</header>
+<div class="container">
+    <div class="pl-sm-2">
+        <div class="mb-3">
+            <h3 class="mb-0">Calc 1: Simple Constrained Optimization</h3>
+            
+            <small class="text-muted">Published July 4, 2023</small>
+        </div>
+
+        <article>
+            <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff79c6">import</span> matplotlib.pyplot <span style="color:#ff79c6">as</span> plt
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">from</span> mpl_toolkits.mplot3d <span style="color:#ff79c6">import</span> Axes3D
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> numpy <span style="color:#ff79c6">as</span> np
+</span></span></code></pre></div><p>The following are my notes on a basic Calculus 1 homework question. I liked the question a lot, so decided to write out some more extended notes on it for my future use.</p>
+<p>Question: <strong>If 2000 square centimeters of material is available to make a box with a square base and an open top, what is the largest box that you can possibly create?</strong></p>
+<p>The following are the core pieces of the question:</p>
+<ol>
+<li><em>2000 square centimeters of material is available to create a box</em></li>
+</ol>
+<p>This means that the surface area of whatever we create will be 2000 cm^2</p>
+<ol start="2">
+<li><em>The box has a square base</em></li>
+</ol>
+<p>This means that the we can equate base and width and just use one variable, $x$, for all sides of the box except height, $b=w=x$</p>
+<ol start="3">
+<li><em>The box has an open top</em></li>
+</ol>
+<p>The resulting box is pictured below, with the red plane denoting the open box.</p>
+<p><div style="
+padding: 0em 0em 1em 0em;
+color: darkred;
+font-weight: bold;
+">
+<details>
+    <summary>Code for open-box figure</summary>
+    <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>fig, ax <span style="color:#ff79c6">=</span> plt<span style="color:#ff79c6">.</span>subplots(subplot_kw<span style="color:#ff79c6">=</span>{<span style="color:#f1fa8c">&#34;projection&#34;</span>: <span style="color:#f1fa8c">&#34;3d&#34;</span>})
+</span></span><span style="display:flex;"><span>r <span style="color:#ff79c6">=</span> [<span style="color:#ff79c6">-</span><span style="color:#bd93f9">1</span>,<span style="color:#bd93f9">1</span>]
+</span></span><span style="display:flex;"><span>X, Y <span style="color:#ff79c6">=</span> np<span style="color:#ff79c6">.</span>meshgrid(r, r)
+</span></span><span style="display:flex;"><span>one <span style="color:#ff79c6">=</span> np<span style="color:#ff79c6">.</span>ones(<span style="color:#bd93f9">4</span>)<span style="color:#ff79c6">.</span>reshape(<span style="color:#bd93f9">2</span>, <span style="color:#bd93f9">2</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>h <span style="color:#ff79c6">=</span> <span style="color:#bd93f9">100</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>ax<span style="color:#ff79c6">.</span>plot_surface(X,Y, one<span style="color:#ff79c6">*</span>h, alpha<span style="color:#ff79c6">=</span><span style="color:#bd93f9">.5</span>, color<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#39;tab:red&#39;</span>)
+</span></span><span style="display:flex;"><span>ax<span style="color:#ff79c6">.</span>plot_wireframe(X,Y,one<span style="color:#ff79c6">*</span>h, alpha<span style="color:#ff79c6">=</span><span style="color:#bd93f9">1</span>)
+</span></span><span style="display:flex;"><span>ax<span style="color:#ff79c6">.</span>plot_wireframe(X,Y,<span style="color:#ff79c6">-</span>one<span style="color:#ff79c6">*</span>h, alpha<span style="color:#ff79c6">=</span><span style="color:#bd93f9">1</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>ax<span style="color:#ff79c6">.</span>plot(<span style="color:#ff79c6">-</span>np<span style="color:#ff79c6">.</span>array([<span style="color:#bd93f9">1</span>, <span style="color:#bd93f9">1</span>]), np<span style="color:#ff79c6">.</span>array([<span style="color:#bd93f9">1</span>, <span style="color:#bd93f9">1</span>]), np<span style="color:#ff79c6">.</span>array([<span style="color:#ff79c6">-</span>h, h]), c<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#34;tab:blue&#34;</span>)
+</span></span><span style="display:flex;"><span>ax<span style="color:#ff79c6">.</span>plot(np<span style="color:#ff79c6">.</span>array([<span style="color:#bd93f9">1</span>, <span style="color:#bd93f9">1</span>]), <span style="color:#ff79c6">-</span>np<span style="color:#ff79c6">.</span>array([<span style="color:#bd93f9">1</span>, <span style="color:#bd93f9">1</span>]), np<span style="color:#ff79c6">.</span>array([<span style="color:#ff79c6">-</span>h, h]), c<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#34;tab:blue&#34;</span>)
+</span></span><span style="display:flex;"><span>ax<span style="color:#ff79c6">.</span>plot(<span style="color:#ff79c6">-</span>np<span style="color:#ff79c6">.</span>array([<span style="color:#bd93f9">1</span>, <span style="color:#bd93f9">1</span>]), <span style="color:#ff79c6">-</span>np<span style="color:#ff79c6">.</span>array([<span style="color:#bd93f9">1</span>, <span style="color:#bd93f9">1</span>]), np<span style="color:#ff79c6">.</span>array([<span style="color:#ff79c6">-</span>h, h]), c<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#34;tab:blue&#34;</span>)
+</span></span><span style="display:flex;"><span>ax<span style="color:#ff79c6">.</span>plot(np<span style="color:#ff79c6">.</span>array([<span style="color:#bd93f9">1</span>, <span style="color:#bd93f9">1</span>]), np<span style="color:#ff79c6">.</span>array([<span style="color:#bd93f9">1</span>, <span style="color:#bd93f9">1</span>]), np<span style="color:#ff79c6">.</span>array([<span style="color:#ff79c6">-</span>h, h]), c<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#34;tab:blue&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>ax<span style="color:#ff79c6">.</span>plot([], [], <span style="color:#f1fa8c">&#34;s&#34;</span>, alpha<span style="color:#ff79c6">=</span><span style="color:#bd93f9">.5</span>, markeredgecolor<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#34;tab:blue&#34;</span>, markersize<span style="color:#ff79c6">=</span><span style="color:#bd93f9">13</span>, c<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#34;tab:red&#34;</span>, label<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#34;Open Top&#34;</span>)
+</span></span><span style="display:flex;"><span>ax<span style="color:#ff79c6">.</span>legend()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>ax<span style="color:#ff79c6">.</span>axis(<span style="color:#f1fa8c">&#34;off&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>ax<span style="color:#ff79c6">.</span>text(<span style="color:#bd93f9">0</span>, <span style="color:#ff79c6">-</span><span style="color:#bd93f9">1.5</span>, <span style="color:#ff79c6">-</span>h, <span style="color:#f1fa8c">r</span><span style="color:#f1fa8c">&#34;$x$&#34;</span>)
+</span></span><span style="display:flex;"><span>ax<span style="color:#ff79c6">.</span>text(<span style="color:#bd93f9">1.5</span>, <span style="color:#bd93f9">0</span>, <span style="color:#ff79c6">-</span>h, <span style="color:#f1fa8c">r</span><span style="color:#f1fa8c">&#34;$x$&#34;</span>)
+</span></span><span style="display:flex;"><span>ax<span style="color:#ff79c6">.</span>text(<span style="color:#bd93f9">1.2</span>, <span style="color:#bd93f9">1</span>, <span style="color:#bd93f9">0</span>, <span style="color:#f1fa8c">r</span><span style="color:#f1fa8c">&#34;$h$&#34;</span>);
+</span></span></code></pre></div>
+  </details>
+</div>
+<img src="images/output_2_0.png" alt="d"></p>
+<p>This is a fairly straightforward constrained optimization function. We want to maximize the volume of an open box &ndash; $V(x, h) = hx^2$ (the fact that the box is open makes no difference for the volume) &ndash; but within the constraint that the surface area of the open box &ndash; $A(x, h)$ &ndash; not exceed 2,000 $cm^2$. We establish what $A(x, h)$ looks like in the case of an open box below.</p>
+<div style="
+padding: 0em 0em 1em 0em;
+color: darkred;
+font-weight: bold;
+">
+<details>
+    <summary>Code for surface-area figure</summary>
+    <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>fig, ax <span style="color:#ff79c6">=</span> plt<span style="color:#ff79c6">.</span>subplots(<span style="color:#bd93f9">1</span>, <span style="color:#bd93f9">3</span>, figsize<span style="color:#ff79c6">=</span>(<span style="color:#bd93f9">8</span>, <span style="color:#bd93f9">10</span>), subplot_kw<span style="color:#ff79c6">=</span>{<span style="color:#f1fa8c">&#34;projection&#34;</span>: <span style="color:#f1fa8c">&#34;3d&#34;</span>})
+</span></span><span style="display:flex;"><span>r <span style="color:#ff79c6">=</span> [<span style="color:#ff79c6">-</span><span style="color:#bd93f9">1</span>,<span style="color:#bd93f9">1</span>]
+</span></span><span style="display:flex;"><span>X, Y <span style="color:#ff79c6">=</span> np<span style="color:#ff79c6">.</span>meshgrid(r, r)
+</span></span><span style="display:flex;"><span>one <span style="color:#ff79c6">=</span> np<span style="color:#ff79c6">.</span>ones(<span style="color:#bd93f9">4</span>)<span style="color:#ff79c6">.</span>reshape(<span style="color:#bd93f9">2</span>, <span style="color:#bd93f9">2</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">def</span> <span style="color:#50fa7b">plot_ax</span>(ax, alpha<span style="color:#ff79c6">=</span><span style="color:#bd93f9">1</span>):
+</span></span><span style="display:flex;"><span>    ax<span style="color:#ff79c6">.</span>plot_wireframe(X,Y,one<span style="color:#ff79c6">*</span>h, alpha<span style="color:#ff79c6">=</span>alpha)
+</span></span><span style="display:flex;"><span>    ax<span style="color:#ff79c6">.</span>plot_wireframe(X,Y,<span style="color:#ff79c6">-</span>one<span style="color:#ff79c6">*</span>h, alpha<span style="color:#ff79c6">=</span>alpha)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    ax<span style="color:#ff79c6">.</span>plot(<span style="color:#ff79c6">-</span>np<span style="color:#ff79c6">.</span>array([<span style="color:#bd93f9">1</span>, <span style="color:#bd93f9">1</span>]), np<span style="color:#ff79c6">.</span>array([<span style="color:#bd93f9">1</span>, <span style="color:#bd93f9">1</span>]), np<span style="color:#ff79c6">.</span>array([<span style="color:#ff79c6">-</span>h, h]), c<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#34;tab:blue&#34;</span>, alpha<span style="color:#ff79c6">=</span>alpha)
+</span></span><span style="display:flex;"><span>    ax<span style="color:#ff79c6">.</span>plot(np<span style="color:#ff79c6">.</span>array([<span style="color:#bd93f9">1</span>, <span style="color:#bd93f9">1</span>]), <span style="color:#ff79c6">-</span>np<span style="color:#ff79c6">.</span>array([<span style="color:#bd93f9">1</span>, <span style="color:#bd93f9">1</span>]), np<span style="color:#ff79c6">.</span>array([<span style="color:#ff79c6">-</span>h, h]), c<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#34;tab:blue&#34;</span>, alpha<span style="color:#ff79c6">=</span>alpha)
+</span></span><span style="display:flex;"><span>    ax<span style="color:#ff79c6">.</span>plot(<span style="color:#ff79c6">-</span>np<span style="color:#ff79c6">.</span>array([<span style="color:#bd93f9">1</span>, <span style="color:#bd93f9">1</span>]), <span style="color:#ff79c6">-</span>np<span style="color:#ff79c6">.</span>array([<span style="color:#bd93f9">1</span>, <span style="color:#bd93f9">1</span>]), np<span style="color:#ff79c6">.</span>array([<span style="color:#ff79c6">-</span>h, h]), c<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#34;tab:blue&#34;</span>, alpha<span style="color:#ff79c6">=</span>alpha)
+</span></span><span style="display:flex;"><span>    ax<span style="color:#ff79c6">.</span>plot(np<span style="color:#ff79c6">.</span>array([<span style="color:#bd93f9">1</span>, <span style="color:#bd93f9">1</span>]), np<span style="color:#ff79c6">.</span>array([<span style="color:#bd93f9">1</span>, <span style="color:#bd93f9">1</span>]), np<span style="color:#ff79c6">.</span>array([<span style="color:#ff79c6">-</span>h, h]), c<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#34;tab:blue&#34;</span>, alpha<span style="color:#ff79c6">=</span>alpha)
+</span></span><span style="display:flex;"><span>    ax<span style="color:#ff79c6">.</span>axis(<span style="color:#f1fa8c">&#34;off&#34;</span>)
+</span></span><span style="display:flex;"><span>    ax<span style="color:#ff79c6">.</span>text(<span style="color:#bd93f9">0</span>, <span style="color:#ff79c6">-</span><span style="color:#bd93f9">1.5</span>, <span style="color:#ff79c6">-</span>h, <span style="color:#f1fa8c">r</span><span style="color:#f1fa8c">&#34;$x$&#34;</span>)
+</span></span><span style="display:flex;"><span>    ax<span style="color:#ff79c6">.</span>text(<span style="color:#bd93f9">1.5</span>, <span style="color:#bd93f9">0</span>, <span style="color:#ff79c6">-</span>h, <span style="color:#f1fa8c">r</span><span style="color:#f1fa8c">&#34;$x$&#34;</span>)
+</span></span><span style="display:flex;"><span>    ax<span style="color:#ff79c6">.</span>text(<span style="color:#bd93f9">1.2</span>, <span style="color:#bd93f9">1</span>, <span style="color:#bd93f9">0</span>, <span style="color:#f1fa8c">r</span><span style="color:#f1fa8c">&#34;$h$&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>plot_ax(ax[<span style="color:#bd93f9">0</span>], <span style="color:#bd93f9">.4</span>)
+</span></span><span style="display:flex;"><span>ax[<span style="color:#bd93f9">0</span>]<span style="color:#ff79c6">.</span>plot_surface(X,Y, <span style="color:#ff79c6">-</span>one<span style="color:#ff79c6">*</span>h, alpha<span style="color:#ff79c6">=</span><span style="color:#bd93f9">.7</span>, color<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#39;tab:green&#39;</span>)
+</span></span><span style="display:flex;"><span>ax[<span style="color:#bd93f9">0</span>]<span style="color:#ff79c6">.</span>set_title(<span style="color:#f1fa8c">r</span><span style="color:#f1fa8c">&#34;$A_1=x^2$&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>plot_ax(ax[<span style="color:#bd93f9">1</span>], <span style="color:#bd93f9">.4</span>)
+</span></span><span style="display:flex;"><span>ax[<span style="color:#bd93f9">1</span>]<span style="color:#ff79c6">.</span>plot_surface(np<span style="color:#ff79c6">.</span>array([[<span style="color:#bd93f9">1</span>, <span style="color:#bd93f9">1</span>],[<span style="color:#bd93f9">1</span>, <span style="color:#bd93f9">1</span>]]),
+</span></span><span style="display:flex;"><span>                np<span style="color:#ff79c6">.</span>array([[<span style="color:#ff79c6">-</span><span style="color:#bd93f9">1</span>, <span style="color:#ff79c6">-</span><span style="color:#bd93f9">1</span>], [<span style="color:#bd93f9">1</span>, <span style="color:#bd93f9">1</span>]]),
+</span></span><span style="display:flex;"><span>                np<span style="color:#ff79c6">.</span>array([[h, <span style="color:#ff79c6">-</span>h], [h, <span style="color:#ff79c6">-</span>h]]),
+</span></span><span style="display:flex;"><span>                alpha<span style="color:#ff79c6">=</span><span style="color:#bd93f9">.7</span>,
+</span></span><span style="display:flex;"><span>                color<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#39;tab:green&#39;</span>)
+</span></span><span style="display:flex;"><span>ax[<span style="color:#bd93f9">1</span>]<span style="color:#ff79c6">.</span>set_title(<span style="color:#f1fa8c">r</span><span style="color:#f1fa8c">&#34;$A_2=xh$&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>plot_ax(ax[<span style="color:#bd93f9">2</span>])
+</span></span><span style="display:flex;"><span>ax[<span style="color:#bd93f9">2</span>]<span style="color:#ff79c6">.</span>plot_surface(X,Y, one<span style="color:#ff79c6">*</span>h, alpha<span style="color:#ff79c6">=</span><span style="color:#bd93f9">.5</span>, color<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#39;tab:red&#39;</span>)
+</span></span><span style="display:flex;"><span>ax[<span style="color:#bd93f9">2</span>]<span style="color:#ff79c6">.</span>set_title(<span style="color:#f1fa8c">r</span><span style="color:#f1fa8c">&#34;$A=A_1 + 4A_2=x^2 + 4xh$&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>                
+</span></span><span style="display:flex;"><span>fig<span style="color:#ff79c6">.</span>tight_layout()
+</span></span></code></pre></div>
+  </details>
+</div>
+<p><img src="images/output_4_0.png" alt="png"></p>
+<p>We have two multivariate functions: $A(x, h) = x^2 + 4xh$, and $V(x, h) = x^2h$, but to optimize, we will ideally just work with one, single variable function. We obtain that function via a two step process:</p>
+<ol>
+<li>Substitute our surface area constraint into $A(x, h)$ and find $h(x)$:
+$$\begin{align}
+2000 &amp;= x^2 + 4xh \\
+2000 - x^2 &amp;= 4xh \\
+h(x) &amp;= \frac{2000 - x^2}{4x}
+\end{align}$$</li>
+<li>Substitute $h(x)$ into $V(x, h)$ to produce $V(x)$:
+$$\begin{align}
+V &amp;= x^2 h \\
+V &amp;= x^2 \left(\frac{2000 - x^2}{4x}\right) \\
+V &amp;= x \left(\frac{2000 - x^2}{4}\right) \\
+V &amp;= \frac{2000x - x^3}{4} \\
+V(x) &amp;= 500x - \frac{1}{4}x^3
+\end{align}$$
+With this function in hand, we can find the value of $x$ that maximizes the volume &ndash; we&rsquo;ll call this $x^\star$. Before we optimize, we&rsquo;ll establish the domain of our search.<br>
+We know that the range of $V(x)$ is $0&lt;V(x)&lt;V(x^\star)$, and the domain of $V(x)$ is obtained as follows:<br>
+$$\begin{align}
+0 &amp;&lt; V \\
+0 &amp;&lt; 500x - \frac{1}{4}x^3 \\
+\frac{1}{4}x^3 &amp;&lt; 500x \\
+x^2 &amp;&lt; 2000 \\
+\text{Note that x must be positive, thus} \\
+0 &lt; x &amp;&lt; 20\sqrt{5}
+\end{align}$$</li>
+</ol>
+<p>Thus, we are looking for the side length $x^\star \in (0, 20\sqrt{5})$ that will maximize the volume of our open box. We compute this objective function&rsquo;s first and second derivatives, $V&rsquo;(x)$ and $V&rsquo;&rsquo;(x)$, to find and analyze the optimal value. All resulting functions are plotted over the original function&rsquo;s domain below.</p>
+<div style="
+padding: 0em 0em 1em 0em;
+color: darkred;
+font-weight: bold;
+">
+<details>
+    <summary>Code for derivatives figure</summary>
+    <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>V <span style="color:#ff79c6">=</span> <span style="color:#ff79c6">lambda</span> x: <span style="color:#bd93f9">500</span><span style="color:#ff79c6">*</span>x <span style="color:#ff79c6">-</span> (x<span style="color:#ff79c6">**</span><span style="color:#bd93f9">3</span>)<span style="color:#ff79c6">*</span><span style="color:#bd93f9">.25</span>
+</span></span><span style="display:flex;"><span>V_1 <span style="color:#ff79c6">=</span> <span style="color:#ff79c6">lambda</span> x: <span style="color:#bd93f9">500</span> <span style="color:#ff79c6">-</span> (x<span style="color:#ff79c6">**</span><span style="color:#bd93f9">2</span>)<span style="color:#ff79c6">*</span><span style="color:#bd93f9">.75</span>
+</span></span><span style="display:flex;"><span>V_2 <span style="color:#ff79c6">=</span> <span style="color:#ff79c6">lambda</span> x: <span style="color:#ff79c6">-</span><span style="color:#bd93f9">1.5</span> <span style="color:#ff79c6">*</span> x
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>x <span style="color:#ff79c6">=</span> np<span style="color:#ff79c6">.</span>linspace(<span style="color:#bd93f9">0</span>, np<span style="color:#ff79c6">.</span>sqrt(<span style="color:#bd93f9">2000</span>), <span style="color:#bd93f9">1000</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>fig, ax <span style="color:#ff79c6">=</span> plt<span style="color:#ff79c6">.</span>subplots(<span style="color:#bd93f9">1</span>, <span style="color:#bd93f9">3</span>, figsize<span style="color:#ff79c6">=</span>(<span style="color:#bd93f9">9</span>, <span style="color:#bd93f9">3</span>), sharex<span style="color:#ff79c6">=</span><span style="color:#ff79c6">True</span>)
+</span></span><span style="display:flex;"><span>ax[<span style="color:#bd93f9">0</span>]<span style="color:#ff79c6">.</span>plot(x, V(x))
+</span></span><span style="display:flex;"><span>ax[<span style="color:#bd93f9">0</span>]<span style="color:#ff79c6">.</span>grid(alpha<span style="color:#ff79c6">=</span><span style="color:#bd93f9">.5</span>)
+</span></span><span style="display:flex;"><span>ax[<span style="color:#bd93f9">0</span>]<span style="color:#ff79c6">.</span>set_title(<span style="color:#f1fa8c">r</span><span style="color:#f1fa8c">&#34;$V(x) = 500x - \frac</span><span style="color:#f1fa8c">{1}{4}</span><span style="color:#f1fa8c">x^3$&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>ax[<span style="color:#bd93f9">1</span>]<span style="color:#ff79c6">.</span>axhline(<span style="color:#bd93f9">0</span>, color<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#34;grey&#34;</span>, linestyle<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#34;--&#34;</span>)
+</span></span><span style="display:flex;"><span>ax[<span style="color:#bd93f9">1</span>]<span style="color:#ff79c6">.</span>plot(x, V_1(x), c<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#34;tab:red&#34;</span>)
+</span></span><span style="display:flex;"><span>ax[<span style="color:#bd93f9">1</span>]<span style="color:#ff79c6">.</span>grid(alpha<span style="color:#ff79c6">=</span><span style="color:#bd93f9">.5</span>)
+</span></span><span style="display:flex;"><span>ax[<span style="color:#bd93f9">1</span>]<span style="color:#ff79c6">.</span>set_xlabel(<span style="color:#f1fa8c">r</span><span style="color:#f1fa8c">&#34;$x$&#34;</span>)
+</span></span><span style="display:flex;"><span>ax[<span style="color:#bd93f9">1</span>]<span style="color:#ff79c6">.</span>set_title(<span style="color:#f1fa8c">r</span><span style="color:#f1fa8c">&#34;$V&#39;(x) = 500 - \frac</span><span style="color:#f1fa8c">{3}{4}</span><span style="color:#f1fa8c">x^2$&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>ax[<span style="color:#bd93f9">2</span>]<span style="color:#ff79c6">.</span>axhline(<span style="color:#bd93f9">0</span>, color<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#34;grey&#34;</span>, linestyle<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#34;--&#34;</span>)
+</span></span><span style="display:flex;"><span>ax[<span style="color:#bd93f9">2</span>]<span style="color:#ff79c6">.</span>plot(x, V_2(x), c<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#34;tab:orange&#34;</span>)
+</span></span><span style="display:flex;"><span>ax[<span style="color:#bd93f9">2</span>]<span style="color:#ff79c6">.</span>grid(alpha<span style="color:#ff79c6">=</span><span style="color:#bd93f9">.5</span>)
+</span></span><span style="display:flex;"><span>ax[<span style="color:#bd93f9">2</span>]<span style="color:#ff79c6">.</span>set_title(<span style="color:#f1fa8c">r</span><span style="color:#f1fa8c">&#34;$V&#39;&#39;(x) = -\frac</span><span style="color:#f1fa8c">{3}{2}</span><span style="color:#f1fa8c">x$&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>fig<span style="color:#ff79c6">.</span>tight_layout();
+</span></span></code></pre></div>
+  </details>
+</div>
+<p><img src="images/output_6_0.png" alt="png"></p>
+<p>To optimize the function and find the maximizing side length, we set $V&rsquo;(x)=0$ to determine the $x$ at which the function $V(x)$ has a slope of zero:<br>
+$$\begin{align}
+0 &amp;= V&rsquo;(x) \\
+0 &amp;= 500 - \frac{3}{4}x^2 \\
+\frac{3}{4}x^2 &amp;= 500 \\
+x^2 &amp;= \frac{2000}{3} \\
+x &amp;= \frac{\sqrt{400 \times 5}}{\sqrt{3}} \\
+x &amp;= \frac{20\sqrt{5} \sqrt{3}}{3} \\
+x &amp;= \pm\frac{20\sqrt{15}}{3} \\
+\text{Given} \quad 0 &amp;&lt; x \\
+x^\star &amp;\approx 25.82
+\end{align}$$</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>x_critical <span style="color:#ff79c6">=</span> <span style="color:#bd93f9">20</span><span style="color:#ff79c6">*</span>np<span style="color:#ff79c6">.</span>sqrt(<span style="color:#bd93f9">15</span>)<span style="color:#ff79c6">/</span><span style="color:#bd93f9">3</span>
+</span></span><span style="display:flex;"><span>x_critical
+</span></span></code></pre></div><pre><code>25.81988897471611
+</code></pre>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>V_1(x_critical)
+</span></span></code></pre></div><pre><code>0.0
+</code></pre>
+<p>We proceed to substitute this value into the second derivative to analyze this critical point and determine whether $V(x^\star)$ is a maximum volume or a minimum. Thus $V&rsquo;&rsquo;(x^\star)$ is:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>V_2(x_critical)
+</span></span></code></pre></div><pre><code>-38.72983346207417
+</code></pre>
+<p>Given that $V&rsquo;&rsquo;(x^\star)&lt;0$, we can confirm that the second derivative is &ldquo;concave down,&rdquo; and thus $V(x^\star)$ represents a maximum value. <strong>We conclude that the maximum possible volume of an open box with a surface area of 2,000 c^2 is</strong>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">print</span>(V(x_critical), <span style="color:#f1fa8c">&#34;cm^3&#34;</span>)
+</span></span></code></pre></div><pre><code>8606.629658238704 cm^3
+</code></pre>
+<hr>
+<p><strong>A note on the second derivative test</strong><br>
+When we determined $V&rsquo;&rsquo;(x^\star)&lt;0$, we determined that coming off of this critical value, the slope of the function is decreasing &ndash; we are <em>coming down</em> from a maximum. In the figure below, the critical value is plotted as a black point. It&rsquo;s clear that if we were to move slightly to the right of the critical value, the slope of the function would decrease, and we see this directly in the plots of the first and second derivatives.</p>
+<p><div style="
+padding: 0em 0em 1em 0em;
+color: darkred;
+font-weight: bold;
+">
+<details>
+    <summary>Code for critical-point figure</summary>
+    <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>fig, ax <span style="color:#ff79c6">=</span> plt<span style="color:#ff79c6">.</span>subplots(<span style="color:#bd93f9">1</span>, <span style="color:#bd93f9">3</span>, figsize<span style="color:#ff79c6">=</span>(<span style="color:#bd93f9">9</span>, <span style="color:#bd93f9">3</span>))
+</span></span><span style="display:flex;"><span>ax[<span style="color:#bd93f9">0</span>]<span style="color:#ff79c6">.</span>plot(x, V(x))
+</span></span><span style="display:flex;"><span>ax[<span style="color:#bd93f9">0</span>]<span style="color:#ff79c6">.</span>grid(alpha<span style="color:#ff79c6">=</span><span style="color:#bd93f9">.5</span>)
+</span></span><span style="display:flex;"><span>ax[<span style="color:#bd93f9">0</span>]<span style="color:#ff79c6">.</span>set_title(<span style="color:#f1fa8c">r</span><span style="color:#f1fa8c">&#34;$V(x^*) = 8606.62$&#34;</span>)
+</span></span><span style="display:flex;"><span>ax[<span style="color:#bd93f9">0</span>]<span style="color:#ff79c6">.</span>set_ylim(<span style="color:#bd93f9">8500</span>,<span style="color:#bd93f9">8650</span>)
+</span></span><span style="display:flex;"><span>ax[<span style="color:#bd93f9">0</span>]<span style="color:#ff79c6">.</span>set_xlim(<span style="color:#bd93f9">24</span>, <span style="color:#bd93f9">28</span>)
+</span></span><span style="display:flex;"><span>ax[<span style="color:#bd93f9">0</span>]<span style="color:#ff79c6">.</span>plot(x_critical, V(x_critical), <span style="color:#f1fa8c">&#34;&gt;&#34;</span>, color<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#34;grey&#34;</span>, markeredgecolor<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#34;black&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>ax[<span style="color:#bd93f9">1</span>]<span style="color:#ff79c6">.</span>axhline(<span style="color:#bd93f9">0</span>, color<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#34;grey&#34;</span>, linestyle<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#34;--&#34;</span>)
+</span></span><span style="display:flex;"><span>ax[<span style="color:#bd93f9">1</span>]<span style="color:#ff79c6">.</span>plot(x, V_1(x), c<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#34;tab:blue&#34;</span>)
+</span></span><span style="display:flex;"><span>ax[<span style="color:#bd93f9">1</span>]<span style="color:#ff79c6">.</span>grid(alpha<span style="color:#ff79c6">=</span><span style="color:#bd93f9">.5</span>)
+</span></span><span style="display:flex;"><span>ax[<span style="color:#bd93f9">1</span>]<span style="color:#ff79c6">.</span>set_xlabel(<span style="color:#f1fa8c">r</span><span style="color:#f1fa8c">&#34;$x$&#34;</span>)
+</span></span><span style="display:flex;"><span>ax[<span style="color:#bd93f9">1</span>]<span style="color:#ff79c6">.</span>set_title(<span style="color:#f1fa8c">r</span><span style="color:#f1fa8c">&#34;$V&#39;(x^*) = 0$&#34;</span>)
+</span></span><span style="display:flex;"><span>ax[<span style="color:#bd93f9">1</span>]<span style="color:#ff79c6">.</span>set_xlim(<span style="color:#bd93f9">20</span>, <span style="color:#bd93f9">30</span>)
+</span></span><span style="display:flex;"><span>ax[<span style="color:#bd93f9">1</span>]<span style="color:#ff79c6">.</span>plot(x_critical, V_1(x_critical), <span style="color:#f1fa8c">&#34;&gt;&#34;</span>, color<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#34;grey&#34;</span>, markeredgecolor<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#34;black&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>ax[<span style="color:#bd93f9">2</span>]<span style="color:#ff79c6">.</span>axhline(<span style="color:#bd93f9">0</span>, color<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#34;grey&#34;</span>, linestyle<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#34;--&#34;</span>)
+</span></span><span style="display:flex;"><span>ax[<span style="color:#bd93f9">2</span>]<span style="color:#ff79c6">.</span>plot(x[V_2(x) <span style="color:#ff79c6">&gt;</span> <span style="color:#bd93f9">0</span>], V_2(x)[V_2(x) <span style="color:#ff79c6">&gt;</span> <span style="color:#bd93f9">0</span>], c<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#34;tab:green&#34;</span>)
+</span></span><span style="display:flex;"><span>ax[<span style="color:#bd93f9">2</span>]<span style="color:#ff79c6">.</span>plot(x[V_2(x) <span style="color:#ff79c6">&lt;</span> <span style="color:#bd93f9">0</span>], V_2(x)[V_2(x) <span style="color:#ff79c6">&lt;</span> <span style="color:#bd93f9">0</span>], c<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#34;tab:red&#34;</span>)
+</span></span><span style="display:flex;"><span>ax[<span style="color:#bd93f9">2</span>]<span style="color:#ff79c6">.</span>grid(alpha<span style="color:#ff79c6">=</span><span style="color:#bd93f9">.5</span>)
+</span></span><span style="display:flex;"><span>ax[<span style="color:#bd93f9">2</span>]<span style="color:#ff79c6">.</span>set_title(<span style="color:#f1fa8c">r</span><span style="color:#f1fa8c">&#34;$V&#39;&#39;(x^*) \approx -39$&#34;</span>)
+</span></span><span style="display:flex;"><span>ax[<span style="color:#bd93f9">2</span>]<span style="color:#ff79c6">.</span>plot(x_critical, V_2(x_critical), <span style="color:#f1fa8c">&#34;o&#34;</span>, alpha<span style="color:#ff79c6">=</span><span style="color:#bd93f9">1</span>, color<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#34;red&#34;</span>, markeredgecolor<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#34;black&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>fig<span style="color:#ff79c6">.</span>tight_layout();
+</span></span></code></pre></div>
+  </details>
+</div><br>
+<img src="images/output_15_0.png" alt="png"></p>
+<p>Expanding on this point, consider another arbitrary function that has more than one critical point, $f(x)=2x^3 - 100x^2$. In this case the function has one maximum and one minimum, so the second derivative test will be more important for analyzing each point. The function is plotted below, along with its first and second derivative.</p>
+<div style="
+padding: 0em 0em 1em 0em;
+color: darkred;
+font-weight: bold;
+">
+<details>
+    <summary>Code for arbitrary-function figure</summary>
+    <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>f <span style="color:#ff79c6">=</span> <span style="color:#ff79c6">lambda</span> x: <span style="color:#bd93f9">2</span><span style="color:#ff79c6">*</span>x<span style="color:#ff79c6">**</span><span style="color:#bd93f9">3</span> <span style="color:#ff79c6">-</span> <span style="color:#bd93f9">100</span><span style="color:#ff79c6">*</span>x<span style="color:#ff79c6">**</span><span style="color:#bd93f9">2</span>
+</span></span><span style="display:flex;"><span>f_1 <span style="color:#ff79c6">=</span> <span style="color:#ff79c6">lambda</span> x: <span style="color:#bd93f9">6</span><span style="color:#ff79c6">*</span>x<span style="color:#ff79c6">**</span><span style="color:#bd93f9">2</span> <span style="color:#ff79c6">-</span> <span style="color:#bd93f9">200</span><span style="color:#ff79c6">*</span>x
+</span></span><span style="display:flex;"><span>f_2 <span style="color:#ff79c6">=</span> <span style="color:#ff79c6">lambda</span> x: <span style="color:#bd93f9">12</span><span style="color:#ff79c6">*</span>x <span style="color:#ff79c6">-</span> <span style="color:#bd93f9">200</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>x <span style="color:#ff79c6">=</span> np<span style="color:#ff79c6">.</span>linspace(<span style="color:#ff79c6">-</span><span style="color:#bd93f9">25</span>, <span style="color:#bd93f9">50</span>, <span style="color:#bd93f9">100</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>fig, ax <span style="color:#ff79c6">=</span> plt<span style="color:#ff79c6">.</span>subplots(<span style="color:#bd93f9">1</span>, <span style="color:#bd93f9">3</span>, figsize<span style="color:#ff79c6">=</span>(<span style="color:#bd93f9">9</span>, <span style="color:#bd93f9">3</span>))
+</span></span><span style="display:flex;"><span>ax[<span style="color:#bd93f9">0</span>]<span style="color:#ff79c6">.</span>plot(x, f(x))
+</span></span><span style="display:flex;"><span>ax[<span style="color:#bd93f9">0</span>]<span style="color:#ff79c6">.</span>grid(alpha<span style="color:#ff79c6">=</span><span style="color:#bd93f9">.5</span>)
+</span></span><span style="display:flex;"><span>ax[<span style="color:#bd93f9">0</span>]<span style="color:#ff79c6">.</span>plot(<span style="color:#bd93f9">100</span><span style="color:#ff79c6">/</span><span style="color:#bd93f9">3</span>, f(<span style="color:#bd93f9">100</span><span style="color:#ff79c6">/</span><span style="color:#bd93f9">3</span>), <span style="color:#f1fa8c">&#34;&gt;&#34;</span>, color<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#34;grey&#34;</span>, markeredgecolor<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#34;black&#34;</span>)
+</span></span><span style="display:flex;"><span>ax[<span style="color:#bd93f9">0</span>]<span style="color:#ff79c6">.</span>plot(<span style="color:#bd93f9">0</span>, f(<span style="color:#bd93f9">0</span>), <span style="color:#f1fa8c">&#34;&gt;&#34;</span>, color<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#34;grey&#34;</span>, markeredgecolor<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#34;black&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>ax[<span style="color:#bd93f9">0</span>]<span style="color:#ff79c6">.</span>set_title(<span style="color:#f1fa8c">r</span><span style="color:#f1fa8c">&#34;$f(x)$&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>ax[<span style="color:#bd93f9">1</span>]<span style="color:#ff79c6">.</span>axhline(<span style="color:#bd93f9">0</span>, color<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#34;grey&#34;</span>, linestyle<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#34;--&#34;</span>)
+</span></span><span style="display:flex;"><span>ax[<span style="color:#bd93f9">1</span>]<span style="color:#ff79c6">.</span>plot(x, f_1(x), c<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#34;tab:blue&#34;</span>)
+</span></span><span style="display:flex;"><span>ax[<span style="color:#bd93f9">1</span>]<span style="color:#ff79c6">.</span>grid(alpha<span style="color:#ff79c6">=</span><span style="color:#bd93f9">.5</span>)
+</span></span><span style="display:flex;"><span>ax[<span style="color:#bd93f9">1</span>]<span style="color:#ff79c6">.</span>plot(<span style="color:#bd93f9">100</span><span style="color:#ff79c6">/</span><span style="color:#bd93f9">3</span>, f_1(<span style="color:#bd93f9">100</span><span style="color:#ff79c6">/</span><span style="color:#bd93f9">3</span>), <span style="color:#f1fa8c">&#34;&gt;&#34;</span>, color<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#34;grey&#34;</span>, markeredgecolor<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#34;black&#34;</span>)
+</span></span><span style="display:flex;"><span>ax[<span style="color:#bd93f9">1</span>]<span style="color:#ff79c6">.</span>plot(<span style="color:#bd93f9">0</span>, f_1(<span style="color:#bd93f9">0</span>), <span style="color:#f1fa8c">&#34;&gt;&#34;</span>, color<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#34;grey&#34;</span>, markeredgecolor<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#34;black&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>ax[<span style="color:#bd93f9">1</span>]<span style="color:#ff79c6">.</span>set_title(<span style="color:#f1fa8c">r</span><span style="color:#f1fa8c">&#34;$f&#39;(x)$&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>ax[<span style="color:#bd93f9">2</span>]<span style="color:#ff79c6">.</span>axhline(<span style="color:#bd93f9">0</span>, color<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#34;grey&#34;</span>, linestyle<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#34;--&#34;</span>)
+</span></span><span style="display:flex;"><span>ax[<span style="color:#bd93f9">2</span>]<span style="color:#ff79c6">.</span>plot(x[f_2(x) <span style="color:#ff79c6">&gt;</span> <span style="color:#bd93f9">0</span>], f_2(x)[f_2(x) <span style="color:#ff79c6">&gt;</span> <span style="color:#bd93f9">0</span>], c<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#34;tab:green&#34;</span>)
+</span></span><span style="display:flex;"><span>ax[<span style="color:#bd93f9">2</span>]<span style="color:#ff79c6">.</span>plot(x[f_2(x) <span style="color:#ff79c6">&lt;</span> <span style="color:#bd93f9">0</span>], f_2(x)[f_2(x) <span style="color:#ff79c6">&lt;</span> <span style="color:#bd93f9">0</span>], c<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#34;tab:red&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>ax[<span style="color:#bd93f9">2</span>]<span style="color:#ff79c6">.</span>grid(alpha<span style="color:#ff79c6">=</span><span style="color:#bd93f9">.5</span>)
+</span></span><span style="display:flex;"><span>ax[<span style="color:#bd93f9">2</span>]<span style="color:#ff79c6">.</span>plot(<span style="color:#bd93f9">100</span><span style="color:#ff79c6">/</span><span style="color:#bd93f9">3</span>, f_2(<span style="color:#bd93f9">100</span><span style="color:#ff79c6">/</span><span style="color:#bd93f9">3</span>), <span style="color:#f1fa8c">&#34;o&#34;</span>, color<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#34;green&#34;</span>, markeredgecolor<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#34;black&#34;</span>)
+</span></span><span style="display:flex;"><span>ax[<span style="color:#bd93f9">2</span>]<span style="color:#ff79c6">.</span>plot(<span style="color:#bd93f9">0</span>, f_2(<span style="color:#bd93f9">0</span>), <span style="color:#f1fa8c">&#34;o&#34;</span>, color<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#34;red&#34;</span>, markeredgecolor<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#34;black&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>ax[<span style="color:#bd93f9">2</span>]<span style="color:#ff79c6">.</span>set_title(<span style="color:#f1fa8c">r</span><span style="color:#f1fa8c">&#34;$f&#39;&#39;(x)$&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>fig<span style="color:#ff79c6">.</span>suptitle(<span style="color:#f1fa8c">r</span><span style="color:#f1fa8c">&#34;$f(x) = 2x^3 - 100x^2$&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>fig<span style="color:#ff79c6">.</span>tight_layout()
+</span></span></code></pre></div>
+  </details>
+</div>
+<p><img src="images/output_17_0.png" alt="png"></p>
+<p>If we were to want to maximize this function by taking the first derivative and solving for 0, we would find two critical values &ndash; a maximum and a minimum. In this case, the second derivative test would be used to conclude which of these points is the maximum and which is the minimum. We substitute each critical value into the second derivative- $f&rsquo;&rsquo;(x^\star)&lt;0$ denotes the maximum (the slope of the function is decreasing off of this point), while $f&rsquo;&rsquo;(x^\star)&gt;0$ denotes the maximum (the slope of the function is increasing off of this point).</p>
+
+        </article>
+    </div>
+
+    
+
+            </div>
+        </div><footer class="text-center pb-1">
+    
+    <p></p>
+    <p><a href="#content">&uarr;Back to Top&uarr;</a></p>
+    
+    <small class="text-muted">
+        
+            &copy; 2023, Peter Amerkhanian
+        
+        <br>
+        Powered by <a href="https://gohugo.io/" target="_blank">Hugo</a>
+        and <a href="https://github.com/austingebauer/devise" target="_blank">Devise</a>
+    </small>
+</footer>
+</body>
+</html>

@@ -40,20 +40,24 @@ Using these population groups and the key parameters, $\beta$, $\nu$, and $\lamb
 ### The Basic Model
 On a given day, the number of infected individuals is defined as follows:
 $$\begin{align*}
-\text{Infected Today} &= \text{Already Infected Yesterday} + \text{Newly Infected Today} - \text{Newly Recovered Today} \\\\\\
-I_t &= (I_{t-1}) + (I_{t-1} \beta S_{t-1}) - (I_{t-1} \nu) 
+I_{t-1}&= \text{Already Infected Yesterday} \\\
+(I_{t-1} \beta S_{t-1}) &= \text{Newly Infected Today} \\\
+(I_{t-1} \nu) &= \text{Newly Recovered Today} \\\
+\text{Infected Today} = \textcolor{red}{I_t} &= (I_{t-1}) + (I_{t-1} \beta S_{t-1}) - (I_{t-1} \nu) 
 \end{align*}
 $$
 
 The number of people who have recovered from the virus and thus have temporary immunity is:
 $$\begin{align*}
-\text{Recovered Today} &= \text{Recovered Yesterday} + \text{Newly Recovered Today} - \text{Newly Susceptible Today} \\\\\\
-R_t &= (R_{t-1}) + (I_{t-1} \nu) - (R_{t-1} \lambda)
+\text{Recovered Yesterday} &= (R_{t-1}) \\\
+\text{Newly Recovered Today} &= (I_{t-1} \nu) \\\
+\text{Newly Susceptible Today} &= (R_{t-1} \lambda) \\\
+\text{Recovered Today} = \textcolor{red}{R_t} &= (R_{t-1}) + (I_{t-1} \nu) - (R_{t-1} \lambda)
 \end{align*}$$
 
 The number of individuals susceptible to the virus is those who are not infected or recovered:
 $$\begin{align*}
-S_t &= 1 - I_t - R_t
+\textcolor{red}{S_t} &= 1 - I_t - R_t
 \end{align*}$$
 
 #### Assumptions

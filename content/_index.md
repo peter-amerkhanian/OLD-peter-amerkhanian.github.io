@@ -3,7 +3,9 @@ title: Home
 ---
 
 #### About &nbsp;<i class="fa fa-user"></i>
-I recently finished graduate school at the UC Berkeley Goldman School of Public Policy, where I studied policy analysis and applied data science. I'm interested in social policy, program evaluation, and computational methods.
+I'm currently a Data Scientist at The California Department of Social Services, where I work on implementing advanced computational methods in department operations.  
+- *Passionate* about progressive social policy and equitable growth.  
+- *Skilled* in statistical program evaluation, machine learning, and other computational methods. 
 
 You can reach me by email at [peteramerkhanian@berkeley.edu](mailto:peteramerkhanian@berkeley.edu). You can also connect with me on [Linkedin](https://www.linkedin.com/in/peteramerkhanian/) and [Github](https://github.com/peter-amerkhanian).
 
