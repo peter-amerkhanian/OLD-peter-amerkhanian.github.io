@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Excel on Peter Amerkhanian</title>
+    <link>https://peter-amerkhanian.github.io/tags/excel/</link>
+    <description>Recent content in Excel on Peter Amerkhanian</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>&amp;copy; 2023, Peter Amerkhanian</copyright>
+    <lastBuildDate>Sun, 15 Jan 2023 16:15:54 -0800</lastBuildDate><atom:link href="https://peter-amerkhanian.github.io/tags/excel/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Reflections on Teaching Public Policy 297</title>
+      <link>https://peter-amerkhanian.github.io/post/pp297-reflections/</link>
+      <pubDate>Sun, 15 Jan 2023 16:15:54 -0800</pubDate>
+      
+      <guid>https://peter-amerkhanian.github.io/post/pp297-reflections/</guid>
+      <description>During the Fall semesters of 2021 and 2022, I taught a course at the UC Berkeley Goldman School of Public Policy called Public Policy 297: Data Management, Analysis, and Visualization (PP297). The course is, at it&amp;rsquo;s core, a basic introduction to data analysis using Excel, typically taught by a second year Master of Public Policy student. I am, I believe, the only student to have taught it twice, so have spent a lot of time thinking about the course, what it can and can&amp;rsquo;t accomplish, and how it relates to the Goldman core.</description>
+    </item>
+    
+  </channel>
+</rss>
