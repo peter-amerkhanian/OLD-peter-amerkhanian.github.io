@@ -71,6 +71,4 @@ copyright = "&copy; 2023, Peter Amerkhanian"
   [[params.social]]
     fa_icon = "fab fa-github fa-lg"          # Font Awesome icon class
     href = "https://github.com/peter-amerkhanian"      # Link to associate with icon (http://, https://, mailto:)
-  [[params.social]]
-    fa_icon = "fas fa-file-alt fa-lg"
-    href = "https://peter-amerkhanian.github.io/documents/Amerkhanian_Peter_Resume.pdf"
+
