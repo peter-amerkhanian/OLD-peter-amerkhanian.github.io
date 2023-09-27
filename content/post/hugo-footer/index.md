@@ -1,5 +1,5 @@
 ---
-title: "How to Add a 'Back to top' Footer to Your Hugo Posts"
+title: "How to Add a 'Back to top' Footer to Hugo Posts"
 date: 2022-08-07T12:38:11-07:00
 draft: false
 categories: ['Hugo Development',]

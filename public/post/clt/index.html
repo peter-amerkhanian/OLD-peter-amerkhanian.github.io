@@ -1,0 +1,307 @@
+<!doctype html>
+<html lang="en"><head>
+  <title>CLT and some Simulation in R</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="" />
+  
+  
+  
+  
+  <link rel="stylesheet" href="../../css/theme.min.css">
+
+  
+  
+  
+
+  
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-V95HGLKTEB"></script>
+<script>
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.dataLayer = window.dataLayer || [];
+	function gtag(){dataLayer.push(arguments);}
+	gtag('js', new Date());
+	gtag('config', 'G-V95HGLKTEB', { 'anonymize_ip': false });
+}
+</script>
+
+
+  <style>
+    body { font-size: 110%; }
+
+
+    table {
+      display: block;
+      max-width: -moz-fit-content;
+      max-width: fit-content;
+      margin: 1em auto;
+      overflow-x: auto;
+      white-space: nowrap;
+      text-align: left;
+      color: rgb(0, 0, 0);
+    }
+
+    .katex-display {
+      overflow-x: auto;
+      overflow-y: clip;
+      margin: 0.5em auto;
+    }
+    .katex-display {
+    -webkit-font-smoothing: antialiased;
+    background: inherit !important;
+    border: none !important;
+    font-size: 100%;
+}
+    .simpletable {
+      font-size: 95%;
+      border-collapse: collapse;
+      width: 100%;
+    }
+    .simpletable th {
+      border: 1px solid #ddd;
+      padding: 0.6em;
+    }
+    .simpletable tbody tr {
+      padding: 0em;
+       
+    }
+    .simpletable tbody td {
+      border: 1px solid #ddd;
+      padding: 0.3em;
+    }
+
+    .dataframe {
+      font-size: 85%;
+      border-collapse: collapse;
+      width: 100%;
+    }
+
+    .dataframe thead th {
+      text-align: center !important;
+    }
+
+    .dataframe td,
+    .dataframe th {
+      border: 1px solid #ddd;
+      padding: 8px;
+    }
+
+    .dataframe tbody tr {
+      padding: 0.5em;
+      border: 1px solid rgb(175, 175, 175);
+    }
+
+    .dataframe tbody tr:nth-child(even) {
+      background-color: #f2f2f2;
+    }
+
+    .dataframe tr:hover {
+      background-color: #ddd;
+    }
+
+    .dataframe tbody tr th {
+      padding: .5em;
+    }
+
+    .dataframe th {
+
+      background-color: #dfdfdf;
+
+    }
+  </style>
+</head><body>
+        <div id="content" class="mx-auto"><header class="container mt-sm-5 mt-4 mb-4 mt-xs-1">
+    <div class="row">
+        <div class="col-sm-4 col-12 text-sm-right text-center pt-sm-4">
+            <a href="../../" class="text-decoration-none">
+                <img id="home-image" class="rounded-circle"
+                    
+                        
+                            
+                            src="../../images/blog.jpg"
+                            
+                        
+                    
+                />
+            </a>
+        </div>
+        <div class="col-sm-8 col-12 text-sm-left text-center">
+            <h2 class="m-0 mb-2 mt-4">
+                <a href="../../" class="text-decoration-none">
+                    
+                        Peter Amerkhanian
+                    
+                </a>
+            </h2>
+            <p class="text-muted mb-1">
+                
+                    Data Scientist @ CA Department of Social Services
+UC Berkeley MPP &#39;23, BA &#39;16
+                
+            </p>
+            <ul id="nav-links" class="list-inline mb-2">
+                
+                
+                    <li class="list-inline-item">
+                        <a class="badge badge-white " href="../../" title="About">About</a>
+                    </li>
+                
+                    <li class="list-inline-item">
+                        <a class="badge badge-white " href="../../post/" title="Blog">Blog</a>
+                    </li>
+                
+            </ul>
+            <ul id="nav-social" class="list-inline">
+                
+                    <li class="list-inline-item mr-3">
+                        <a href="mailto:peteramerkhanian@berkeley.edu" target="_blank">
+                            <i class="fas fa-at fa-lg text-muted"></i>
+                        </a>
+                    </li>
+                
+                    <li class="list-inline-item mr-3">
+                        <a href="https://www.linkedin.com/in/peteramerkhanian/" target="_blank">
+                            <i class="fab fa-linkedin-in fa-lg text-muted"></i>
+                        </a>
+                    </li>
+                
+                    <li class="list-inline-item mr-3">
+                        <a href="https://github.com/peter-amerkhanian" target="_blank">
+                            <i class="fab fa-github fa-lg text-muted"></i>
+                        </a>
+                    </li>
+                
+                    <li class="list-inline-item mr-3">
+                        <a href="https://peter-amerkhanian.github.io/documents/Amerkhanian_Peter_Resume.pdf" target="_blank">
+                            <i class="fas fa-file-alt fa-lg text-muted"></i>
+                        </a>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+    <hr />
+</header>
+<div class="container">
+    <div class="pl-sm-2">
+        <div class="mb-3">
+            <h3 class="mb-0">CLT and some Simulation in R</h3>
+            
+            <small class="text-muted">Published July 24, 2022</small>
+        </div>
+
+        <article>
+            <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span><span style="color:#50fa7b">library</span>(reshape2)
+</span></span><span style="display:flex;"><span><span style="color:#50fa7b">library</span>(tidyverse)
+</span></span><span style="display:flex;"><span><span style="color:#50fa7b">library</span>(boot)
+</span></span><span style="display:flex;"><span><span style="color:#50fa7b">library</span>(knitr)
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span>data <span style="color:#ff79c6">&lt;-</span> tips
+</span></span><span style="display:flex;"><span><span style="color:#50fa7b">summary</span>(data)
+</span></span></code></pre></div><pre><code>##    total_bill         tip             sex      smoker      day         time    
+##  Min.   : 3.07   Min.   : 1.000   Female: 87   No :151   Fri :19   Dinner:176  
+##  1st Qu.:13.35   1st Qu.: 2.000   Male  :157   Yes: 93   Sat :87   Lunch : 68  
+##  Median :17.80   Median : 2.900                          Sun :76               
+##  Mean   :19.79   Mean   : 2.998                          Thur:62               
+##  3rd Qu.:24.13   3rd Qu.: 3.562                                                
+##  Max.   :50.81   Max.   :10.000                                                
+##       size     
+##  Min.   :1.00  
+##  1st Qu.:2.00  
+##  Median :2.00  
+##  Mean   :2.57  
+##  3rd Qu.:3.00  
+##  Max.   :6.00
+</code></pre>
+<h2 id="including-plots">Including Plots</h2>
+<p>You can also embed plots, for example:</p>
+<p><img src="index_files/figure-gfm/pressure-1.png" alt=""><!-- --></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span>results <span style="color:#ff79c6">&lt;-</span> <span style="color:#50fa7b">data.frame</span>()
+</span></span><span style="display:flex;"><span>  
+</span></span><span style="display:flex;"><span>results[1,<span style="color:#bd93f9">1</span>] <span style="color:#ff79c6">&lt;-</span> <span style="color:#f1fa8c">&#34;1&#34;</span>
+</span></span><span style="display:flex;"><span>results[1,<span style="color:#bd93f9">2</span>] <span style="color:#ff79c6">&lt;-</span>  <span style="color:#50fa7b">mean</span>(<span style="color:#50fa7b">slice_sample</span>(data, n<span style="color:#ff79c6">=</span><span style="color:#bd93f9">100</span>, replace<span style="color:#ff79c6">=</span><span style="color:#ff79c6">TRUE</span>)<span style="color:#ff79c6">$</span>tip)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>results[2,<span style="color:#bd93f9">1</span>] <span style="color:#ff79c6">&lt;-</span> <span style="color:#f1fa8c">&#34;2&#34;</span>
+</span></span><span style="display:flex;"><span>results[2,<span style="color:#bd93f9">2</span>] <span style="color:#ff79c6">&lt;-</span>  <span style="color:#50fa7b">mean</span>(<span style="color:#50fa7b">slice_sample</span>(data, n<span style="color:#ff79c6">=</span><span style="color:#bd93f9">100</span>, replace<span style="color:#ff79c6">=</span><span style="color:#ff79c6">TRUE</span>)<span style="color:#ff79c6">$</span>tip)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>results[3,<span style="color:#bd93f9">1</span>] <span style="color:#ff79c6">&lt;-</span> <span style="color:#f1fa8c">&#34;3&#34;</span>
+</span></span><span style="display:flex;"><span>results[3,<span style="color:#bd93f9">2</span>] <span style="color:#ff79c6">&lt;-</span>  <span style="color:#50fa7b">mean</span>(<span style="color:#50fa7b">slice_sample</span>(data, n<span style="color:#ff79c6">=</span><span style="color:#bd93f9">100</span>, replace<span style="color:#ff79c6">=</span><span style="color:#ff79c6">TRUE</span>)<span style="color:#ff79c6">$</span>tip)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#50fa7b">colnames</span>(results) <span style="color:#ff79c6">&lt;-</span> <span style="color:#50fa7b">c</span>(<span style="color:#f1fa8c">&#34;Sample #&#34;</span>, <span style="color:#f1fa8c">&#34;Sample Mean&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>results
+</span></span></code></pre></div><pre><code>##   Sample # Sample Mean
+## 1        1      3.1151
+## 2        2      2.9017
+## 3        3      2.8694
+</code></pre>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span><span style="color:#50fa7b">set.seed</span>(<span style="color:#bd93f9">3</span>)
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span>sample_means_100 <span style="color:#ff79c6">=</span> <span style="color:#50fa7b">vector</span>()
+</span></span><span style="display:flex;"><span><span style="color:#50fa7b">for </span>(i in <span style="color:#bd93f9">1</span><span style="color:#ff79c6">:</span><span style="color:#bd93f9">100</span>) {
+</span></span><span style="display:flex;"><span>  sample_means_100[i] <span style="color:#ff79c6">&lt;-</span> <span style="color:#50fa7b">mean</span>(<span style="color:#50fa7b">slice_sample</span>(data, prop<span style="color:#ff79c6">=</span><span style="color:#bd93f9">1</span>, replace<span style="color:#ff79c6">=</span><span style="color:#ff79c6">TRUE</span>)<span style="color:#ff79c6">$</span>tip)
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span><span style="color:#50fa7b">hist</span>(sample_means_100, freq<span style="color:#ff79c6">=</span><span style="color:#ff79c6">FALSE</span>)
+</span></span></code></pre></div><p><img src="index_files/figure-gfm/unnamed-chunk-6-1.png" alt=""><!-- --></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span>sample_means_1000 <span style="color:#ff79c6">=</span> <span style="color:#50fa7b">vector</span>()
+</span></span><span style="display:flex;"><span><span style="color:#50fa7b">for </span>(i in <span style="color:#bd93f9">1</span><span style="color:#ff79c6">:</span><span style="color:#bd93f9">1000</span>) {
+</span></span><span style="display:flex;"><span>  sample_means_1000[i] <span style="color:#ff79c6">&lt;-</span> <span style="color:#50fa7b">mean</span>(<span style="color:#50fa7b">slice_sample</span>(data, prop<span style="color:#ff79c6">=</span><span style="color:#bd93f9">1</span>, replace<span style="color:#ff79c6">=</span><span style="color:#ff79c6">TRUE</span>)<span style="color:#ff79c6">$</span>tip)
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span><span style="color:#50fa7b">hist</span>(sample_means_1000, freq<span style="color:#ff79c6">=</span><span style="color:#ff79c6">FALSE</span>)
+</span></span></code></pre></div><p><img src="index_files/figure-gfm/unnamed-chunk-8-1.png" alt=""><!-- --></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span>bootstrap_func <span style="color:#ff79c6">&lt;-</span> <span style="color:#50fa7b">function</span>(data_, i){
+</span></span><span style="display:flex;"><span> <span style="color:#50fa7b">return</span>(<span style="color:#50fa7b">mean</span>(data_[i, ]<span style="color:#ff79c6">$</span>tip))
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span><span style="color:#50fa7b">paste</span>(<span style="color:#f1fa8c">&#34;For Loop&#34;</span>)
+</span></span></code></pre></div><pre><code>## [1] &quot;For Loop&quot;
+</code></pre>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span>sample_means_1000 <span style="color:#ff79c6">=</span> <span style="color:#50fa7b">vector</span>()
+</span></span><span style="display:flex;"><span><span style="color:#50fa7b">system.time</span>(
+</span></span><span style="display:flex;"><span>  <span style="color:#50fa7b">for </span>(i in <span style="color:#bd93f9">1</span><span style="color:#ff79c6">:</span><span style="color:#bd93f9">1000</span>) {
+</span></span><span style="display:flex;"><span>  sample_means_1000[i] <span style="color:#ff79c6">&lt;-</span> <span style="color:#50fa7b">mean</span>(<span style="color:#50fa7b">slice_sample</span>(data, prop<span style="color:#ff79c6">=</span><span style="color:#bd93f9">1</span>, replace<span style="color:#ff79c6">=</span><span style="color:#ff79c6">TRUE</span>)<span style="color:#ff79c6">$</span>tip)
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>)
+</span></span></code></pre></div><pre><code>##    user  system elapsed 
+##    2.13    0.00    2.16
+</code></pre>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span><span style="color:#50fa7b">paste</span>(<span style="color:#f1fa8c">&#34;Function (from `boot`)&#34;</span>)
+</span></span></code></pre></div><pre><code>## [1] &quot;Function (from `boot`)&quot;
+</code></pre>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span><span style="color:#50fa7b">system.time</span>(
+</span></span><span style="display:flex;"><span>  sample_means_boot <span style="color:#ff79c6">&lt;-</span> <span style="color:#50fa7b">boot</span>(data,bootstrap_func,R<span style="color:#ff79c6">=</span><span style="color:#bd93f9">1000</span>)
+</span></span><span style="display:flex;"><span>  )
+</span></span></code></pre></div><pre><code>##    user  system elapsed 
+##    0.30    0.01    0.31
+</code></pre>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span>sample_means_boot <span style="color:#ff79c6">&lt;-</span> <span style="color:#50fa7b">boot</span>(data,bootstrap_func,R<span style="color:#ff79c6">=</span><span style="color:#bd93f9">100000</span>)
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span>sample_means_1000000 <span style="color:#ff79c6">&lt;-</span> sample_means_boot<span style="color:#ff79c6">$</span>t
+</span></span><span style="display:flex;"><span><span style="color:#50fa7b">hist</span>(sample_means_1000000)
+</span></span></code></pre></div><p><img src="index_files/figure-gfm/unnamed-chunk-12-1.png" alt=""><!-- --></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span>(<span style="color:#50fa7b">max</span>(sample_means_1000000) <span style="color:#ff79c6">-</span> <span style="color:#50fa7b">mean</span>(sample_means_1000000)) <span style="color:#ff79c6">/</span> <span style="color:#50fa7b">sd</span>(sample_means_1000000)
+</span></span></code></pre></div><pre><code>## [1] 4.615244
+</code></pre>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span>(<span style="color:#50fa7b">min</span>(sample_means_1000000) <span style="color:#ff79c6">-</span> <span style="color:#50fa7b">mean</span>(sample_means_1000000)) <span style="color:#ff79c6">/</span> <span style="color:#50fa7b">sd</span>(sample_means_1000000)
+</span></span></code></pre></div><pre><code>## [1] -4.123977
+</code></pre>
+
+        </article>
+    </div>
+
+    
+
+            </div>
+        </div><footer class="text-center pb-1">
+    
+    <p></p>
+    <p><a href="#content">&uarr;Back to Top&uarr;</a></p>
+    
+    <small class="text-muted">
+        
+            &copy; 2023, Peter Amerkhanian
+        
+        <br>
+        Powered by <a href="https://gohugo.io/" target="_blank">Hugo</a>
+        and <a href="https://github.com/austingebauer/devise" target="_blank">Devise</a>
+    </small>
+</footer>
+</body>
+</html>

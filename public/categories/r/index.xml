@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>R on Peter Amerkhanian</title>
+    <link>https://peter-amerkhanian.github.io/categories/r/</link>
+    <description>Recent content in R on Peter Amerkhanian</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>&amp;copy; 2023, Peter Amerkhanian</copyright>
+    <lastBuildDate>Sun, 24 Jul 2022 11:07:25 -0700</lastBuildDate><atom:link href="https://peter-amerkhanian.github.io/categories/r/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>CLT and some Simulation in R</title>
+      <link>https://peter-amerkhanian.github.io/post/clt/</link>
+      <pubDate>Sun, 24 Jul 2022 11:07:25 -0700</pubDate>
+      
+      <guid>https://peter-amerkhanian.github.io/post/clt/</guid>
+      <description>library(reshape2) library(tidyverse) library(boot) library(knitr) data &amp;lt;- tips summary(data) ## total_bill tip sex smoker day time ## Min. : 3.07 Min. : 1.000 Female: 87 No :151 Fri :19 Dinner:176 ## 1st Qu.:13.35 1st Qu.: 2.000 Male :157 Yes: 93 Sat :87 Lunch : 68 ## Median :17.80 Median : 2.900 Sun :76 ## Mean :19.79 Mean : 2.998 Thur:62 ## 3rd Qu.:24.13 3rd Qu.: 3.562 ## Max. :50.81 Max. :10.000 ## size ## Min.</description>
+    </item>
+    
+  </channel>
+</rss>
