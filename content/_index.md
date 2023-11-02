@@ -21,7 +21,7 @@ Peter Amerkhanian (2023), *Report prepared for The City of Alameda Department of
 [A Reexamination of Proposition 13 Using Parcel Level Data](https://youngamericans.berkeley.edu/wp-content/uploads/2023/02/Report_A-Reexamination-of-Proposition-13-Using-Parcel-Level-Data_final.pdf)  
 
 Peter Amerkhanian, Max Zhang, and James Hawkins (2023), *Berkeley Institute for Young Americans Report*.  
-**Summary**: We utilize 12 million property records in California to estimate the discount effect of Prop 13 across property types. <img width=28em src=images/icons8-r-project.svg>  
+**Summary**: We utilize 12 million property records in California and a fixed-effects model to estimate the discount effect of Prop 13 across property types. <img width=28em src=images/icons8-r-project.svg>  
 
 ---
 
@@ -34,6 +34,6 @@ Peter Amerkhanian (2022), *Public Policy 275 Final Paper (A+)*.
 
 [Measuring Differences in California Politician Agendas in Press Releases](https://drive.google.com/file/d/134YMeVodA3_kytoq-u8rqO34b3U6Bkoy/view?usp=sharing)  
 Peter Amerkhanian (2021), *Information 254 Final Paper (A)*.   
-**Summary**: I use a novel dataset of press releases issued by governors and mayors in California to 1. Develop a model to identify press release authorship, 2. Identify clusters of press release topic, and 3. Estimate the political similarities between mayors and governors. <img width=28em src=images/icons8-python.svg> 
+**Summary**: I use a novel dataset of press releases issued by governors and mayors in California to 1. Develop a regression model to identify press release authorship, 2. Cluster press releases by topic, and 3. Estimate the political similarities between mayors and governors. <img width=28em src=images/icons8-python.svg> 
 
 ---
