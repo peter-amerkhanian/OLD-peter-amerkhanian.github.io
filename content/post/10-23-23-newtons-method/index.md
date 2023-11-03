@@ -20,7 +20,7 @@ from typing import Callable
 
 ## Newton's Method for Finding Roots: What, How, and Why
 
-In the context of a Differential Calculus course, [Newton's Method](https://en.wikipedia.org/wiki/Newton%27s_method#Applications), also referred to as The Newton-Raphson Method, seems to typically come up near the end of the semester, offering students a brief look into the world of "numerical methods" and how we might solve complex problems in the real world. I think that it's such a cool topic and first step from math into applied fields like statistics and optimization, that I wanted to write an extended blog post about it. The main purpose of this is to ensure that I always have a personal reference materials for Newton's Method, but perhaps it can be helpful to other readers.
+In the context of a Differential Calculus course, [Newton's Method](https://en.wikipedia.org/wiki/Newton%27s_method#Applications), also referred to as The Newton-Raphson Method, seems to typically come up near the end of the semester, offering students a brief look into the world of "numerical methods" and how we might solve complex problems in the real world. I think that it's such a cool topic and first step from math into applied fields like statistics and optimization, that I wanted to write an extended blog post about it. The main purpose of this is to ensure that I always have personal reference materials for Newton's Method, but perhaps it can be helpful to other readers.
 
 I draw on two key sources for thinking about Newton's Method:
 1. [“Newton’s Method.”](https://en.wikipedia.org/w/index.php?title=Newton%27s_method&oldid=1177135929.) 2023. In Wikipedia
@@ -230,7 +230,7 @@ ax.legend();
     
 
 
-We can evaluate that directly by looking at the distance from the guess to what we know is the right answer:
+We can assess the quality of that guess by calculating the distance from the guess to the right answer ($-\pi$):
 
 
 ```python
@@ -243,7 +243,7 @@ print(f"error for guess x_0:", euclidean_dist_to_truth(x_0))
 #### Step 2: Find the equation of the tangent line at those coordinates
 We will proceed to improve upon that initial guess by computing the linear approximation of the function at that point, then retrieve its root to make a next-guess. Our first guess wasn't based on any relevant information other than the domain of our search (between -5 and 0). Our next guess is going to be better-informed, as it is an estimate based on an approximation of the function.  
 
-(Note that the linear approximation at this point is typically referred to as a tangent line, and I'll just between those two phrases.)
+(Note that the linear approximation at this point is typically referred to as a tangent line, and I'll use those two phrases interchangeably.)
 
 We compute the tangent by first differentiating the function and plugging in our previous guess. This yields the slope of the tangent line:
 $$
@@ -465,7 +465,7 @@ for i, x_n in enumerate([x_0, x_1, x_2]):
 
 #### Step 5: Generalize the procedure
 
-##### Make the equation more direct
+##### A.) Make the equation more direct
 Thus far we have used the general equation $y = f'(x_n)(x - x_n) + f(x_n)$, where $x_n$ is our current guess, and we solve for $x$ to define our next guess. Given that we solve the equation for $x$, we can rewrite it as follows:  
 $$
 \begin{align*}
@@ -478,7 +478,7 @@ x &= x_n -\frac{f(x_n)}{f'(x_n)}\\\
 $$
 This expresses *one step* of Newton's Method -- solving for the x-intercept of the tangent line at the point $(x_n, f(x_n))$.  
 
-##### From equation to algorithm
+##### B.) Move from equation to algorithm
 
 We now build on this single step and express the general *process* of Newton's method. To start, it's more accurate to label the left hand side $x_{n+1}$ given that it represents the next guess:
 $$
@@ -502,7 +502,10 @@ $$
 We can try writing out the recursive algorithm as a piece-wise equation:  
 
 $$
-\text{Let } x_0 := \text{initial guess} \text{. For all natural numbers } n \ge 0 \text{, define }  x_{n+1} \text{ as:}
+\begin{align*}
+\text{Let } x_0 := \text{initial guess, } \\\
+\text{For all natural numbers } n \ge 0 \text{, define }  x_{n+1} \text{ as:}
+\end{align*}
 $$
 $$
 x_{n+1} = \begin{cases}
@@ -559,7 +562,7 @@ while True:
     Converged in 6 steps.
     
 
-We can verify that this new guess again reduces our "error," which should encourage us to continue this process.
+We've converged at our best-guess after six steps, which we can see animated below.
 
 
 {{< details "GIF Code" >}}
@@ -640,7 +643,7 @@ for item in files:
 ![gif](newton_iterations.gif?4 "gif")
 
 ### Using Newton's Method to Solve a Real Problem
-In the previous example, we dealt with a function, $f(x) = 4\sin(x)$ with a well known analytical solution for its x-intercept. Other simple functions can typically be solved with known formulas -- e.g. a second degree polynomial's roots can be found using the quadratic formula. In cases of known analytical solutions or readily available root-finding formula's, there is no reason to use Newton's Method beyond as a learning exercise.  
+In the previous example, we dealt with a function, $f(x) = 4\sin(x)$ with a well known analytical solution for its x-intercept. Other simple functions can typically be solved with known formulas -- e.g. a second degree polynomial's roots can be found using the quadratic formula. In cases of known analytical solutions or readily available root-finding formulas, there is no reason to use Newton's Method beyond as a learning exercise.  
 
 However, many functions do not have have readily available methods for finding the root. For example, if $f(x)$ is a polynomial of degree 5 or greater, it is known that no formula for finding its roots exist (Strang 2016). Consider the following polynomial of degree 5:
 $$
@@ -698,7 +701,7 @@ ax.set_title(f"$y={sympy.latex(y)}$");
 
 
 Here's a good use-case for Newton's Method. I set up the algorithm with $x_0=0$ and a stopping condition that $|x_{n+1} - x_{n}| \leq 10^{-10}$.  
-In just 10 steps I have the answer:
+I quickly converge at an answer:
 
 
 ```python

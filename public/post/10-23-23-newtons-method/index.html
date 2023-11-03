@@ -65,6 +65,18 @@ if (!doNotTrack) {
       color: rgb(0, 0, 0);
     }
 
+    mjx-container {
+      overflow-x: auto;
+      overflow-y: clip;
+      margin: 0.5em auto;
+    }
+    .has-jax {
+      overflow-x: auto;
+      overflow-y: clip;
+      margin: 0.5em auto;
+    }
+    
+
     .katex-display {
       overflow-x: auto;
       overflow-y: clip;
@@ -216,7 +228,7 @@ UC Berkeley MPP &#39;23, BA &#39;16
 </span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> imageio
 </span></span><span style="display:flex;"><span><span style="color:#ff79c6">from</span> typing <span style="color:#ff79c6">import</span> Callable
 </span></span></code></pre></div><h2 id="newtons-method-for-finding-roots-what-how-and-why">Newton&rsquo;s Method for Finding Roots: What, How, and Why</h2>
-<p>In the context of a Differential Calculus course, <a href="https://en.wikipedia.org/wiki/Newton%27s_method#Applications">Newton&rsquo;s Method</a>, also referred to as The Newton-Raphson Method, seems to typically come up near the end of the semester, offering students a brief look into the world of &ldquo;numerical methods&rdquo; and how we might solve complex problems in the real world. I think that it&rsquo;s such a cool topic and first step from math into applied fields like statistics and optimization, that I wanted to write an extended blog post about it. The main purpose of this is to ensure that I always have a personal reference materials for Newton&rsquo;s Method, but perhaps it can be helpful to other readers.</p>
+<p>In the context of a Differential Calculus course, <a href="https://en.wikipedia.org/wiki/Newton%27s_method#Applications">Newton&rsquo;s Method</a>, also referred to as The Newton-Raphson Method, seems to typically come up near the end of the semester, offering students a brief look into the world of &ldquo;numerical methods&rdquo; and how we might solve complex problems in the real world. I think that it&rsquo;s such a cool topic and first step from math into applied fields like statistics and optimization, that I wanted to write an extended blog post about it. The main purpose of this is to ensure that I always have personal reference materials for Newton&rsquo;s Method, but perhaps it can be helpful to other readers.</p>
 <p>I draw on two key sources for thinking about Newton&rsquo;s Method:</p>
 <ol>
 <li><a href="https://en.wikipedia.org/w/index.php?title=Newton%27s_method&amp;oldid=1177135929.">“Newton’s Method.”</a> 2023. In Wikipedia</li>
@@ -386,13 +398,13 @@ $$</p>
 </span></span><span style="display:flex;"><span>plot_guess_coords(ax, x_0, <span style="color:#f1fa8c">&#34;$(x_0, f(x_0))$&#34;</span>)
 </span></span><span style="display:flex;"><span>ax<span style="color:#ff79c6">.</span>legend();
 </span></span></code></pre></div><p><img src="newtons_method_files/newtons_method_9_0.png" alt="png"></p>
-<p>We can evaluate that directly by looking at the distance from the guess to what we know is the right answer:</p>
+<p>We can assess the quality of that guess by calculating the distance from the guess to the right answer ($-\pi$):</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">print</span>(<span style="color:#f1fa8c">f</span><span style="color:#f1fa8c">&#34;error for guess x_0:&#34;</span>, euclidean_dist_to_truth(x_0))
 </span></span></code></pre></div><pre><code>error for guess x_0: 1.1415926535897931
 </code></pre>
 <h4 id="step-2-find-the-equation-of-the-tangent-line-at-those-coordinates">Step 2: Find the equation of the tangent line at those coordinates</h4>
 <p>We will proceed to improve upon that initial guess by computing the linear approximation of the function at that point, then retrieve its root to make a next-guess. Our first guess wasn&rsquo;t based on any relevant information other than the domain of our search (between -5 and 0). Our next guess is going to be better-informed, as it is an estimate based on an approximation of the function.</p>
-<p>(Note that the linear approximation at this point is typically referred to as a tangent line, and I&rsquo;ll just between those two phrases.)</p>
+<p>(Note that the linear approximation at this point is typically referred to as a tangent line, and I&rsquo;ll use those two phrases interchangeably.)</p>
 <p>We compute the tangent by first differentiating the function and plugging in our previous guess. This yields the slope of the tangent line:
 $$
 \begin{align*}
@@ -526,7 +538,7 @@ error for guess x_1: 1.0434073464102065
 error for guess x_2: 0.6735814493932737
 </code></pre>
 <h4 id="step-5-generalize-the-procedure">Step 5: Generalize the procedure</h4>
-<h5 id="make-the-equation-more-direct">Make the equation more direct</h5>
+<h5 id="a-make-the-equation-more-direct">A.) Make the equation more direct</h5>
 <p>Thus far we have used the general equation $y = f&rsquo;(x_n)(x - x_n) + f(x_n)$, where $x_n$ is our current guess, and we solve for $x$ to define our next guess. Given that we solve the equation for $x$, we can rewrite it as follows:<br>
 $$
 \begin{align*}
@@ -538,7 +550,7 @@ x &amp;= x_n -\frac{f(x_n)}{f&rsquo;(x_n)}\\
 \end{align*}
 $$
 This expresses <em>one step</em> of Newton&rsquo;s Method &ndash; solving for the x-intercept of the tangent line at the point $(x_n, f(x_n))$.</p>
-<h5 id="from-equation-to-algorithm">From equation to algorithm</h5>
+<h5 id="b-move-from-equation-to-algorithm">B.) Move from equation to algorithm</h5>
 <p>We now build on this single step and express the general <em>process</em> of Newton&rsquo;s method. To start, it&rsquo;s more accurate to label the left hand side $x_{n+1}$ given that it represents the next guess:
 $$
 x_{n+1} = x_n -\frac{f(x_n)}{f&rsquo;(x_n)}
@@ -556,7 +568,10 @@ Given this equation, we can think of Newton&rsquo;s Method as essentially search
 $$</p>
 <p>We can try writing out the recursive algorithm as a piece-wise equation:</p>
 <p>$$
-\text{Let } x_0 := \text{initial guess} \text{. For all natural numbers } n \ge 0 \text{, define }  x_{n+1} \text{ as:}
+\begin{align*}
+\text{Let } x_0 := \text{initial guess, } \\
+\text{For all natural numbers } n \ge 0 \text{, define }  x_{n+1} \text{ as:}
+\end{align*}
 $$
 $$
 x_{n+1} = \begin{cases}
@@ -605,7 +620,7 @@ Guess 5: -3.14094  --- Error: 0.00064874127215786
 Guess 6: -3.14159  --- Error: 9.101119857746198e-11
 Converged in 6 steps.
 </code></pre>
-<p>We can verify that this new guess again reduces our &ldquo;error,&rdquo; which should encourage us to continue this process.</p>
+<p>We&rsquo;ve converged at our best-guess after six steps, which we can see animated below.</p>
 <div style="
 padding: 0em 0em 1em 0em;
 color: darkred;
@@ -684,7 +699,7 @@ font-weight: bold;
 </div>
 <p><img src="newton_iterations.gif?4" alt="gif" title="gif"></p>
 <h3 id="using-newtons-method-to-solve-a-real-problem">Using Newton&rsquo;s Method to Solve a Real Problem</h3>
-<p>In the previous example, we dealt with a function, $f(x) = 4\sin(x)$ with a well known analytical solution for its x-intercept. Other simple functions can typically be solved with known formulas &ndash; e.g. a second degree polynomial&rsquo;s roots can be found using the quadratic formula. In cases of known analytical solutions or readily available root-finding formula&rsquo;s, there is no reason to use Newton&rsquo;s Method beyond as a learning exercise.</p>
+<p>In the previous example, we dealt with a function, $f(x) = 4\sin(x)$ with a well known analytical solution for its x-intercept. Other simple functions can typically be solved with known formulas &ndash; e.g. a second degree polynomial&rsquo;s roots can be found using the quadratic formula. In cases of known analytical solutions or readily available root-finding formulas, there is no reason to use Newton&rsquo;s Method beyond as a learning exercise.</p>
 <p>However, many functions do not have have readily available methods for finding the root. For example, if $f(x)$ is a polynomial of degree 5 or greater, it is known that no formula for finding its roots exist (Strang 2016). Consider the following polynomial of degree 5:
 $$
 f(x) =x^{5} + 8 x^{4} + 4 x^{3} - 2 x - 7
@@ -713,7 +728,7 @@ There is no formula that solves this. Even plugging the polynomial into <code>sy
 </span></span><span style="display:flex;"><span>ax<span style="color:#ff79c6">.</span>set_title(<span style="color:#f1fa8c">f</span><span style="color:#f1fa8c">&#34;$y=</span><span style="color:#f1fa8c">{</span>sympy<span style="color:#ff79c6">.</span>latex(y)<span style="color:#f1fa8c">}</span><span style="color:#f1fa8c">$&#34;</span>);
 </span></span></code></pre></div><p><img src="newtons_method_files/newtons_method_43_0.png" alt="png"></p>
 <p>Here&rsquo;s a good use-case for Newton&rsquo;s Method. I set up the algorithm with $x_0=0$ and a stopping condition that $|x_{n+1} - x_{n}| \leq 10^{-10}$.<br>
-In just 10 steps I have the answer:</p>
+I quickly converge at an answer:</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>x_n <span style="color:#ff79c6">=</span> <span style="color:#bd93f9">0</span>
 </span></span><span style="display:flex;"><span>tolerance <span style="color:#ff79c6">=</span> <span style="color:#bd93f9">1e-10</span>
 </span></span><span style="display:flex;"><span>counter <span style="color:#ff79c6">=</span> <span style="color:#bd93f9">1</span>
