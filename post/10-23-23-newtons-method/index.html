@@ -1,0 +1,463 @@
+<!doctype html><html lang=en><head><title>Calc 1: Newton's Method From The Ground Up</title>
+<meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=description content><script type=text/javascript id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>MathJax={tex:{inlineMath:[["$","$"],["\\(","\\)"]],displayMath:[["$$","$$"],["\\[","\\]"]],processEscapes:!0,processEnvironments:!0},options:{skipHtmlTags:["script","noscript","style","textarea","pre"]}},window.addEventListener("load",e=>{document.querySelectorAll("mjx-container").forEach(function(e){e.parentElement.classList+="has-jax"})})</script><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script type=text/javascript id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><link rel=stylesheet href=../../css/theme.min.css><script async src="https://www.googletagmanager.com/gtag/js?id=G-V95HGLKTEB"></script><script>var doNotTrack=!1;if(!doNotTrack){window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag("js",new Date),gtag("config","G-V95HGLKTEB",{anonymize_ip:!1})}</script><style>body{font-size:110%}table{display:block;max-width:100%;margin:1em auto;overflow-x:auto;white-space:nowrap;text-align:left;color:#000}.katex-display{overflow-x:auto;overflow-y:clip;margin:.5em auto}.katex-display{-webkit-font-smoothing:antialiased;background:inherit!important;border:none!important;font-size:100%}.simpletable{font-size:95%;border-collapse:collapse;width:100%}.simpletable th{border:1px solid #ddd;padding:.6em}.simpletable tbody tr{padding:0}.simpletable tbody td{border:1px solid #ddd;padding:.3em}.dataframe{font-size:85%;border-collapse:collapse;width:100%}.dataframe thead th{text-align:center!important}.dataframe td,.dataframe th{border:1px solid #ddd;padding:8px}.dataframe tbody tr{padding:.5em;border:1px solid #afafaf}.dataframe tbody tr:nth-child(even){background-color:#f2f2f2}.dataframe tr:hover{background-color:#ddd}.dataframe tbody tr th{padding:.5em}.dataframe th{background-color:#dfdfdf}</style></head><body><div id=content class=mx-auto><header class="container mt-sm-5 mt-4 mb-4 mt-xs-1"><div class=row><div class="col-sm-4 col-12 text-sm-right text-center pt-sm-4"><a href=../../ class=text-decoration-none><img id=home-image class=rounded-circle src=../../images/blog.jpg></a></div><div class="col-sm-8 col-12 text-sm-left text-center"><h2 class="m-0 mb-2 mt-4"><a href=../../ class=text-decoration-none>Peter Amerkhanian</a></h2><p class="text-muted mb-1">Data Scientist @ CA Department of Social Services
+UC Berkeley MPP '23, BA '16</p><ul id=nav-links class="list-inline mb-2"><li class=list-inline-item><a class="badge badge-white" href=../../ title=About>About</a></li><li class=list-inline-item><a class="badge badge-white" href=../../post/ title=Blog>Blog</a></li></ul><ul id=nav-social class=list-inline><li class="list-inline-item mr-3"><a href=mailto:peteramerkhanian@berkeley.edu target=_blank><i class="fas fa-at fa-lg text-muted"></i></a></li><li class="list-inline-item mr-3"><a href=https://www.linkedin.com/in/peteramerkhanian/ target=_blank><i class="fab fa-linkedin-in fa-lg text-muted"></i></a></li><li class="list-inline-item mr-3"><a href=https://github.com/peter-amerkhanian target=_blank><i class="fab fa-github fa-lg text-muted"></i></a></li></ul></div></div><hr></header><div class=container><div class=pl-sm-2><div class=mb-3><h3 class=mb-0>Calc 1: Newton's Method From The Ground Up</h3><small class=text-muted>Published November 3, 2023</small></div><article><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#ff79c6>import</span> numpy <span style=color:#ff79c6>as</span> np
+</span></span><span style=display:flex><span><span style=color:#ff79c6>import</span> matplotlib.pyplot <span style=color:#ff79c6>as</span> plt
+</span></span><span style=display:flex><span><span style=color:#ff79c6>import</span> matplotlib
+</span></span><span style=display:flex><span><span style=color:#ff79c6>import</span> sympy
+</span></span><span style=display:flex><span><span style=color:#ff79c6>import</span> imageio
+</span></span><span style=display:flex><span><span style=color:#ff79c6>from</span> typing <span style=color:#ff79c6>import</span> Callable
+</span></span></code></pre></div><h2 id=newtons-method-for-finding-roots-what-how-and-why>Newton&rsquo;s Method for Finding Roots: What, How, and Why</h2><p>In the context of a Differential Calculus course, <a href=https://en.wikipedia.org/wiki/Newton%27s_method#Applications>Newton&rsquo;s Method</a>, also referred to as The Newton-Raphson Method, seems to typically come up near the end of the semester, offering students a brief look into the world of &ldquo;numerical methods&rdquo; and how we might solve complex problems in the real world. I think that it&rsquo;s such a cool topic and first step from math into applied fields like statistics and optimization, that I wanted to write an extended blog post about it. The main purpose of this is to ensure that I always have a personal reference materials for Newton&rsquo;s Method, but perhaps it can be helpful to other readers.</p><p>I draw on two key sources for thinking about Newton&rsquo;s Method:</p><ol><li><a href="https://en.wikipedia.org/w/index.php?title=Newton%27s_method&amp;oldid=1177135929.">“Newton’s Method.”</a> 2023. In Wikipedia</li><li>Strang, Gilbert, and Edwin Herman. 2016. <a href=https://openstax.org/books/calculus-volume-1/pages/4-9-newtons-method>Calculus Volume 1</a>. OpenStax College.</li></ol><h3 id=what-is-it>What is it</h3><blockquote><p>In many areas of pure and applied mathematics, we are interested in finding solutions to an equation of the form $f(x)=0$</p></blockquote><p>(Strang 2016)</p><p>Newton&rsquo;s Method is a numerical method that helps us solve $f(x)=0$.</p><p>There are many cases where we need to solve equations like that, but the application area I work in is statistics, so I jump to the case where we want to &ldquo;fit&rdquo; a line as close as possible to some set of data points, thus creating a model of a data-generating-process. The fitting process rests on getting the line as close to the data points as possible, thus minimizing error. If we can formulate error as a function, then we can minimize it &ndash; we differentiate it and set the derivative to 0, and solve $f&rsquo;(x)=0$. Therein lies the opportunity to apply Newton&rsquo;s Method to a real problem.</p><p>However, we&rsquo;ll take a step back from statistics and return to the domain of an introductory calculus course. Newton&rsquo;s Method is useful for finding the root &ndash; the x-intercept &ndash; of a function. We&rsquo;ll explore the method by walking through an example</p><h3 id=using-newtons-method-to-solve-a-simple-problem>Using Newton&rsquo;s Method to Solve a Simple Problem</h3><p>Say we are given the function $4\sin(x)$ and we want to find the x-intercept of the function with the domain $-5\leq x \leq -1$.</p><p>We&rsquo;ll first set this function up in <code>sympy</code>, a python library for symbolic computation.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span>x, y <span style=color:#ff79c6>=</span> sympy<span style=color:#ff79c6>.</span>symbols(<span style=color:#f1fa8c>&#39;x y&#39;</span>)
+</span></span><span style=display:flex><span>y <span style=color:#ff79c6>=</span> <span style=color:#bd93f9>4</span><span style=color:#ff79c6>*</span>sympy<span style=color:#ff79c6>.</span>sin(x)
+</span></span><span style=display:flex><span>y
+</span></span></code></pre></div><p>$\displaystyle 4 \sin{\left(x \right)}$</p><p>This is a problem with a known answer (you can google x-intercepts of $\sin(x)$ for a table), so it&rsquo;s not particularly useful to use Newton&rsquo;s Method here, but for our purposes it will be helpful that we can check our answer with the &ldquo;right&rdquo; one.
+\begin{align*}
+4 \sin{\left(x \right)} &= 0 \quad where \quad -5\leq x \leq -1\\
+\sin{\left(x \right)} &= 0 \\
+x &= -\pi
+\end{align*}</p><div style="padding:0 0 1em;color:darkred;font-weight:700"><details><summary>Utility functions</summary><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#ff79c6>def</span> <span style=color:#50fa7b>plot_f</span>(
+</span></span><span style=display:flex><span>    f: Callable[[<span style=color:#8be9fd;font-style:italic>float</span>], <span style=color:#8be9fd;font-style:italic>float</span>],
+</span></span><span style=display:flex><span>    x_low: <span style=color:#8be9fd;font-style:italic>int</span>,
+</span></span><span style=display:flex><span>    x_high: <span style=color:#8be9fd;font-style:italic>int</span>,
+</span></span><span style=display:flex><span>    ax: matplotlib<span style=color:#ff79c6>.</span>axes<span style=color:#ff79c6>.</span>Axes) <span style=color:#ff79c6>-&gt;</span> <span style=color:#ff79c6>None</span>:
+</span></span><span style=display:flex><span>    <span style=color:#f1fa8c>&#34;&#34;&#34;
+</span></span></span><span style=display:flex><span><span style=color:#f1fa8c>    Plots a given function f within a specified range on a provided axes.
+</span></span></span><span style=display:flex><span><span style=color:#f1fa8c>
+</span></span></span><span style=display:flex><span><span style=color:#f1fa8c>    Parameters:
+</span></span></span><span style=display:flex><span><span style=color:#f1fa8c>        f (Callable[[float], float]): The function to be plotted.
+</span></span></span><span style=display:flex><span><span style=color:#f1fa8c>        x_low (int): The lower bound of the x-axis.
+</span></span></span><span style=display:flex><span><span style=color:#f1fa8c>        x_high (int): The upper bound of the x-axis.
+</span></span></span><span style=display:flex><span><span style=color:#f1fa8c>        ax (matplotlib.axes.Axes): The matplotlib axes object on which the function will be plotted.
+</span></span></span><span style=display:flex><span><span style=color:#f1fa8c>
+</span></span></span><span style=display:flex><span><span style=color:#f1fa8c>    Returns:
+</span></span></span><span style=display:flex><span><span style=color:#f1fa8c>        None
+</span></span></span><span style=display:flex><span><span style=color:#f1fa8c>    &#34;&#34;&#34;</span>
+</span></span><span style=display:flex><span>    x_vec <span style=color:#ff79c6>=</span> np<span style=color:#ff79c6>.</span>linspace(x_low, x_high, <span style=color:#bd93f9>100</span>)
+</span></span><span style=display:flex><span>    ax<span style=color:#ff79c6>.</span>plot(x_vec, f(x_vec))
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#ff79c6>def</span> <span style=color:#50fa7b>base_plot</span>(
+</span></span><span style=display:flex><span>    y: sympy<span style=color:#ff79c6>.</span>core<span style=color:#ff79c6>.</span>mul<span style=color:#ff79c6>.</span>Mul,
+</span></span><span style=display:flex><span>    x: sympy<span style=color:#ff79c6>.</span>core<span style=color:#ff79c6>.</span>mul<span style=color:#ff79c6>.</span>Mul,
+</span></span><span style=display:flex><span>    x_low: <span style=color:#8be9fd;font-style:italic>int</span><span style=color:#ff79c6>=-</span><span style=color:#bd93f9>5</span>,
+</span></span><span style=display:flex><span>    x_high: <span style=color:#8be9fd;font-style:italic>int</span><span style=color:#ff79c6>=</span><span style=color:#bd93f9>5</span>) <span style=color:#ff79c6>-&gt;</span> <span style=color:#ff79c6>None</span>:
+</span></span><span style=display:flex><span>    <span style=color:#f1fa8c>&#34;&#34;&#34;
+</span></span></span><span style=display:flex><span><span style=color:#f1fa8c>    Creates a base plot for a mathematical expression and its graph.
+</span></span></span><span style=display:flex><span><span style=color:#f1fa8c>
+</span></span></span><span style=display:flex><span><span style=color:#f1fa8c>    Parameters:
+</span></span></span><span style=display:flex><span><span style=color:#f1fa8c>        y (sympy.core.mul.Mul): The mathematical expression to be plotted.
+</span></span></span><span style=display:flex><span><span style=color:#f1fa8c>        x (sympy.core.mul.Mul): The symbol representing the independent variable in the expression.
+</span></span></span><span style=display:flex><span><span style=color:#f1fa8c>        x_low (int): The lower bound of the x-axis (default is -5).
+</span></span></span><span style=display:flex><span><span style=color:#f1fa8c>        x_high (int): The upper bound of the x-axis (default is 5).
+</span></span></span><span style=display:flex><span><span style=color:#f1fa8c>
+</span></span></span><span style=display:flex><span><span style=color:#f1fa8c>    Returns:
+</span></span></span><span style=display:flex><span><span style=color:#f1fa8c>        tuple: A tuple containing the matplotlib figure and axes used for plotting.
+</span></span></span><span style=display:flex><span><span style=color:#f1fa8c>
+</span></span></span><span style=display:flex><span><span style=color:#f1fa8c>    Note:
+</span></span></span><span style=display:flex><span><span style=color:#f1fa8c>        The mathematical expression is first converted to a Python function using sympy.lambdify.
+</span></span></span><span style=display:flex><span><span style=color:#f1fa8c>    The function is then plotted on the specified axes along with gridlines and labels.
+</span></span></span><span style=display:flex><span><span style=color:#f1fa8c>    &#34;&#34;&#34;</span>
+</span></span><span style=display:flex><span>    f <span style=color:#ff79c6>=</span> sympy<span style=color:#ff79c6>.</span>lambdify(x, y)
+</span></span><span style=display:flex><span>    fig, ax <span style=color:#ff79c6>=</span> plt<span style=color:#ff79c6>.</span>subplots()
+</span></span><span style=display:flex><span>    ax<span style=color:#ff79c6>.</span>grid(alpha<span style=color:#ff79c6>=</span><span style=color:#bd93f9>.5</span>)
+</span></span><span style=display:flex><span>    ax<span style=color:#ff79c6>.</span>axhline(<span style=color:#bd93f9>0</span>, color<span style=color:#ff79c6>=</span><span style=color:#f1fa8c>&#34;black&#34;</span>, alpha<span style=color:#ff79c6>=</span><span style=color:#bd93f9>.5</span>)
+</span></span><span style=display:flex><span>    plot_f(f, x_low, x_high, ax)
+</span></span><span style=display:flex><span>    ax<span style=color:#ff79c6>.</span>set(title<span style=color:#ff79c6>=</span><span style=color:#f1fa8c>f</span><span style=color:#f1fa8c>&#34;$f(x)=</span><span style=color:#f1fa8c>{</span>sympy<span style=color:#ff79c6>.</span>latex(y)<span style=color:#f1fa8c>}</span><span style=color:#f1fa8c>$&#34;</span>, xlabel<span style=color:#ff79c6>=</span><span style=color:#f1fa8c>&#34;$x$&#34;</span>, ylabel<span style=color:#ff79c6>=</span><span style=color:#f1fa8c>&#34;$f(x)$&#34;</span>)
+</span></span><span style=display:flex><span>    <span style=color:#ff79c6>return</span> fig, ax
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#ff79c6>def</span> <span style=color:#50fa7b>plot_truth</span>(ax: matplotlib<span style=color:#ff79c6>.</span>axes<span style=color:#ff79c6>.</span>Axes) <span style=color:#ff79c6>-&gt;</span> <span style=color:#ff79c6>None</span>:
+</span></span><span style=display:flex><span>    <span style=color:#f1fa8c>&#34;&#34;&#34;
+</span></span></span><span style=display:flex><span><span style=color:#f1fa8c>    Plots the true root of a function as a marker on the graph.
+</span></span></span><span style=display:flex><span><span style=color:#f1fa8c>
+</span></span></span><span style=display:flex><span><span style=color:#f1fa8c>    Parameters:
+</span></span></span><span style=display:flex><span><span style=color:#f1fa8c>        ax (matplotlib.axes.Axes): The matplotlib axes on which the marker will be plotted.
+</span></span></span><span style=display:flex><span><span style=color:#f1fa8c>
+</span></span></span><span style=display:flex><span><span style=color:#f1fa8c>    Returns:
+</span></span></span><span style=display:flex><span><span style=color:#f1fa8c>        None
+</span></span></span><span style=display:flex><span><span style=color:#f1fa8c>    &#34;&#34;&#34;</span>
+</span></span><span style=display:flex><span>    ax<span style=color:#ff79c6>.</span>plot(<span style=color:#ff79c6>-</span>np<span style=color:#ff79c6>.</span>pi,
+</span></span><span style=display:flex><span>        <span style=color:#bd93f9>0</span>,
+</span></span><span style=display:flex><span>        <span style=color:#f1fa8c>&#34;*&#34;</span>,
+</span></span><span style=display:flex><span>        markersize<span style=color:#ff79c6>=</span><span style=color:#bd93f9>15</span>,
+</span></span><span style=display:flex><span>        color<span style=color:#ff79c6>=</span><span style=color:#f1fa8c>&#34;darkblue&#34;</span>,
+</span></span><span style=display:flex><span>        label<span style=color:#ff79c6>=</span><span style=color:#f1fa8c>&#34;True root, $-\pi$&#34;</span>)
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span><span style=color:#ff79c6>def</span> <span style=color:#50fa7b>plot_guess</span>(
+</span></span><span style=display:flex><span>    ax: matplotlib<span style=color:#ff79c6>.</span>axes<span style=color:#ff79c6>.</span>Axes,
+</span></span><span style=display:flex><span>    guess: <span style=color:#8be9fd;font-style:italic>int</span>,
+</span></span><span style=display:flex><span>    label: <span style=color:#8be9fd;font-style:italic>str</span>) <span style=color:#ff79c6>-&gt;</span> <span style=color:#ff79c6>None</span>:
+</span></span><span style=display:flex><span>    <span style=color:#f1fa8c>&#34;&#34;&#34;
+</span></span></span><span style=display:flex><span><span style=color:#f1fa8c>    Plots a guess or estimate as a marker on the graph.
+</span></span></span><span style=display:flex><span><span style=color:#f1fa8c>
+</span></span></span><span style=display:flex><span><span style=color:#f1fa8c>    Parameters:
+</span></span></span><span style=display:flex><span><span style=color:#f1fa8c>        ax (matplotlib.axes.Axes): The matplotlib axes on which the marker will be plotted.
+</span></span></span><span style=display:flex><span><span style=color:#f1fa8c>        guess (int): The estimated value to be marked on the graph.
+</span></span></span><span style=display:flex><span><span style=color:#f1fa8c>        label (str): Label for the marker.
+</span></span></span><span style=display:flex><span><span style=color:#f1fa8c>
+</span></span></span><span style=display:flex><span><span style=color:#f1fa8c>    Returns:
+</span></span></span><span style=display:flex><span><span style=color:#f1fa8c>        None
+</span></span></span><span style=display:flex><span><span style=color:#f1fa8c>    &#34;&#34;&#34;</span>
+</span></span><span style=display:flex><span>    ax<span style=color:#ff79c6>.</span>plot(guess,
+</span></span><span style=display:flex><span>            <span style=color:#bd93f9>0</span>,
+</span></span><span style=display:flex><span>            <span style=color:#f1fa8c>&#34;o&#34;</span>,
+</span></span><span style=display:flex><span>            label<span style=color:#ff79c6>=</span>label)
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span><span style=color:#ff79c6>def</span> <span style=color:#50fa7b>plot_guess_coords</span>(
+</span></span><span style=display:flex><span>    ax: matplotlib<span style=color:#ff79c6>.</span>axes<span style=color:#ff79c6>.</span>Axes,
+</span></span><span style=display:flex><span>    guess: <span style=color:#8be9fd;font-style:italic>int</span>,
+</span></span><span style=display:flex><span>    label: <span style=color:#8be9fd;font-style:italic>str</span>,
+</span></span><span style=display:flex><span>    y: sympy<span style=color:#ff79c6>.</span>core<span style=color:#ff79c6>.</span>mul<span style=color:#ff79c6>.</span>Mul<span style=color:#ff79c6>=</span>y,
+</span></span><span style=display:flex><span>    x: sympy<span style=color:#ff79c6>.</span>core<span style=color:#ff79c6>.</span>mul<span style=color:#ff79c6>.</span>Mul<span style=color:#ff79c6>=</span>x):
+</span></span><span style=display:flex><span>    <span style=color:#f1fa8c>&#34;&#34;&#34;
+</span></span></span><span style=display:flex><span><span style=color:#f1fa8c>    Plots a guess or estimate with specific coordinates as a marker on the graph.
+</span></span></span><span style=display:flex><span><span style=color:#f1fa8c>
+</span></span></span><span style=display:flex><span><span style=color:#f1fa8c>    Parameters:
+</span></span></span><span style=display:flex><span><span style=color:#f1fa8c>        ax (matplotlib.axes.Axes): The matplotlib axes on which the marker will be plotted.
+</span></span></span><span style=display:flex><span><span style=color:#f1fa8c>        guess (int): The estimated x-coordinate where the marker will be placed.
+</span></span></span><span style=display:flex><span><span style=color:#f1fa8c>        label (str): Label for the marker.
+</span></span></span><span style=display:flex><span><span style=color:#f1fa8c>        y (sympy.core.mul.Mul): The mathematical expression corresponding to the y-coordinate.
+</span></span></span><span style=display:flex><span><span style=color:#f1fa8c>        x (sympy.core.mul.Mul): The symbol representing the independent variable (x).
+</span></span></span><span style=display:flex><span><span style=color:#f1fa8c>
+</span></span></span><span style=display:flex><span><span style=color:#f1fa8c>    Returns:
+</span></span></span><span style=display:flex><span><span style=color:#f1fa8c>        None
+</span></span></span><span style=display:flex><span><span style=color:#f1fa8c>    &#34;&#34;&#34;</span>
+</span></span><span style=display:flex><span>    ax<span style=color:#ff79c6>.</span>plot(guess,
+</span></span><span style=display:flex><span>            y<span style=color:#ff79c6>.</span>subs(x, guess)<span style=color:#ff79c6>.</span>evalf(),
+</span></span><span style=display:flex><span>            <span style=color:#f1fa8c>&#34;s&#34;</span>,
+</span></span><span style=display:flex><span>            label<span style=color:#ff79c6>=</span>label, color<span style=color:#ff79c6>=</span><span style=color:#f1fa8c>&#34;black&#34;</span>)
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span><span style=color:#ff79c6>def</span> <span style=color:#50fa7b>euclidean_dist_to_truth</span>(x): <span style=color:#ff79c6>return</span> np<span style=color:#ff79c6>.</span>sqrt((<span style=color:#ff79c6>-</span>np<span style=color:#ff79c6>.</span>pi <span style=color:#ff79c6>-</span> <span style=color:#8be9fd;font-style:italic>float</span>(x))<span style=color:#ff79c6>**</span><span style=color:#bd93f9>2</span>)
+</span></span></code></pre></div></details></div><p>Now we&rsquo;ll begin the process of using Newton&rsquo;s Method to arrive at that same answer of $x=-\pi$.</p><h4 id=step-1-make-a-first-guess-and-evaluate-its-x-y-coordinates>Step 1: Make a first guess and evaluate its (x, y) coordinates</h4><p>For a first guess, it&rsquo;s typical to start close to 0. In our case, we&rsquo;ll try -2.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span>x_0 <span style=color:#ff79c6>=</span> <span style=color:#ff79c6>-</span><span style=color:#bd93f9>2</span>
+</span></span><span style=display:flex><span>x_0
+</span></span></code></pre></div><pre><code>-2
+</code></pre><p>Let&rsquo;s get a sense of how good of a guess this is by plotting it</p><p>$$
+\begin{align*}
+f(x) &= 4 \sin \left( x \right) \\
+f(x_0) &= 4 \sin \left( -2 \right) \\
+f(x_0) &\approx −3.6371897 \\
+(x_0, y_0) &= (x_0, f(x_0)) \approx (-2, −3.6371897)
+\end{align*}
+$$</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span>fig, ax <span style=color:#ff79c6>=</span> base_plot(y, x, x_low<span style=color:#ff79c6>=-</span><span style=color:#bd93f9>5</span>, x_high<span style=color:#ff79c6>=-</span><span style=color:#bd93f9>1</span>)
+</span></span><span style=display:flex><span>plot_truth(ax)
+</span></span><span style=display:flex><span>plot_guess(ax, x_0, <span style=color:#f1fa8c>&#34;$x_0$ (initial guess)&#34;</span>)
+</span></span><span style=display:flex><span>plot_guess_coords(ax, x_0, <span style=color:#f1fa8c>&#34;$(x_0, f(x_0))$&#34;</span>)
+</span></span><span style=display:flex><span>ax<span style=color:#ff79c6>.</span>legend();
+</span></span></code></pre></div><p><img src=newtons_method_files/newtons_method_9_0.png alt=png></p><p>We can evaluate that directly by looking at the distance from the guess to what we know is the right answer:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#8be9fd;font-style:italic>print</span>(<span style=color:#f1fa8c>f</span><span style=color:#f1fa8c>&#34;error for guess x_0:&#34;</span>, euclidean_dist_to_truth(x_0))
+</span></span></code></pre></div><pre><code>error for guess x_0: 1.1415926535897931
+</code></pre><h4 id=step-2-find-the-equation-of-the-tangent-line-at-those-coordinates>Step 2: Find the equation of the tangent line at those coordinates</h4><p>We will proceed to improve upon that initial guess by computing the linear approximation of the function at that point, then retrieve its root to make a next-guess. Our first guess wasn&rsquo;t based on any relevant information other than the domain of our search (between -5 and 0). Our next guess is going to be better-informed, as it is an estimate based on an approximation of the function.</p><p>(Note that the linear approximation at this point is typically referred to as a tangent line, and I&rsquo;ll just between those two phrases.)</p><p>We compute the tangent by first differentiating the function and plugging in our previous guess. This yields the slope of the tangent line:
+$$
+\begin{align*}
+f(x) &= 4 \sin \left( x \right) \\
+f&rsquo;(x) &= 4 \cos \left( x \right) \\
+f&rsquo;(x_0) &= 4 \cos \left( -2 \right) \\
+f&rsquo;(x_0) &\approx −1.6645873
+\end{align*}
+$$</p><p>I&rsquo;ll note that <code>sympy</code> is capable of doing all of these routine calculations as well:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#8be9fd;font-style:italic>print</span>(<span style=color:#f1fa8c>&#34;   f(x) = &#34;</span>, y)
+</span></span><span style=display:flex><span><span style=color:#8be9fd;font-style:italic>print</span>(<span style=color:#f1fa8c>&#34;  f&#39;(x) = &#34;</span>, y<span style=color:#ff79c6>.</span>diff())
+</span></span><span style=display:flex><span><span style=color:#8be9fd;font-style:italic>print</span>(<span style=color:#f1fa8c>&#34;f&#39;(x_0) = &#34;</span>, y<span style=color:#ff79c6>.</span>diff()<span style=color:#ff79c6>.</span>subs(x, <span style=color:#ff79c6>-</span><span style=color:#bd93f9>2</span>))
+</span></span><span style=display:flex><span><span style=color:#8be9fd;font-style:italic>print</span>(<span style=color:#f1fa8c>&#34;[note: sympy converted x_0=-2 to x_0=2 because cos(-x)=cos(x)]&#34;</span>)
+</span></span><span style=display:flex><span><span style=color:#8be9fd;font-style:italic>print</span>(<span style=color:#f1fa8c>&#34;f&#39;(x_0) = &#34;</span>, y<span style=color:#ff79c6>.</span>diff()<span style=color:#ff79c6>.</span>subs(x, x_0)<span style=color:#ff79c6>.</span>evalf())
+</span></span></code></pre></div><pre><code>   f(x) =  4*sin(x)
+  f'(x) =  4*cos(x)
+f'(x_0) =  4*cos(2)
+[note: sympy converted x_0=-2 to x_0=2 because cos(-x)=cos(x)]
+f'(x_0) =  -1.66458734618857
+</code></pre><p>Now, given each of these terms:</p><table><thead><tr><th>Term (math)</th><th>Value</th></tr></thead><tbody><tr><td>$x_0$ (X, Last Guess)</td><td>$= -2$</td></tr><tr><td>$f(x_0)$ (Y at $x_0$)</td><td>$\approx −3.6371897$</td></tr><tr><td>$f&rsquo;(x_0)$ (Slope of tangent at $x_0$)</td><td>$\approx −1.6645873$</td></tr></tbody></table><p>We can proceed to find the full equation of the tangent line by writing out the point-slope form of a linear equation with slope $m=f&rsquo;(x_0)$.
+$$
+\begin{align*}
+(y - y_0) &= m(x - x_0) \\
+(y - f(x_0)) &= f&rsquo;(x_0)(x - x_0) \\
+y &= f&rsquo;(x_0)(x - x_0) + f(x_0)
+\end{align*}
+$$
+Plugging in our values, we get:
+$$
+\begin{align*}
+y &\approx −1.6645873x + 1.6645873(-2) - 3.6371897\\
+y &\approx −1.6645873x - 6.9663643\\
+\end{align*}
+$$</p><p>We&rsquo;ll save that into a python function and plot it to make sure it does look like the tangent.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span>f_1 <span style=color:#ff79c6>=</span> <span style=color:#ff79c6>lambda</span> x: <span style=color:#ff79c6>-</span><span style=color:#bd93f9>1.6645873</span><span style=color:#ff79c6>*</span>x <span style=color:#ff79c6>-</span> <span style=color:#bd93f9>6.9663643</span>
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span>fig, ax <span style=color:#ff79c6>=</span> base_plot(y, x, x_low<span style=color:#ff79c6>=-</span><span style=color:#bd93f9>5</span>, x_high<span style=color:#ff79c6>=-</span><span style=color:#bd93f9>1</span>)
+</span></span><span style=display:flex><span>plot_truth(ax)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>plot_f(f_1, x_low<span style=color:#ff79c6>=-</span><span style=color:#bd93f9>5</span>, x_high<span style=color:#ff79c6>=-</span><span style=color:#bd93f9>1</span>, ax<span style=color:#ff79c6>=</span>ax)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>plot_guess(ax, x_0, <span style=color:#f1fa8c>&#34;$x_0$ (initial guess)&#34;</span>)
+</span></span><span style=display:flex><span>plot_guess_coords(ax, x_0, <span style=color:#f1fa8c>&#34;$(x_0, f(x_0))$&#34;</span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>ax<span style=color:#ff79c6>.</span>legend();
+</span></span></code></pre></div><p><img src=newtons_method_files/newtons_method_16_0.png alt=png></p><h4 id=step-3-find-the-x-intercept-of-the-tangent-line>Step 3: Find the x-intercept of the tangent line</h4><p>Given that the tangent line is the <strong>best linear approximation</strong> of the original function, we can use its x-intercept as an approximation of the x-intercept of the original function. Thus, the root of the tangent line is the new &ldquo;best-guess&rdquo; of the original function&rsquo;s root.</p><p>$$
+\begin{align*}
+0 &\approx −1.6645873x_1 - 6.9663643\\
+\frac{6.9663643}{−1.6645873} &\approx x_1\\
+x_1 &\approx -4.1850
+\end{align*}
+$$</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span>x_1 <span style=color:#ff79c6>=</span> <span style=color:#ff79c6>-</span><span style=color:#bd93f9>4.1850</span>
+</span></span></code></pre></div><pre><code>-4.185
+</code></pre><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span>fig, ax <span style=color:#ff79c6>=</span> base_plot(y, x, x_low<span style=color:#ff79c6>=-</span><span style=color:#bd93f9>5</span>, x_high<span style=color:#ff79c6>=-</span><span style=color:#bd93f9>1</span>)
+</span></span><span style=display:flex><span>plot_truth(ax)
+</span></span><span style=display:flex><span>plot_guess(ax, x_0, <span style=color:#f1fa8c>&#34;$x_0$ (initial guess)&#34;</span>)
+</span></span><span style=display:flex><span>plot_f(f_1, x_low<span style=color:#ff79c6>=-</span><span style=color:#bd93f9>5</span>, x_high<span style=color:#ff79c6>=-</span><span style=color:#bd93f9>1</span>, ax<span style=color:#ff79c6>=</span>ax)
+</span></span><span style=display:flex><span>plot_guess(ax, x_1, <span style=color:#f1fa8c>&#34;$x_1$ (next guess)&#34;</span>)
+</span></span><span style=display:flex><span>ax<span style=color:#ff79c6>.</span>legend();
+</span></span></code></pre></div><p><img src=newtons_method_files/newtons_method_19_0.png alt=png></p><p>While this guess still isn&rsquo;t particularly great, we can see that we have actually reduced the &ldquo;error&rdquo; of our guess:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#ff79c6>for</span> i, x_n <span style=color:#ff79c6>in</span> <span style=color:#8be9fd;font-style:italic>enumerate</span>([x_0, x_1]):
+</span></span><span style=display:flex><span>    <span style=color:#8be9fd;font-style:italic>print</span>(<span style=color:#f1fa8c>f</span><span style=color:#f1fa8c>&#34;error for guess x_</span><span style=color:#f1fa8c>{</span>i<span style=color:#f1fa8c>}</span><span style=color:#f1fa8c>:&#34;</span>, euclidean_dist_to_truth(x_n))
+</span></span></code></pre></div><pre><code>error for guess x_0: 1.1415926535897931
+error for guess x_1: 1.0434073464102065
+</code></pre><p>The big reveal of Newton-Raphson is that this error will continue to shrink as we repeat steps 1-3.</p><h4 id=step-4-repeat>Step 4: Repeat</h4><p>We will again find the tangent line at this new point, $(x_1, f(x_1))$. We could take the old tangent line equation, $y = f&rsquo;(x_0)(x - x_0) + f(x_0)$ and simply update all of those $x_0$ to $x_1$, but at this point it will benefit us to move towards a more general equation:
+$$
+y = f&rsquo;(x_n)(x - x_n) + f(x_n)
+$$
+This allows us to generate the tangent line at any given guess, $x_n$. The following code leverages <code>sympy</code> to write that equation as a python function.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#ff79c6>def</span> <span style=color:#50fa7b>y_n</span>(x_n): <span style=color:#ff79c6>return</span> (
+</span></span><span style=display:flex><span>    y<span style=color:#ff79c6>.</span>diff()<span style=color:#ff79c6>.</span>subs(x, x_n) <span style=color:#ff79c6>*</span> (x <span style=color:#ff79c6>-</span> x_n) <span style=color:#ff79c6>+</span>  <span style=color:#6272a4># f_1(x_1)(x-x_1) +</span>
+</span></span><span style=display:flex><span>    y<span style=color:#ff79c6>.</span>subs(x, x_n)  <span style=color:#6272a4># f(x_1)</span>
+</span></span><span style=display:flex><span>)
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span>y_n(x_1)
+</span></span></code></pre></div><p>$\displaystyle - 2.01311525745113 x - 4.96839101072835$</p><p>We&rsquo;ll also use <code>sympy</code> to easily solve for the new tangent line&rsquo;s x-intercept, $x_2$</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span>x_2 <span style=color:#ff79c6>=</span> sympy<span style=color:#ff79c6>.</span>solve(y_n(x_1), x)[<span style=color:#bd93f9>0</span>]
+</span></span><span style=display:flex><span>x_2
+</span></span></code></pre></div><p>$\displaystyle -2.46801120419652$</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span>fig, ax <span style=color:#ff79c6>=</span> base_plot(y, x, x_low<span style=color:#ff79c6>=-</span><span style=color:#bd93f9>5</span>, x_high<span style=color:#ff79c6>=-</span><span style=color:#bd93f9>1</span>)
+</span></span><span style=display:flex><span>plot_truth(ax)
+</span></span><span style=display:flex><span>plot_f(sympy<span style=color:#ff79c6>.</span>lambdify(x, y_n(x_1)), x_low<span style=color:#ff79c6>=-</span><span style=color:#bd93f9>5</span>, x_high<span style=color:#ff79c6>=-</span><span style=color:#bd93f9>1</span>, ax<span style=color:#ff79c6>=</span>ax)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>plot_guess_coords(ax, x_1, <span style=color:#f1fa8c>&#34;$(x_1, f(x_1))$&#34;</span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>plot_guess(ax, x_0, <span style=color:#f1fa8c>&#34;$x_0$ (initial guess)&#34;</span>)
+</span></span><span style=display:flex><span>plot_guess(ax, x_1, <span style=color:#f1fa8c>&#34;$x_1$ (previous guess)&#34;</span>)
+</span></span><span style=display:flex><span>plot_guess(ax, x_2, <span style=color:#f1fa8c>&#34;$x_2$ (next guess)&#34;</span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>ax<span style=color:#ff79c6>.</span>legend();
+</span></span></code></pre></div><p><img src=newtons_method_files/newtons_method_28_0.png alt=png></p><p>We can verify that this new guess again reduces our &ldquo;error,&rdquo; which should encourage us to continue this process.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#ff79c6>for</span> i, x_n <span style=color:#ff79c6>in</span> <span style=color:#8be9fd;font-style:italic>enumerate</span>([x_0, x_1, x_2]):
+</span></span><span style=display:flex><span>    <span style=color:#8be9fd;font-style:italic>print</span>(<span style=color:#f1fa8c>f</span><span style=color:#f1fa8c>&#34;error for guess x_</span><span style=color:#f1fa8c>{</span>i<span style=color:#f1fa8c>}</span><span style=color:#f1fa8c>:&#34;</span>, euclidean_dist_to_truth(x_n))
+</span></span></code></pre></div><pre><code>error for guess x_0: 1.1415926535897931
+error for guess x_1: 1.0434073464102065
+error for guess x_2: 0.6735814493932737
+</code></pre><h4 id=step-5-generalize-the-procedure>Step 5: Generalize the procedure</h4><h5 id=make-the-equation-more-direct>Make the equation more direct</h5><p>Thus far we have used the general equation $y = f&rsquo;(x_n)(x - x_n) + f(x_n)$, where $x_n$ is our current guess, and we solve for $x$ to define our next guess. Given that we solve the equation for $x$, we can rewrite it as follows:<br>$$
+\begin{align*}
+0 &= f&rsquo;(x_n)(x - x_n) + f(x_n)\\
+0 &= f&rsquo;(x_n)(x - x_n) + f(x_n) \\
+0 - f(x_n) &= f&rsquo;(x_n)(x - x_n)\\
+-\frac{f(x_n)}{f&rsquo;(x_n)} &= x - x_n\\
+x &= x_n -\frac{f(x_n)}{f&rsquo;(x_n)}\\
+\end{align*}
+$$
+This expresses <em>one step</em> of Newton&rsquo;s Method &ndash; solving for the x-intercept of the tangent line at the point $(x_n, f(x_n))$.</p><h5 id=from-equation-to-algorithm>From equation to algorithm</h5><p>We now build on this single step and express the general <em>process</em> of Newton&rsquo;s method. To start, it&rsquo;s more accurate to label the left hand side $x_{n+1}$ given that it represents the next guess:
+$$
+x_{n+1} = x_n -\frac{f(x_n)}{f&rsquo;(x_n)}
+$$<br>Given this equation, we can think of Newton&rsquo;s Method as essentially searching for good guesses &ndash; defining new $x_{n+1}$ &ndash; until it&rsquo;s right. But how do we define &ldquo;right&rdquo;? Put in other words, <strong>when do we stop?</strong></p><p>In our case, we are working with a simple function and we know the correct answer &ndash; we can just stop once we get close to $-\pi$ &ndash; but in any real application that won&rsquo;t be the case. In those cases, it is common practice to define &ldquo;right&rdquo; as when the guesses stop changing much with each iteration. Stated semi-formally, we wait until $|x_{n+1} - x_{n}|$ gets small.</p><p>For example: if the last guess was -3.14159 and the new guess is -3.141592, the guess only changed by .0000002, and we might conclude that we&rsquo;ve gotten as close to the answer as is necessary. In this case, we set a stopping condition &ndash; when the next guess is less than or equal to .0000002 away from the previous one, we stop. We can write out the stopping condition as follows:</p><p>$$
+\begin{align*}
+|x_{n+1} - x_{n}| &\leq 2\times 10^{-7} \\
+|(x_n -\frac{f(x_n)}{f&rsquo;(x_n)}) - x_{n}| &\leq 2\times 10^{-7} \\
+|-\frac{f(x_n)}{f&rsquo;(x_n)}| &\leq 2\times 10^{-7} \\
+|\frac{f(x_n)}{f&rsquo;(x_n)}| &\leq 2\times 10^{-7}
+\end{align*}
+$$</p><p>We can try writing out the recursive algorithm as a piece-wise equation:</p><p>$$
+\text{Let } x_0 := \text{initial guess} \text{. For all natural numbers } n \ge 0 \text{, define } x_{n+1} \text{ as:}
+$$
+$$
+x_{n+1} = \begin{cases}
+x_n & \text{if }\quad |\frac{f(x_n)}{f&rsquo;(x_n)}| \leq 2\times 10^{-7} \\
+x_n -\frac{f(x_n)}{f&rsquo;(x_n)} & \text{Otherwise}
+\end{cases}
+$$</p><p>However, now that we are moving into the realm of algorithms, I think it&rsquo;s clearer to write this as code:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span>x_n <span style=color:#ff79c6>=</span> <span style=color:#ff79c6>-</span><span style=color:#bd93f9>2</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#6272a4># We&#39;ll use this to count which guess we are on</span>
+</span></span><span style=display:flex><span>counter <span style=color:#ff79c6>=</span> <span style=color:#bd93f9>1</span>
+</span></span><span style=display:flex><span><span style=color:#ff79c6>while</span> <span style=color:#ff79c6>True</span>:
+</span></span><span style=display:flex><span>    <span style=color:#6272a4># Disregard the following utility code</span>
+</span></span><span style=display:flex><span>    <span style=color:#8be9fd;font-style:italic>print</span>(<span style=color:#f1fa8c>f</span><span style=color:#f1fa8c>&#34;Guess </span><span style=color:#f1fa8c>{</span>counter<span style=color:#f1fa8c>}</span><span style=color:#f1fa8c>:&#34;</span>,
+</span></span><span style=display:flex><span>          <span style=color:#8be9fd;font-style:italic>str</span>(<span style=color:#8be9fd;font-style:italic>round</span>(<span style=color:#8be9fd;font-style:italic>float</span>(x_n), <span style=color:#bd93f9>5</span>))<span style=color:#ff79c6>.</span>ljust(<span style=color:#bd93f9>8</span>, <span style=color:#f1fa8c>&#39;0&#39;</span>),
+</span></span><span style=display:flex><span>          <span style=color:#f1fa8c>&#34; --- Error:&#34;</span>,
+</span></span><span style=display:flex><span>          euclidean_dist_to_truth(x_n))
+</span></span><span style=display:flex><span>    <span style=color:#6272a4>################################################</span>
+</span></span><span style=display:flex><span>    <span style=color:#6272a4># The following is the code for newton&#39;s method</span>
+</span></span><span style=display:flex><span>    <span style=color:#6272a4># 1.) Check for the stopping condition,</span>
+</span></span><span style=display:flex><span>    <span style=color:#6272a4># |f(x_n)/f&#39;(x_n)| &lt; 2 * 10^-7</span>
+</span></span><span style=display:flex><span>    stop_condition <span style=color:#ff79c6>=</span> (
+</span></span><span style=display:flex><span>        np<span style=color:#ff79c6>.</span>abs(sympy<span style=color:#ff79c6>.</span>lambdify(x, y)(x_n) <span style=color:#ff79c6>/</span>
+</span></span><span style=display:flex><span>               sympy<span style=color:#ff79c6>.</span>lambdify(x, y<span style=color:#ff79c6>.</span>diff())(x_n))
+</span></span><span style=display:flex><span>        <span style=color:#ff79c6>&lt;</span> <span style=color:#bd93f9>2e-7</span>
+</span></span><span style=display:flex><span>               )
+</span></span><span style=display:flex><span>    <span style=color:#ff79c6>if</span> stop_condition:
+</span></span><span style=display:flex><span>        <span style=color:#8be9fd;font-style:italic>print</span>(<span style=color:#f1fa8c>f</span><span style=color:#f1fa8c>&#34;Converged in </span><span style=color:#f1fa8c>{</span>counter<span style=color:#f1fa8c>}</span><span style=color:#f1fa8c> steps.&#34;</span>)
+</span></span><span style=display:flex><span>        <span style=color:#ff79c6>break</span>
+</span></span><span style=display:flex><span>    <span style=color:#6272a4># 2.) If stopping condition not met, make a new guess</span>
+</span></span><span style=display:flex><span>    x_n <span style=color:#ff79c6>=</span> x_n <span style=color:#ff79c6>-</span> (
+</span></span><span style=display:flex><span>        <span style=color:#6272a4># f(x_n) / </span>
+</span></span><span style=display:flex><span>        sympy<span style=color:#ff79c6>.</span>lambdify(x, y)(x_n) <span style=color:#ff79c6>/</span>
+</span></span><span style=display:flex><span>        <span style=color:#6272a4># f&#39;(x_n)</span>
+</span></span><span style=display:flex><span>        sympy<span style=color:#ff79c6>.</span>lambdify(x, y<span style=color:#ff79c6>.</span>diff())(x_n)
+</span></span><span style=display:flex><span>    )
+</span></span><span style=display:flex><span>    <span style=color:#6272a4>################################################</span>
+</span></span><span style=display:flex><span>    <span style=color:#6272a4># Update the counter  </span>
+</span></span><span style=display:flex><span>    counter <span style=color:#ff79c6>+=</span> <span style=color:#bd93f9>1</span>
+</span></span></code></pre></div><pre><code>Guess 1: -2.00000  --- Error: 1.1415926535897931
+Guess 2: -4.18504  --- Error: 1.0434472096717258
+Guess 3: -2.46789  --- Error: 0.6736989790751275
+Guess 4: -3.26619  --- Error: 0.1245936239793135
+Guess 5: -3.14094  --- Error: 0.00064874127215786
+Guess 6: -3.14159  --- Error: 9.101119857746198e-11
+Converged in 6 steps.
+</code></pre><p>We can verify that this new guess again reduces our &ldquo;error,&rdquo; which should encourage us to continue this process.</p><div style="padding:0 0 1em;color:darkred;font-weight:700"><details><summary>GIF Code</summary><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#ff79c6>%%</span>capture
+</span></span><span style=display:flex><span>x_n <span style=color:#ff79c6>=</span> <span style=color:#ff79c6>-</span><span style=color:#bd93f9>2</span>
+</span></span><span style=display:flex><span>max_iter <span style=color:#ff79c6>=</span> <span style=color:#bd93f9>10</span>
+</span></span><span style=display:flex><span>tolerance <span style=color:#ff79c6>=</span> <span style=color:#bd93f9>1e-6</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>fig, ax <span style=color:#ff79c6>=</span> base_plot(y, x, x_low<span style=color:#ff79c6>=-</span><span style=color:#bd93f9>5</span>, x_high<span style=color:#ff79c6>=-</span><span style=color:#bd93f9>1</span>)
+</span></span><span style=display:flex><span>plot_truth(ax)
+</span></span><span style=display:flex><span>ax<span style=color:#ff79c6>.</span>set_ylim(<span style=color:#ff79c6>-</span><span style=color:#bd93f9>4</span>, <span style=color:#bd93f9>4</span>)
+</span></span><span style=display:flex><span>ax<span style=color:#ff79c6>.</span>set_xlim(<span style=color:#ff79c6>-</span><span style=color:#bd93f9>4.5</span>, <span style=color:#ff79c6>-</span><span style=color:#bd93f9>1.5</span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>images <span style=color:#ff79c6>=</span> []
+</span></span><span style=display:flex><span>breaking_condition <span style=color:#ff79c6>=</span> <span style=color:#ff79c6>False</span>
+</span></span><span style=display:flex><span><span style=color:#ff79c6>for</span> j <span style=color:#ff79c6>in</span> <span style=color:#8be9fd;font-style:italic>range</span>(max_iter):
+</span></span><span style=display:flex><span>    error <span style=color:#ff79c6>=</span> euclidean_dist_to_truth(x_n)
+</span></span><span style=display:flex><span>    <span style=color:#ff79c6>if</span> error <span style=color:#ff79c6>&lt;</span> tolerance:
+</span></span><span style=display:flex><span>        breaking_condition <span style=color:#ff79c6>=</span> <span style=color:#ff79c6>True</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    ax<span style=color:#ff79c6>.</span>set_title(
+</span></span><span style=display:flex><span>        <span style=color:#f1fa8c>f</span><span style=color:#f1fa8c>&#34;Iteration </span><span style=color:#f1fa8c>{</span>j<span style=color:#ff79c6>+</span><span style=color:#bd93f9>1</span><span style=color:#f1fa8c>}</span><span style=color:#f1fa8c>\n</span><span style=color:#f1fa8c>Guess: </span><span style=color:#f1fa8c>{</span><span style=color:#8be9fd;font-style:italic>round</span>(x_n, <span style=color:#bd93f9>6</span>)<span style=color:#f1fa8c>}</span><span style=color:#f1fa8c>\n</span><span style=color:#f1fa8c> Error: </span><span style=color:#f1fa8c>{</span><span style=color:#8be9fd;font-style:italic>round</span>(error, <span style=color:#bd93f9>8</span>)<span style=color:#f1fa8c>}</span><span style=color:#f1fa8c>&#34;</span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#6272a4># Plot the current guess</span>
+</span></span><span style=display:flex><span>    plot_guess(ax, x_n, <span style=color:#f1fa8c>&#34;$x_n$&#34;</span>)
+</span></span><span style=display:flex><span>    filename <span style=color:#ff79c6>=</span> <span style=color:#f1fa8c>f</span><span style=color:#f1fa8c>&#39;newton_iteration_</span><span style=color:#f1fa8c>{</span>j<span style=color:#f1fa8c>}</span><span style=color:#f1fa8c>_0.png&#39;</span>
+</span></span><span style=display:flex><span>    fig<span style=color:#ff79c6>.</span>savefig(filename)
+</span></span><span style=display:flex><span>    images<span style=color:#ff79c6>.</span>append(imageio<span style=color:#ff79c6>.</span>imread(filename))
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#ff79c6>if</span> breaking_condition:
+</span></span><span style=display:flex><span>        ax<span style=color:#ff79c6>.</span>text(x_n, <span style=color:#bd93f9>2</span>, s<span style=color:#ff79c6>=</span><span style=color:#f1fa8c>f</span><span style=color:#f1fa8c>&#34;CONVERGED IN </span><span style=color:#f1fa8c>{</span>j<span style=color:#f1fa8c>}</span><span style=color:#f1fa8c> STEPS&#34;</span>, size<span style=color:#ff79c6>=</span><span style=color:#bd93f9>15</span>)
+</span></span><span style=display:flex><span>        filename <span style=color:#ff79c6>=</span> <span style=color:#f1fa8c>f</span><span style=color:#f1fa8c>&#39;newton_iteration_</span><span style=color:#f1fa8c>{</span>i<span style=color:#f1fa8c>}</span><span style=color:#f1fa8c>_3.png&#39;</span>
+</span></span><span style=display:flex><span>        fig<span style=color:#ff79c6>.</span>savefig(filename)
+</span></span><span style=display:flex><span>        images<span style=color:#ff79c6>.</span>append(imageio<span style=color:#ff79c6>.</span>imread(filename))
+</span></span><span style=display:flex><span>        ax<span style=color:#ff79c6>.</span>text(x_n, <span style=color:#bd93f9>2</span>, s<span style=color:#ff79c6>=</span><span style=color:#f1fa8c>f</span><span style=color:#f1fa8c>&#34;CONVERGED IN </span><span style=color:#f1fa8c>{</span>j<span style=color:#f1fa8c>}</span><span style=color:#f1fa8c> STEPS&#34;</span>, size<span style=color:#ff79c6>=</span><span style=color:#bd93f9>15</span>)
+</span></span><span style=display:flex><span>        filename <span style=color:#ff79c6>=</span> <span style=color:#f1fa8c>f</span><span style=color:#f1fa8c>&#39;newton_iteration_</span><span style=color:#f1fa8c>{</span>i<span style=color:#f1fa8c>}</span><span style=color:#f1fa8c>_4.png&#39;</span>
+</span></span><span style=display:flex><span>        fig<span style=color:#ff79c6>.</span>savefig(filename)
+</span></span><span style=display:flex><span>        images<span style=color:#ff79c6>.</span>append(imageio<span style=color:#ff79c6>.</span>imread(filename))
+</span></span><span style=display:flex><span>        <span style=color:#ff79c6>break</span>
+</span></span><span style=display:flex><span>    <span style=color:#6272a4># Plot the coordinates of the current guess</span>
+</span></span><span style=display:flex><span>    plot_guess_coords(ax, x_n, <span style=color:#f1fa8c>&#34;$(x_n, f(x_n))$&#34;</span>)
+</span></span><span style=display:flex><span>    filename <span style=color:#ff79c6>=</span> <span style=color:#f1fa8c>f</span><span style=color:#f1fa8c>&#39;newton_iteration_</span><span style=color:#f1fa8c>{</span>j<span style=color:#f1fa8c>}</span><span style=color:#f1fa8c>_1.png&#39;</span>
+</span></span><span style=display:flex><span>    fig<span style=color:#ff79c6>.</span>savefig(filename)
+</span></span><span style=display:flex><span>    images<span style=color:#ff79c6>.</span>append(imageio<span style=color:#ff79c6>.</span>imread(filename))
+</span></span><span style=display:flex><span>    <span style=color:#6272a4># Plot the tangent line of that coordinate to inform next guess</span>
+</span></span><span style=display:flex><span>    plot_f(sympy<span style=color:#ff79c6>.</span>lambdify(x, y_n(x_n)), x_low<span style=color:#ff79c6>=-</span><span style=color:#bd93f9>5</span>, x_high<span style=color:#ff79c6>=-</span><span style=color:#bd93f9>1</span>, ax<span style=color:#ff79c6>=</span>ax)
+</span></span><span style=display:flex><span>    filename <span style=color:#ff79c6>=</span> <span style=color:#f1fa8c>f</span><span style=color:#f1fa8c>&#39;newton_iteration_</span><span style=color:#f1fa8c>{</span>j<span style=color:#f1fa8c>}</span><span style=color:#f1fa8c>_2.png&#39;</span>
+</span></span><span style=display:flex><span>    fig<span style=color:#ff79c6>.</span>savefig(filename)
+</span></span><span style=display:flex><span>    images<span style=color:#ff79c6>.</span>append(imageio<span style=color:#ff79c6>.</span>imread(filename))
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#6272a4># Reset plot</span>
+</span></span><span style=display:flex><span>    ax<span style=color:#ff79c6>.</span>clear()
+</span></span><span style=display:flex><span>    fig, ax <span style=color:#ff79c6>=</span> base_plot(y, x, x_low<span style=color:#ff79c6>=-</span><span style=color:#bd93f9>5</span>, x_high<span style=color:#ff79c6>=-</span><span style=color:#bd93f9>1</span>)
+</span></span><span style=display:flex><span>    plot_truth(ax)
+</span></span><span style=display:flex><span>    ax<span style=color:#ff79c6>.</span>set_ylim(<span style=color:#ff79c6>-</span><span style=color:#bd93f9>4</span>, <span style=color:#bd93f9>4</span>)
+</span></span><span style=display:flex><span>    ax<span style=color:#ff79c6>.</span>set_xlim(<span style=color:#ff79c6>-</span><span style=color:#bd93f9>4.5</span>, <span style=color:#ff79c6>-</span><span style=color:#bd93f9>1.5</span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    x_n <span style=color:#ff79c6>-=</span> (
+</span></span><span style=display:flex><span>        sympy<span style=color:#ff79c6>.</span>lambdify(x, y)(x_n) <span style=color:#ff79c6>/</span>
+</span></span><span style=display:flex><span>        sympy<span style=color:#ff79c6>.</span>lambdify(x, y<span style=color:#ff79c6>.</span>diff())(x_n)
+</span></span><span style=display:flex><span>    )
+</span></span><span style=display:flex><span>imageio<span style=color:#ff79c6>.</span>mimsave(<span style=color:#f1fa8c>&#39;newton_iterations.gif&#39;</span>, images, duration<span style=color:#ff79c6>=</span><span style=color:#bd93f9>1</span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#6272a4># Clean out pngs</span>
+</span></span><span style=display:flex><span>wd <span style=color:#ff79c6>=</span> os<span style=color:#ff79c6>.</span>getcwd()
+</span></span><span style=display:flex><span>files <span style=color:#ff79c6>=</span> os<span style=color:#ff79c6>.</span>listdir(wd)
+</span></span><span style=display:flex><span><span style=color:#ff79c6>for</span> item <span style=color:#ff79c6>in</span> files:
+</span></span><span style=display:flex><span>    <span style=color:#ff79c6>if</span> item<span style=color:#ff79c6>.</span>endswith(<span style=color:#f1fa8c>&#34;.png&#34;</span>):
+</span></span><span style=display:flex><span>        os<span style=color:#ff79c6>.</span>remove(os<span style=color:#ff79c6>.</span>path<span style=color:#ff79c6>.</span>join(wd, item))
+</span></span></code></pre></div></details></div><p><img src=newton_iterations.gif?4 alt=gif title=gif></p><h3 id=using-newtons-method-to-solve-a-real-problem>Using Newton&rsquo;s Method to Solve a Real Problem</h3><p>In the previous example, we dealt with a function, $f(x) = 4\sin(x)$ with a well known analytical solution for its x-intercept. Other simple functions can typically be solved with known formulas &ndash; e.g. a second degree polynomial&rsquo;s roots can be found using the quadratic formula. In cases of known analytical solutions or readily available root-finding formula&rsquo;s, there is no reason to use Newton&rsquo;s Method beyond as a learning exercise.</p><p>However, many functions do not have have readily available methods for finding the root. For example, if $f(x)$ is a polynomial of degree 5 or greater, it is known that no formula for finding its roots exist (Strang 2016). Consider the following polynomial of degree 5:
+$$
+f(x) =x^{5} + 8 x^{4} + 4 x^{3} - 2 x - 7
+$$
+What if we are asked to solve the following:
+$$
+\begin{align*}
+f(x)&=0 \quad where -5\leq x \leq 0\\
+0 &= x^{5} + 8 x^{4} + 4 x^{3} - 2 x - 7 \quad where -5\leq x \leq 0\\
+\end{align*}
+$$
+There is no formula that solves this. Even plugging the polynomial into <code>sympy</code> and running its solver, <code>sympy.solveset</code>, doesn&rsquo;t give a clear answer.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span>x, y <span style=color:#ff79c6>=</span> sympy<span style=color:#ff79c6>.</span>symbols(<span style=color:#f1fa8c>&#39;x y&#39;</span>)
+</span></span><span style=display:flex><span>y <span style=color:#ff79c6>=</span> x<span style=color:#ff79c6>**</span><span style=color:#bd93f9>5</span> <span style=color:#ff79c6>+</span> <span style=color:#bd93f9>8</span><span style=color:#ff79c6>*</span>x<span style=color:#ff79c6>**</span><span style=color:#bd93f9>4</span> <span style=color:#ff79c6>+</span> <span style=color:#bd93f9>4</span><span style=color:#ff79c6>*</span>x<span style=color:#ff79c6>**</span><span style=color:#bd93f9>3</span> <span style=color:#ff79c6>-</span> <span style=color:#bd93f9>2</span><span style=color:#ff79c6>*</span>x<span style=color:#ff79c6>-</span><span style=color:#bd93f9>7</span>
+</span></span><span style=display:flex><span>y
+</span></span></code></pre></div><p>$\displaystyle x^{5} + 8 x^{4} + 4 x^{3} - 2 x - 7$</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#8be9fd;font-style:italic>print</span>(sympy<span style=color:#ff79c6>.</span>solveset(y, x, sympy<span style=color:#ff79c6>.</span>Interval(<span style=color:#ff79c6>-</span><span style=color:#bd93f9>5</span>, <span style=color:#bd93f9>0</span>)))
+</span></span></code></pre></div><pre><code>{CRootOf(x**5 + 8*x**4 + 4*x**3 - 2*x - 7, 1)}
+</code></pre><p>(where $\text{CRootOf}$ is an indexed complex root of the polynomial &ndash; not an analytical solution)</p><p>We might proceed to visually inspect the function on this domain &ndash; but it&rsquo;s even pretty hard to visually spot a root here!</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span>x_vec <span style=color:#ff79c6>=</span> np<span style=color:#ff79c6>.</span>linspace(<span style=color:#ff79c6>-</span><span style=color:#bd93f9>5</span>, <span style=color:#bd93f9>0</span>, <span style=color:#bd93f9>1000000</span>)
+</span></span><span style=display:flex><span>fig, ax <span style=color:#ff79c6>=</span> plt<span style=color:#ff79c6>.</span>subplots()
+</span></span><span style=display:flex><span>ax<span style=color:#ff79c6>.</span>grid(alpha<span style=color:#ff79c6>=</span><span style=color:#bd93f9>.5</span>)
+</span></span><span style=display:flex><span>ax<span style=color:#ff79c6>.</span>plot(x_vec, sympy<span style=color:#ff79c6>.</span>lambdify(x, y)(x_vec))
+</span></span><span style=display:flex><span>ax<span style=color:#ff79c6>.</span>set_title(<span style=color:#f1fa8c>f</span><span style=color:#f1fa8c>&#34;$y=</span><span style=color:#f1fa8c>{</span>sympy<span style=color:#ff79c6>.</span>latex(y)<span style=color:#f1fa8c>}</span><span style=color:#f1fa8c>$&#34;</span>);
+</span></span></code></pre></div><p><img src=newtons_method_files/newtons_method_43_0.png alt=png></p><p>Here&rsquo;s a good use-case for Newton&rsquo;s Method. I set up the algorithm with $x_0=0$ and a stopping condition that $|x_{n+1} - x_{n}| \leq 10^{-10}$.<br>In just 10 steps I have the answer:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span>x_n <span style=color:#ff79c6>=</span> <span style=color:#bd93f9>0</span>
+</span></span><span style=display:flex><span>tolerance <span style=color:#ff79c6>=</span> <span style=color:#bd93f9>1e-10</span>
+</span></span><span style=display:flex><span>counter <span style=color:#ff79c6>=</span> <span style=color:#bd93f9>1</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#ff79c6>while</span> <span style=color:#ff79c6>True</span>:
+</span></span><span style=display:flex><span>    <span style=color:#6272a4># Disregard the following utility code</span>
+</span></span><span style=display:flex><span>    <span style=color:#8be9fd;font-style:italic>print</span>(<span style=color:#f1fa8c>f</span><span style=color:#f1fa8c>&#34;Guess </span><span style=color:#f1fa8c>{</span>counter<span style=color:#f1fa8c>}</span><span style=color:#f1fa8c>:&#34;</span>,
+</span></span><span style=display:flex><span>          <span style=color:#8be9fd;font-style:italic>str</span>(<span style=color:#8be9fd;font-style:italic>round</span>(<span style=color:#8be9fd;font-style:italic>float</span>(x_n), <span style=color:#bd93f9>5</span>))<span style=color:#ff79c6>.</span>ljust(<span style=color:#bd93f9>8</span>, <span style=color:#f1fa8c>&#39;0&#39;</span>),
+</span></span><span style=display:flex><span>          <span style=color:#f1fa8c>&#34; --- Error:&#34;</span>,
+</span></span><span style=display:flex><span>          euclidean_dist_to_truth(x_n))
+</span></span><span style=display:flex><span>    <span style=color:#6272a4>################################################</span>
+</span></span><span style=display:flex><span>    <span style=color:#6272a4># The following is the code for newton&#39;s method</span>
+</span></span><span style=display:flex><span>    <span style=color:#6272a4># 1.) Check for the stopping condition,</span>
+</span></span><span style=display:flex><span>    <span style=color:#6272a4># |f(x_n)/f&#39;(x_n)| &lt; 2 * 10^-7</span>
+</span></span><span style=display:flex><span>    stop_condition <span style=color:#ff79c6>=</span> (
+</span></span><span style=display:flex><span>        np<span style=color:#ff79c6>.</span>abs(sympy<span style=color:#ff79c6>.</span>lambdify(x, y)(x_n) <span style=color:#ff79c6>/</span>
+</span></span><span style=display:flex><span>               sympy<span style=color:#ff79c6>.</span>lambdify(x, y<span style=color:#ff79c6>.</span>diff())(x_n))
+</span></span><span style=display:flex><span>        <span style=color:#ff79c6>&lt;</span> <span style=color:#bd93f9>2e-7</span>
+</span></span><span style=display:flex><span>               )
+</span></span><span style=display:flex><span>    <span style=color:#ff79c6>if</span> stop_condition:
+</span></span><span style=display:flex><span>        <span style=color:#8be9fd;font-style:italic>print</span>(<span style=color:#f1fa8c>f</span><span style=color:#f1fa8c>&#34;Converged in </span><span style=color:#f1fa8c>{</span>counter<span style=color:#f1fa8c>}</span><span style=color:#f1fa8c> steps.&#34;</span>)
+</span></span><span style=display:flex><span>        <span style=color:#ff79c6>break</span>
+</span></span><span style=display:flex><span>    <span style=color:#6272a4># 2.) If stopping condition not met, make a new guess</span>
+</span></span><span style=display:flex><span>    x_n <span style=color:#ff79c6>=</span> x_n <span style=color:#ff79c6>-</span> (
+</span></span><span style=display:flex><span>        <span style=color:#6272a4># f(x_n) / </span>
+</span></span><span style=display:flex><span>        sympy<span style=color:#ff79c6>.</span>lambdify(x, y)(x_n) <span style=color:#ff79c6>/</span>
+</span></span><span style=display:flex><span>        <span style=color:#6272a4># f&#39;(x_n)</span>
+</span></span><span style=display:flex><span>        sympy<span style=color:#ff79c6>.</span>lambdify(x, y<span style=color:#ff79c6>.</span>diff())(x_n)
+</span></span><span style=display:flex><span>    )
+</span></span><span style=display:flex><span>    <span style=color:#6272a4>################################################</span>
+</span></span><span style=display:flex><span>    counter <span style=color:#ff79c6>+=</span> <span style=color:#bd93f9>1</span>
+</span></span></code></pre></div><pre><code>Guess 1: 0.000000  --- Error: 3.141592653589793
+Guess 2: -3.50000  --- Error: 0.3584073464102069
+Guess 3: -2.44316  --- Error: 0.6984302043961392
+Guess 4: -1.81481  --- Error: 1.3267800055437047
+Guess 5: -1.41471  --- Error: 1.726886024726261
+Guess 6: -1.19062  --- Error: 1.9509769810235635
+Guess 7: -1.11070  --- Error: 2.0308902060887837
+Guess 8: -1.10108  --- Error: 2.0405099013561894
+Guess 9: -1.10095  --- Error: 2.0406396683000647
+Converged in 9 steps.
+</code></pre><p>When we plot our best guess, $x_n$, we see that it is indeed the root of the function.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span>fig, ax <span style=color:#ff79c6>=</span> plt<span style=color:#ff79c6>.</span>subplots()
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>ax<span style=color:#ff79c6>.</span>axvline(x_n, linestyle<span style=color:#ff79c6>=</span><span style=color:#f1fa8c>&#34;--&#34;</span>, color<span style=color:#ff79c6>=</span><span style=color:#f1fa8c>&#34;tab:red&#34;</span>, linewidth<span style=color:#ff79c6>=</span><span style=color:#bd93f9>2</span>, label<span style=color:#ff79c6>=</span><span style=color:#f1fa8c>&#34;Final Guess&#34;</span>)
+</span></span><span style=display:flex><span>ax<span style=color:#ff79c6>.</span>legend()
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>x_vec <span style=color:#ff79c6>=</span> np<span style=color:#ff79c6>.</span>linspace(<span style=color:#ff79c6>-</span><span style=color:#bd93f9>1.5</span>, <span style=color:#bd93f9>0</span>, <span style=color:#bd93f9>1000000</span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>ax<span style=color:#ff79c6>.</span>grid(alpha<span style=color:#ff79c6>=</span><span style=color:#bd93f9>.5</span>)
+</span></span><span style=display:flex><span>ax<span style=color:#ff79c6>.</span>plot(x_vec, sympy<span style=color:#ff79c6>.</span>lambdify(x, y)(x_vec))
+</span></span><span style=display:flex><span>ax<span style=color:#ff79c6>.</span>set_title(<span style=color:#f1fa8c>f</span><span style=color:#f1fa8c>&#34;$y=</span><span style=color:#f1fa8c>{</span>sympy<span style=color:#ff79c6>.</span>latex(y)<span style=color:#f1fa8c>}</span><span style=color:#f1fa8c>$&#34;</span>)
+</span></span><span style=display:flex><span>ax<span style=color:#ff79c6>.</span>axhline(<span style=color:#bd93f9>0</span>, color<span style=color:#ff79c6>=</span><span style=color:#f1fa8c>&#34;black&#34;</span>, alpha<span style=color:#ff79c6>=</span><span style=color:#bd93f9>.5</span>);
+</span></span></code></pre></div><p><img src=newtons_method_files/newtons_method_47_0.png alt=png></p><p>We can also compare our answer to what <code>sympy</code> gets from numerically solving for the function&rsquo;s root:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#8be9fd;font-style:italic>print</span>(<span style=color:#f1fa8c>&#34;Newton&#39;s Method:&#34;</span>, x_n)
+</span></span></code></pre></div><pre><code>Newton's Method: -1.1009529619409872
+</code></pre><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#8be9fd;font-style:italic>print</span>(<span style=color:#f1fa8c>&#34;Sympy&#39;s answer:&#34;</span>,sympy<span style=color:#ff79c6>.</span>solveset(y, x, sympy<span style=color:#ff79c6>.</span>Interval(<span style=color:#ff79c6>-</span><span style=color:#bd93f9>5</span>, <span style=color:#bd93f9>0</span>))<span style=color:#ff79c6>.</span>evalf())
+</span></span></code></pre></div><pre><code>Sympy's answer: {-1.10095296194099}
+</code></pre><p>We see that we have basically the same answer as <code>sympy</code>.</p><h2 id=newtons-method-as-optimization>Newton&rsquo;s Method as Optimization</h2><p>Recall that the derivative of a function is 0 at a critical point &ndash; its maximum or minimum. We have been using Newton&rsquo;s Method to find the root of a function, but in the process <strong>we&rsquo;ve also implicitly been finding the critical point of the anti-derivative, or, integral of that function</strong>.</p><p>For visual intuition of this fact, consider the following plot, in which we visualize the integral of our function, $\int f(x) dx$, and plot the root of $f(x)$ that we just found using Newton&rsquo;s Method:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span>fig, ax <span style=color:#ff79c6>=</span> plt<span style=color:#ff79c6>.</span>subplots()
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>ax<span style=color:#ff79c6>.</span>axvline(x_n, linestyle<span style=color:#ff79c6>=</span><span style=color:#f1fa8c>&#34;--&#34;</span>, color<span style=color:#ff79c6>=</span><span style=color:#f1fa8c>&#34;tab:red&#34;</span>, linewidth<span style=color:#ff79c6>=</span><span style=color:#bd93f9>2</span>, label<span style=color:#ff79c6>=</span><span style=color:#f1fa8c>&#34;Final Guess&#34;</span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>ax<span style=color:#ff79c6>.</span>grid(alpha<span style=color:#ff79c6>=</span><span style=color:#bd93f9>.5</span>)
+</span></span><span style=display:flex><span>ax<span style=color:#ff79c6>.</span>plot(x_vec, sympy<span style=color:#ff79c6>.</span>lambdify(x, y)(x_vec), label<span style=color:#ff79c6>=</span><span style=color:#f1fa8c>&#34;$f(x)$&#34;</span>)
+</span></span><span style=display:flex><span>ax<span style=color:#ff79c6>.</span>plot(x_vec, sympy<span style=color:#ff79c6>.</span>lambdify(x, y<span style=color:#ff79c6>.</span>integrate())(x_vec), label<span style=color:#ff79c6>=</span><span style=color:#f1fa8c>&#34;$\int f(x) dx$&#34;</span>)
+</span></span><span style=display:flex><span>ax<span style=color:#ff79c6>.</span>legend()
+</span></span><span style=display:flex><span>ax<span style=color:#ff79c6>.</span>set_ylim(<span style=color:#ff79c6>-</span><span style=color:#bd93f9>5</span>, <span style=color:#bd93f9>7</span>)
+</span></span><span style=display:flex><span>ax<span style=color:#ff79c6>.</span>set_title(<span style=color:#f1fa8c>f</span><span style=color:#f1fa8c>&#34;$\int (</span><span style=color:#f1fa8c>{</span>sympy<span style=color:#ff79c6>.</span>latex(y)<span style=color:#f1fa8c>}</span><span style=color:#f1fa8c>)dx$&#34;</span>);
+</span></span></code></pre></div><p><img src=newtons_method_files/newtons_method_53_0.png alt=png></p><p>The root of $f(x)$ seems to also be the maximum of $\int f(x) dx$.</p><p><strong>Why is this important?</strong> Based on this idea, we can extend Newton&rsquo;s Method for general use in finding the critical value of a function, which means that we can use it for solving optimization problems. We can setup the optimization approach as follows:<br>If the following equation will converge to the root of $f(x)$ and the critical point of $\int f(x) dx$:
+$$
+\begin{align*}
+x_{n+1} = x_n -\frac{f(x_n)}{f&rsquo;(x_n)}
+\end{align*}
+$$
+Then the following equation will converge to the root of $f&rsquo;(x)$ and thus the critical point of $f(x)$ (equivalent to $\int f&rsquo;(x)dx$):
+$$
+\begin{align*}
+x_{n+1} = x_n -\frac{f&rsquo;(x_n)}{f&rsquo;&rsquo;(x_n)}
+\end{align*}
+$$</p></article></div></div></div><footer class="text-center pb-1"><p></p><p><a href=#content>&uarr;Back to Top&uarr;</a></p><small class=text-muted>&copy; 2023, Peter Amerkhanian<br>Powered by <a href=https://gohugo.io/ target=_blank>Hugo</a>
+and <a href=https://github.com/austingebauer/devise target=_blank>Devise</a></small></footer></body></html>
