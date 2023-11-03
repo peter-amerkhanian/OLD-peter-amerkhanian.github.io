@@ -2,7 +2,7 @@
 title: "Calc 1: Simple Constrained Optimization"
 date: 2023-07-04
 draft: false
-categories: ['Notes on Methods']
+categories: ['Math']
 tags: ['Python', 'Math', 'Calculus']
 math: true
 ---

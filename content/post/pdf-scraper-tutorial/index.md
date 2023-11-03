@@ -2,7 +2,7 @@
 title: "Reliable PDF Scraping with tabula-py"
 date: 2022-07-20T09:27:34-07:00
 draft: false
-categories: ['Python Projects',]
+categories: ['Python',]
 tags: ['Python', 'PDF', 'Scraping']
 ---
 

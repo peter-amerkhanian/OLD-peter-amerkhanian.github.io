@@ -28,10 +28,12 @@ if (!doNotTrack) {
 
 
   <style>
+    body { font-size: 110%; }
+
+
     table {
       display: block;
-      max-width: -moz-fit-content;
-      max-width: fit-content;
+      max-width: 100%;
       margin: 1em auto;
       overflow-x: auto;
       white-space: nowrap;
@@ -44,6 +46,12 @@ if (!doNotTrack) {
       overflow-y: clip;
       margin: 0.5em auto;
     }
+    .katex-display {
+    -webkit-font-smoothing: antialiased;
+    background: inherit !important;
+    border: none !important;
+    font-size: 100%;
+}
     .simpletable {
       font-size: 95%;
       border-collapse: collapse;
@@ -127,7 +135,8 @@ if (!doNotTrack) {
             </h2>
             <p class="text-muted mb-1">
                 
-                    MPP &#39;23 @ UC Berkeley Goldman School
+                    Data Scientist @ CA Department of Social Services
+UC Berkeley MPP &#39;23, BA &#39;16
                 
             </p>
             <ul id="nav-links" class="list-inline mb-2">
@@ -162,12 +171,6 @@ if (!doNotTrack) {
                         </a>
                     </li>
                 
-                    <li class="list-inline-item mr-3">
-                        <a href="https://peter-amerkhanian.github.io/documents/Amerkhanian_Peter_Resume.pdf" target="_blank">
-                            <i class="fas fa-file-alt fa-lg text-muted"></i>
-                        </a>
-                    </li>
-                
             </ul>
         </div>
     </div>
@@ -181,56 +184,12 @@ if (!doNotTrack) {
         
         <li>
             
-                <time datetime="2023-03-25T00:00:00Z">
-                Mar 25 2023
-                </time>
-            
-            <a href="../../post/instrumental-variables/">
-                Instrumental Variables (IV) Basics
-            </a>
-        </li>
-        
-        <li>
-            
-                <time datetime="2023-01-15T00:00:00Z">
-                Jan 15 2023
-                </time>
-            
-            <a href="../../post/sir-modeling/">
-                An SIR Modeling Application in Python
-            </a>
-        </li>
-        
-        <li>
-            
-                <time datetime="2022-08-06T14:14:01-07:00">
-                Aug 6 2022
-                </time>
-            
-            <a href="../../post/rent-v-buy/">
-                Buy vs. Rent, A Financial Modeling Workflow in Python
-            </a>
-        </li>
-        
-        <li>
-            
                 <time datetime="2022-07-20T09:27:34-07:00">
                 Jul 20 2022
                 </time>
             
             <a href="../../post/pdf-scraper-tutorial/">
                 Reliable PDF Scraping with tabula-py
-            </a>
-        </li>
-        
-        <li>
-            
-                <time datetime="2022-03-14T00:00:00Z">
-                Mar 14 2022
-                </time>
-            
-            <a href="../../post/fidelity-fund-covar/">
-                Bootstrapping a Correlation Test in Python
             </a>
         </li>
         

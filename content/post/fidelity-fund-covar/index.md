@@ -2,7 +2,7 @@
 title: "Examining Mutual Fund Covariance in Python"
 date: 2022-03-14
 draft: false
-categories: ['Python Projects']
+categories: ['Applications']
 tags: ['Python', 'Statistics', 'Finance', 'Bootstrap']
 math: true
 ---

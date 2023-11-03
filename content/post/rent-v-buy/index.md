@@ -2,7 +2,7 @@
 title: "Buy vs. Rent, A Financial Modeling Workflow in Python"
 date: 2022-08-06T14:14:01-07:00
 draft: false
-categories: ['Python Projects']
+categories: ['Applications']
 tags: ['Python', 'Statistics', 'Finance', 'Simulation']
 math: true
 ---

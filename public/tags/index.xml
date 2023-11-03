@@ -7,20 +7,11 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>&amp;copy; 2023, Peter Amerkhanian</copyright>
-    <lastBuildDate>Tue, 04 Jul 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://peter-amerkhanian.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>Calculus</title>
-      <link>https://peter-amerkhanian.github.io/tags/calculus/</link>
-      <pubDate>Tue, 04 Jul 2023 00:00:00 +0000</pubDate>
-      
-      <guid>https://peter-amerkhanian.github.io/tags/calculus/</guid>
-      <description></description>
-    </item>
-    
+    <lastBuildDate>Fri, 03 Nov 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://peter-amerkhanian.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Math</title>
       <link>https://peter-amerkhanian.github.io/tags/math/</link>
-      <pubDate>Tue, 04 Jul 2023 00:00:00 +0000</pubDate>
+      <pubDate>Fri, 03 Nov 2023 00:00:00 +0000</pubDate>
       
       <guid>https://peter-amerkhanian.github.io/tags/math/</guid>
       <description></description>
@@ -29,9 +20,18 @@
     <item>
       <title>Python</title>
       <link>https://peter-amerkhanian.github.io/tags/python/</link>
-      <pubDate>Tue, 04 Jul 2023 00:00:00 +0000</pubDate>
+      <pubDate>Fri, 03 Nov 2023 00:00:00 +0000</pubDate>
       
       <guid>https://peter-amerkhanian.github.io/tags/python/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Calculus</title>
+      <link>https://peter-amerkhanian.github.io/tags/calculus/</link>
+      <pubDate>Tue, 04 Jul 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://peter-amerkhanian.github.io/tags/calculus/</guid>
       <description></description>
     </item>
     

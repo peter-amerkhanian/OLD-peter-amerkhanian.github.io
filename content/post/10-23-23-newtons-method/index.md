@@ -1,8 +1,8 @@
 ---
 title: "Calc 1: Newton's Method From The Ground Up"
-date: 2023-01-15
+date: 2023-11-03
 draft: false
-categories: ['Python Projects']
+categories: ['Math']
 tags: ['Python', 'Math']
 math: true
 ---
@@ -10,28 +10,31 @@ math: true
 
 ```python
 import numpy as np
-import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib
 import sympy
 import imageio
-import os
 from typing import Callable
 
 ```
 
 ## Newton's Method for Finding Roots: What, How, and Why
 
-In the context of a Differential Calculus course, Newton's Method, also referred to as The Newton-Raphson Method, seems to typically come up near the end of the semester, offering students a brief look into the world of "numerical methods" and how we might solve complex problems in the real world. I think that it's such a cool topic and first step, from math into applied fields like statistics and optimization, that I wanted to write an extended blog post about it. The main purpose of this is to ensure that I always have a personal reference materials for Newton's Method, but perhaps it can be helpful to other readers.
+In the context of a Differential Calculus course, [Newton's Method](https://en.wikipedia.org/wiki/Newton%27s_method#Applications), also referred to as The Newton-Raphson Method, seems to typically come up near the end of the semester, offering students a brief look into the world of "numerical methods" and how we might solve complex problems in the real world. I think that it's such a cool topic and first step from math into applied fields like statistics and optimization, that I wanted to write an extended blog post about it. The main purpose of this is to ensure that I always have a personal reference materials for Newton's Method, but perhaps it can be helpful to other readers.
 
 I draw on two key sources for thinking about Newton's Method:
-1. “Newton’s Method.” 2023. In Wikipedia. https://en.wikipedia.org/w/index.php?title=Newton%27s_method&oldid=1177135929.
-2. Strang, Gilbert, and Edwin Herman. 2016. Calculus Volume 1. OpenStax College.
+1. [“Newton’s Method.”](https://en.wikipedia.org/w/index.php?title=Newton%27s_method&oldid=1177135929.) 2023. In Wikipedia
+2. Strang, Gilbert, and Edwin Herman. 2016. [Calculus Volume 1](https://openstax.org/books/calculus-volume-1/pages/4-9-newtons-method). OpenStax College.
 
 ### What is it
-To borrow from (Strang 2016), "in many areas of pure and applied mathematics, we are interested in finding solutions to an equation of the form  $f(x)=0$."
 
-One of the first areas that occurs to me is in statistics, where we typically want to "fit" a line as close as possible to some set of data points, thus creating a model of a data-generating-process. The fitting process rests on getting the line as close as possible to the data points as possible, thus minimizing error. If we can formulate error as a function, then we can minimize it -- we differentiate it and set the derivative to 0, and solve $f'(x)=0$. Therein lies the opportunity to apply Newton's Method to a real problem.
+>In many areas of pure and applied mathematics, we are interested in finding solutions to an equation of the form  $f(x)=0$  
+
+(Strang 2016)  
+
+Newton's Method is a numerical method that helps us solve $f(x)=0$.  
+
+There are many cases where we need to solve equations like that, but the application area I work in is statistics, so I jump to the case where we want to "fit" a line as close as possible to some set of data points, thus creating a model of a data-generating-process. The fitting process rests on getting the line as close to the data points as possible, thus minimizing error. If we can formulate error as a function, then we can minimize it -- we differentiate it and set the derivative to 0, and solve $f'(x)=0$. Therein lies the opportunity to apply Newton's Method to a real problem.
 
 However, we'll take a step back from statistics and return to the domain of an introductory calculus course. Newton's Method is useful for finding the root -- the x-intercept -- of a function. We'll explore the method by walking through an example
 
@@ -55,10 +58,11 @@ $\displaystyle 4 \sin{\left(x \right)}$
 
 
 
+
 This is a problem with a known answer (you can google x-intercepts of $\sin(x)$ for a table), so it's not particularly useful to use Newton's Method here, but for our purposes it will be helpful that we can check our answer with the "right" one.
 \begin{align*}
-4 \sin{\left(x \right)} &= 0 \quad where \quad -5\leq x \leq -1\\
-\sin{\left(x \right)} &= 0 \\
+4 \sin{\left(x \right)} &= 0 \quad where \quad -5\leq x \leq -1\\\
+\sin{\left(x \right)} &= 0 \\\
 x &= -\pi
 \end{align*}
 
@@ -203,9 +207,9 @@ Let's get a sense of how good of a guess this is by plotting it
 
 $$
 \begin{align*}
-f(x) &= 4 \sin \left( x \right) \\
-f(x_0) &= 4 \sin \left( -2 \right) \\
-f(x_0) &\approx −3.6371897 \\
+f(x) &= 4 \sin \left( x \right) \\\
+f(x_0) &= 4 \sin \left( -2 \right) \\\
+f(x_0) &\approx −3.6371897 \\\
 (x_0, y_0) &= (x_0, f(x_0)) \approx (-2, −3.6371897) 
 \end{align*}
 $$
@@ -222,7 +226,7 @@ ax.legend();
 
 
     
-![png](newtons_method_files/newtons_method_11_0.png)
+![png](newtons_method_files/newtons_method_9_0.png)
     
 
 
@@ -244,9 +248,9 @@ We will proceed to improve upon that initial guess by computing the linear appro
 We compute the tangent by first differentiating the function and plugging in our previous guess. This yields the slope of the tangent line:
 $$
 \begin{align*}
-f(x) &= 4 \sin \left( x \right) \\
-f'(x) &= 4 \cos \left( x \right) \\
-f'(x_0) &= 4 \cos \left( -2 \right) \\
+f(x) &= 4 \sin \left( x \right) \\\
+f'(x) &= 4 \cos \left( x \right) \\\
+f'(x_0) &= 4 \cos \left( -2 \right) \\\
 f'(x_0) &\approx −1.6645873
 \end{align*}
 $$
@@ -270,35 +274,38 @@ print("f'(x_0) = ", y.diff().subs(x, x_0).evalf())
     f'(x_0) =  -1.66458734618857
     
 
-Now, given each of these terms:
-|  Term (english)   |  Term (math)   | Value |
-| -------- | -------- | ------- |
-|Previous Guess| $x_0$  | $= -2$   |
-|Y coordinate at Previous Guess| $f(x_0)$ | $\approx −3.6371897$     |
-|Slope of the tangent line at Previous Guess| $f'(x_0)$    | $\approx −1.6645873$   |   
+
+Now, given each of these terms:  
+
+|  Term (math)   | Value |
+| -------- | ------- |
+| $x_0$ (X, Last Guess)  | $= -2$   |
+| $f(x_0)$ (Y at $x_0$) | $\approx −3.6371897$     |
+| $f'(x_0)$ (Slope of tangent at $x_0$)   | $\approx −1.6645873$  |   
 
 We can proceed to find the full equation of the tangent line by writing out the point-slope form of a linear equation with slope $m=f'(x_0)$.
 $$
 \begin{align*}
-(y - y_0) &= m(x - x_0) \\
-(y - f(x_0)) &= f'(x_0)(x - x_0) \\
+(y - y_0) &= m(x - x_0) \\\
+(y - f(x_0)) &= f'(x_0)(x - x_0) \\\
 y &= f'(x_0)(x - x_0) + f(x_0)
 \end{align*}
 $$
 Plugging in our values, we get:
 $$
 \begin{align*}
-y &\approx −1.6645873x + 1.6645873(-2) - 3.6371897\\
-y &\approx −1.6645873x - 6.9663643\\
+y &\approx −1.6645873x + 1.6645873(-2) - 3.6371897\\\
+y &\approx −1.6645873x - 6.9663643\\\
 \end{align*}
 $$  
 
 We'll save that into a python function and plot it to make sure it does look like the tangent.
 
 
+
+
 ```python
 f_1 = lambda x: -1.6645873*x - 6.9663643
-
 ```
 
 
@@ -317,7 +324,7 @@ ax.legend();
 
 
     
-![png](newtons_method_files/newtons_method_19_0.png)
+![png](newtons_method_files/newtons_method_16_0.png)
     
 
 
@@ -326,8 +333,8 @@ Given that the tangent line is the **best linear approximation** of the original
 
 $$
 \begin{align*}
-0 &\approx −1.6645873x_1 - 6.9663643\\
-\frac{6.9663643}{−1.6645873} &\approx x_1\\
+0 &\approx −1.6645873x_1 - 6.9663643\\\
+\frac{6.9663643}{−1.6645873} &\approx x_1\\\
 x_1 &\approx -4.1850
 \end{align*}
 $$
@@ -335,8 +342,14 @@ $$
 
 ```python
 x_1 = -4.1850
-
 ```
+
+
+
+
+    -4.185
+
+
 
 
 ```python
@@ -351,7 +364,7 @@ ax.legend();
 
 
     
-![png](newtons_method_files/newtons_method_23_0.png)
+![png](newtons_method_files/newtons_method_19_0.png)
     
 
 
@@ -379,10 +392,8 @@ This allows us to generate the tangent line at any given guess, $x_n$. The follo
 
 ```python
 def y_n(x_n): return (
-    # f_1(x_1)(x-x_1) +
-    y.diff().subs(x, x_n) * (x - x_n) + 
-    # f(x_1)
-    y.subs(x, x_n)
+    y.diff().subs(x, x_n) * (x - x_n) +  # f_1(x_1)(x-x_1) +
+    y.subs(x, x_n)  # f(x_1)
 )
 
 ```
@@ -434,11 +445,12 @@ ax.legend();
 
 
     
-![png](newtons_method_files/newtons_method_32_0.png)
+![png](newtons_method_files/newtons_method_28_0.png)
     
 
 
 We can verify that this new guess again reduces our "error," which should encourage us to continue this process.
+
 
 
 ```python
@@ -451,19 +463,17 @@ for i, x_n in enumerate([x_0, x_1, x_2]):
     error for guess x_2: 0.6735814493932737
     
 
-Given that we will want to repeat this a lot, we should move away from calculating each step manually and move towards a generalizable equation and algorithm.
-
 #### Step 5: Generalize the procedure
 
 ##### Make the equation more direct
 Thus far we have used the general equation $y = f'(x_n)(x - x_n) + f(x_n)$, where $x_n$ is our current guess, and we solve for $x$ to define our next guess. Given that we solve the equation for $x$, we can rewrite it as follows:  
 $$
 \begin{align*}
-0 &= f'(x_n)(x - x_n) + f(x_n)\\
-0 &= f'(x_n)(x - x_n) + f(x_n) \\
-0 - f(x_n) &= f'(x_n)(x - x_n)\\
--\frac{f(x_n)}{f'(x_n)} &= x - x_n\\
-x &= x_n -\frac{f(x_n)}{f'(x_n)}\\
+0 &= f'(x_n)(x - x_n) + f(x_n)\\\
+0 &= f'(x_n)(x - x_n) + f(x_n) \\\
+0 - f(x_n) &= f'(x_n)(x - x_n)\\\
+-\frac{f(x_n)}{f'(x_n)} &= x - x_n\\\
+x &= x_n -\frac{f(x_n)}{f'(x_n)}\\\
 \end{align*}
 $$
 This expresses *one step* of Newton's Method -- solving for the x-intercept of the tangent line at the point $(x_n, f(x_n))$.  
@@ -479,28 +489,29 @@ Given this equation, we can think of Newton's Method as essentially searching fo
 In our case, we are working with a simple function and we know the correct answer -- we can just stop once we get close to $-\pi$ -- but in any real application that won't be the case. In those cases, it is common practice to define "right" as when the guesses stop changing much with each iteration. Stated semi-formally, we wait until $|x_{n+1} - x_{n}|$ gets small.  
 
 For example: if the last guess was -3.14159 and the new guess is -3.141592, the guess only changed by .0000002, and we might conclude that we've gotten as close to the answer as is necessary. In this case, we set a stopping condition -- when the next guess is less than or equal to .0000002 away from the previous one, we stop. We can write out the stopping condition as follows:
+
 $$
 \begin{align*}
-|x_{n+1} - x_{n}| &\leq 2\times 10^{-7} \\
-|(x_n -\frac{f(x_n)}{f'(x_n)}) - x_{n}| &\leq 2\times 10^{-7} \\
-|-\frac{f(x_n)}{f'(x_n)}| &\leq 2\times 10^{-7} \\
+|x_{n+1} - x_{n}| &\leq 2\times 10^{-7} \\\
+|(x_n -\frac{f(x_n)}{f'(x_n)}) - x_{n}| &\leq 2\times 10^{-7} \\\
+|-\frac{f(x_n)}{f'(x_n)}| &\leq 2\times 10^{-7} \\\
 |\frac{f(x_n)}{f'(x_n)}| &\leq 2\times 10^{-7}
 \end{align*}
-$$
-We can try writing out the recursive algorithm as a piece-wise equation:
-$$
-\text{Let } x_0 := \text{initial guess} \text{. For all natural numbers } n \ge 0 \text{, define }  x_{n+1} \text{ as:} \\
+$$  
 
-x_{n+1} =
-    \begin{cases}
-        x_n & \text{if }\quad |\frac{f(x_n)}{f'(x_n)}| \leq 2\times 10^{-7} \\
+We can try writing out the recursive algorithm as a piece-wise equation:  
+
+$$
+\text{Let } x_0 := \text{initial guess} \text{. For all natural numbers } n \ge 0 \text{, define }  x_{n+1} \text{ as:}
+$$
+$$
+x_{n+1} = \begin{cases}
+        x_n & \text{if }\quad |\frac{f(x_n)}{f'(x_n)}| \leq 2\times 10^{-7} \\\
         x_n -\frac{f(x_n)}{f'(x_n)} & \text{Otherwise}
-    \end{cases}
-
+        \end{cases}
 $$
 
 However, now that we are moving into the realm of algorithms, I think it's clearer to write this as code:
-
 
 
 ```python
@@ -516,9 +527,14 @@ while True:
           euclidean_dist_to_truth(x_n))
     ################################################
     # The following is the code for newton's method
-
-    # 1.) Check for the stopping condition, |f(x_n)/f'(x_n)| < 2 * 10^-7
-    if np.abs(sympy.lambdify(x, y)(x_n) / sympy.lambdify(x, y.diff())(x_n)) < 2e-7:
+    # 1.) Check for the stopping condition,
+    # |f(x_n)/f'(x_n)| < 2 * 10^-7
+    stop_condition = (
+        np.abs(sympy.lambdify(x, y)(x_n) /
+               sympy.lambdify(x, y.diff())(x_n))
+        < 2e-7
+               )
+    if stop_condition:
         print(f"Converged in {counter} steps.")
         break
     # 2.) If stopping condition not met, make a new guess
@@ -529,7 +545,6 @@ while True:
         sympy.lambdify(x, y.diff())(x_n)
     )
     ################################################
-
     # Update the counter  
     counter += 1
 
@@ -544,7 +559,10 @@ while True:
     Converged in 6 steps.
     
 
-{{< details "Code for GIF generation" >}}
+We can verify that this new guess again reduces our "error," which should encourage us to continue this process.
+
+
+{{< details "GIF Code" >}}
 
 
 ```python
@@ -624,15 +642,15 @@ for item in files:
 ### Using Newton's Method to Solve a Real Problem
 In the previous example, we dealt with a function, $f(x) = 4\sin(x)$ with a well known analytical solution for its x-intercept. Other simple functions can typically be solved with known formulas -- e.g. a second degree polynomial's roots can be found using the quadratic formula. In cases of known analytical solutions or readily available root-finding formula's, there is no reason to use Newton's Method beyond as a learning exercise.  
 
-However, many functions do not have have readily available methods for finding the root. For example, if $f(x)$ is a polynomial of degree 5 or greater, it is known that no formula for finding its roots exist. Consider the following polynomial of degree 5:
+However, many functions do not have have readily available methods for finding the root. For example, if $f(x)$ is a polynomial of degree 5 or greater, it is known that no formula for finding its roots exist (Strang 2016). Consider the following polynomial of degree 5:
 $$
 f(x) =x^{5} + 8 x^{4} + 4 x^{3} - 2 x - 7
 $$
 What if we are asked to solve the following:
 $$
 \begin{align*}
-f(x)&=0 \quad where -5\leq x \leq 0\\
-0 &=  x^{5} + 8 x^{4} + 4 x^{3} - 2 x - 7 \quad where -5\leq x \leq 0\\
+f(x)&=0 \quad where -5\leq x \leq 0\\\
+0 &=  x^{5} + 8 x^{4} + 4 x^{3} - 2 x - 7 \quad where -5\leq x \leq 0\\\
 \end{align*}
 $$
 There is no formula that solves this. Even plugging the polynomial into `sympy` and running its solver, `sympy.solveset`, doesn't give a clear answer.
@@ -653,15 +671,11 @@ $\displaystyle x^{5} + 8 x^{4} + 4 x^{3} - 2 x - 7$
 
 
 ```python
-sympy.solveset(y, x, sympy.Interval(-5, 0))
+print(sympy.solveset(y, x, sympy.Interval(-5, 0)))
 ```
 
-
-
-
-$\displaystyle \left\{\operatorname{CRootOf} {\left(x^{5} + 8 x^{4} + 4 x^{3} - 2 x - 7, 1\right)}\right\}$
-
-
+    {CRootOf(x**5 + 8*x**4 + 4*x**3 - 2*x - 7, 1)}
+    
 
 (where $\text{CRootOf}$ is an indexed complex root of the polynomial -- not an analytical solution)
 
@@ -670,10 +684,6 @@ We might proceed to visually inspect the function on this domain -- but it's eve
 
 ```python
 x_vec = np.linspace(-5, 0, 1000000)
-```
-
-
-```python
 fig, ax = plt.subplots()
 ax.grid(alpha=.5)
 ax.plot(x_vec, sympy.lambdify(x, y)(x_vec))
@@ -683,7 +693,7 @@ ax.set_title(f"$y={sympy.latex(y)}$");
 
 
     
-![png](newtons_method_files/newtons_method_48_0.png)
+![png](newtons_method_files/newtons_method_43_0.png)
     
 
 
@@ -693,10 +703,8 @@ In just 10 steps I have the answer:
 
 ```python
 x_n = 0
-
 tolerance = 1e-10
 counter = 1
-
 
 while True:
     # Disregard the following utility code
@@ -704,16 +712,26 @@ while True:
           str(round(float(x_n), 5)).ljust(8, '0'),
           " --- Error:",
           euclidean_dist_to_truth(x_n))
-    
+    ################################################
     # The following is the code for newton's method
-    if np.abs(sympy.lambdify(x, y)(x_n) / sympy.lambdify(x, y.diff())(x_n)) < tolerance:
+    # 1.) Check for the stopping condition,
+    # |f(x_n)/f'(x_n)| < 2 * 10^-7
+    stop_condition = (
+        np.abs(sympy.lambdify(x, y)(x_n) /
+               sympy.lambdify(x, y.diff())(x_n))
+        < 2e-7
+               )
+    if stop_condition:
         print(f"Converged in {counter} steps.")
         break
+    # 2.) If stopping condition not met, make a new guess
     x_n = x_n - (
+        # f(x_n) / 
         sympy.lambdify(x, y)(x_n) /
+        # f'(x_n)
         sympy.lambdify(x, y.diff())(x_n)
     )
-        
+    ################################################
     counter += 1
 ```
 
@@ -726,8 +744,7 @@ while True:
     Guess 7: -1.11070  --- Error: 2.0308902060887837
     Guess 8: -1.10108  --- Error: 2.0405099013561894
     Guess 9: -1.10095  --- Error: 2.0406396683000647
-    Guess 10: -1.10095  --- Error: 2.040639691648806
-    Converged in 10 steps.
+    Converged in 9 steps.
     
 
 When we plot our best guess, $x_n$, we see that it is indeed the root of the function.
@@ -749,7 +766,7 @@ ax.axhline(0, color="black", alpha=.5);
 
 
     
-![png](newtons_method_files/newtons_method_52_0.png)
+![png](newtons_method_files/newtons_method_47_0.png)
     
 
 
@@ -794,7 +811,7 @@ ax.set_title(f"$\int ({sympy.latex(y)})dx$");
 
 
     
-![png](newtons_method_files/newtons_method_58_0.png)
+![png](newtons_method_files/newtons_method_53_0.png)
     
 
 
@@ -813,6 +830,3 @@ $$
 x_{n+1} = x_n -\frac{f'(x_n)}{f''(x_n)}
 \end{align*}
 $$
-
-## Conclusion
-Newton's Method is an awesome tool and a springboard from required math classes into computation and interesting applied topics. It prepared students to take on stochastic gradient descent, a core concept in statistical learning

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Math on Peter Amerkhanian</title>
+    <link>https://peter-amerkhanian.github.io/categories/math/</link>
+    <description>Recent content in Math on Peter Amerkhanian</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>&amp;copy; 2023, Peter Amerkhanian</copyright>
+    <lastBuildDate>Fri, 03 Nov 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://peter-amerkhanian.github.io/categories/math/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Calc 1: Newton&#39;s Method From The Ground Up</title>
+      <link>https://peter-amerkhanian.github.io/post/10-23-23-newtons-method/</link>
+      <pubDate>Fri, 03 Nov 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://peter-amerkhanian.github.io/post/10-23-23-newtons-method/</guid>
+      <description>import numpy as np import matplotlib.pyplot as plt import matplotlib import sympy import imageio from typing import Callable Newton&amp;rsquo;s Method for Finding Roots: What, How, and Why In the context of a Differential Calculus course, Newton&amp;rsquo;s Method, also referred to as The Newton-Raphson Method, seems to typically come up near the end of the semester, offering students a brief look into the world of &amp;ldquo;numerical methods&amp;rdquo; and how we might solve complex problems in the real world.</description>
+    </item>
+    
+    <item>
+      <title>Calc 1: Simple Constrained Optimization</title>
+      <link>https://peter-amerkhanian.github.io/post/7-16-23-optimization/</link>
+      <pubDate>Tue, 04 Jul 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://peter-amerkhanian.github.io/post/7-16-23-optimization/</guid>
+      <description>import matplotlib.pyplot as plt from mpl_toolkits.mplot3d import Axes3D import numpy as np The following are my notes on a basic calculus 1 homework question. I liked the question a lot, so decided to write out it all out for my future use.
+Question: If 2000 square centimeters of material is available to make a box with a square base and an open top, what is the largest box that you can possibly create?</description>
+    </item>
+    
+  </channel>
+</rss>
