@@ -200,16 +200,7 @@ For a first guess, it's typical to start close to 0. In our case, we'll try -2.
 
 ```python
 x_0 = -2
-x_0
-
 ```
-
-
-
-
-    -2
-
-
 
 Let's get a sense of how good of a guess this is by plotting it
 
@@ -649,7 +640,7 @@ for item in files:
 
 {{< /details >}}
 
-![gif](newton_iterations.gif?4 "gif")
+![gif](newton_iterations.gif?8 "gif")
 
 ### Using Newton's Method to Solve a Real Problem
 In the previous example, we dealt with a function, $f(x) = 4\sin(x)$ with a well known analytical solution for its x-intercept. Other simple functions can typically be solved with known formulas -- e.g. a second degree polynomial's roots can be found using the quadratic formula. In cases of known analytical solutions or readily available root-finding formulas, there is no reason to use Newton's Method beyond as a learning exercise.  
@@ -708,13 +699,13 @@ ax.set_title(f"$y={sympy.latex(y)}$");
     
 
 
-Here's a good use-case for Newton's Method. I set up the algorithm with $x_0=0$ and a stopping condition that $|x_{n+1} - x_{n}| \leq 10^{-10}$.  
+Here's a good use-case for Newton's Method. I set up the algorithm with $x_0=0$ and a stopping condition that $|x_{n+1} - x_{n}| \leq 10^{-12}$.  
 I quickly converge at an answer:
 
 
 ```python
 x_n = 0
-tolerance = 1e-10
+tolerance = 1e-12
 counter = 1
 
 while True:
@@ -730,7 +721,7 @@ while True:
     stop_condition = (
         np.abs(sympy.lambdify(x, y)(x_n) /
                sympy.lambdify(x, y.diff())(x_n))
-        < 2e-7
+        < tolerance
     )
     if stop_condition:
         print(f"Converged in {counter} steps.")
@@ -756,7 +747,8 @@ while True:
     Guess 7: -1.11070  --- Error: 2.0308902060887837
     Guess 8: -1.10108  --- Error: 2.0405099013561894
     Guess 9: -1.10095  --- Error: 2.0406396683000647
-    Converged in 9 steps.
+    Guess 10: -1.10095  --- Error: 2.040639691648806
+    Converged in 10 steps.
     
 
 When we plot our best guess, $x_n$, we see that it is indeed the root of the function.
@@ -792,7 +784,7 @@ print("Newton's Method:", x_n)
 
 ```
 
-    Newton's Method: -1.1009529852897284
+    Newton's Method: -1.1009529619409872
     
 
 
