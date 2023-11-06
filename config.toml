@@ -52,7 +52,7 @@ copyright = "&copy; 2023, Peter Amerkhanian"
 [params]
   description = "Portfolio and personal website"      # Your meta description of the site
   header_title = "Peter Amerkhanian"                 # Your header title
-  header_subtitle = "Data Scientist @ CA Department of Social Services\nUC Berkeley MPP '23, BA '16" # Your header subtitle
+  header_subtitle = "Data Scientist @ CA Department of Social Services. UC Berkeley MPP '23, BA '16" # Your header subtitle
   home_image = "/images/Peter_Amerkhanian_Headshot_square_lower_qual.jpg"          # Path to header image starting from the static directory
   blog_image = "/images/blog.jpg"          # Path to header image starting from the static directory
   recent_posts = 5                           # Max amount of recent posts to show

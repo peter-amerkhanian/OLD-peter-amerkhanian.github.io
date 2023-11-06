@@ -32,21 +32,29 @@
       color: rgb(0, 0, 0);
     }
 
+    /* Overflow settings for math */
     mjx-container {
       overflow-x: auto;
-      overflow-y: clip;
-      margin: 0.5em auto;
+      overflow-y: hidden;
+
     }
-    .has-jax {
+    /* Set a margin for math so that the scrollbar doesn't cover it */
+    mjx-math {
+      /* margin: .5em auto; */
       overflow-x: auto;
-      overflow-y: clip;
-      margin: 0.5em auto;
+      overflow-y: hidden;
+
     }
+    /* Make sure that mathjax that is inside a table doesn't have overflow on */
+    .has-jax:not(table .has-jax) {
+      overflow-x: auto;
+      overflow-y: hidden;
+      }
+
     
 
     .katex-display {
       overflow-x: auto;
-      overflow-y: clip;
       margin: 0.5em auto;
     }
     .katex-display {

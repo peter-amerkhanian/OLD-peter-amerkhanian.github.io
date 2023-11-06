@@ -10,6 +10,7 @@ math: true
 
 ```python
 import numpy as np
+import os
 import matplotlib.pyplot as plt
 import matplotlib
 import sympy
@@ -49,6 +50,7 @@ We'll first set this function up in `sympy`, a python library for symbolic compu
 x, y = sympy.symbols('x y')
 y = 4*sympy.sin(x)
 y
+
 ```
 
 
@@ -71,10 +73,10 @@ x &= -\pi
 
 ```python
 def plot_f(
-    f: Callable[[float], float],
-    x_low: int,
-    x_high: int,
-    ax: matplotlib.axes.Axes) -> None:
+        f: Callable[[float], float],
+        x_low: int,
+        x_high: int,
+        ax: matplotlib.axes.Axes) -> None:
     """
     Plots a given function f within a specified range on a provided axes.
 
@@ -90,11 +92,12 @@ def plot_f(
     x_vec = np.linspace(x_low, x_high, 100)
     ax.plot(x_vec, f(x_vec))
 
+
 def base_plot(
-    y: sympy.core.mul.Mul,
-    x: sympy.core.mul.Mul,
-    x_low: int=-5,
-    x_high: int=5) -> None:
+        y: sympy.core.mul.Mul,
+        x: sympy.core.mul.Mul,
+        x_low: int = -5,
+        x_high: int = 5) -> None:
     """
     Creates a base plot for a mathematical expression and its graph.
 
@@ -119,6 +122,7 @@ def base_plot(
     ax.set(title=f"$f(x)={sympy.latex(y)}$", xlabel="$x$", ylabel="$f(x)$")
     return fig, ax
 
+
 def plot_truth(ax: matplotlib.axes.Axes) -> None:
     """
     Plots the true root of a function as a marker on the graph.
@@ -130,16 +134,17 @@ def plot_truth(ax: matplotlib.axes.Axes) -> None:
         None
     """
     ax.plot(-np.pi,
-        0,
-        "*",
-        markersize=15,
-        color="darkblue",
-        label="True root, $-\pi$")
-    
+            0,
+            "*",
+            markersize=15,
+            color="darkblue",
+            label="True root, $-\pi$")
+
+
 def plot_guess(
-    ax: matplotlib.axes.Axes,
-    guess: int,
-    label: str) -> None:
+        ax: matplotlib.axes.Axes,
+        guess: int,
+        label: str) -> None:
     """
     Plots a guess or estimate as a marker on the graph.
 
@@ -155,13 +160,14 @@ def plot_guess(
             0,
             "o",
             label=label)
-    
+
+
 def plot_guess_coords(
-    ax: matplotlib.axes.Axes,
-    guess: int,
-    label: str,
-    y: sympy.core.mul.Mul=y,
-    x: sympy.core.mul.Mul=x):
+        ax: matplotlib.axes.Axes,
+        guess: int,
+        label: str,
+        y: sympy.core.mul.Mul = y,
+        x: sympy.core.mul.Mul = x):
     """
     Plots a guess or estimate with specific coordinates as a marker on the graph.
 
@@ -179,8 +185,10 @@ def plot_guess_coords(
             y.subs(x, guess).evalf(),
             "s",
             label=label, color="black")
-    
+
+
 def euclidean_dist_to_truth(x): return np.sqrt((-np.pi - float(x))**2)
+
 ```
 
 {{< /details >}}
@@ -235,6 +243,7 @@ We can assess the quality of that guess by calculating the distance from the gue
 
 ```python
 print(f"error for guess x_0:", euclidean_dist_to_truth(x_0))
+
 ```
 
     error for guess x_0: 1.1415926535897931
@@ -305,7 +314,8 @@ We'll save that into a python function and plot it to make sure it does look lik
 
 
 ```python
-f_1 = lambda x: -1.6645873*x - 6.9663643
+def f_1(x): return -1.6645873*x - 6.9663643
+
 ```
 
 
@@ -342,14 +352,8 @@ $$
 
 ```python
 x_1 = -4.1850
+
 ```
-
-
-
-
-    -4.185
-
-
 
 
 ```python
@@ -374,6 +378,7 @@ While this guess still isn't particularly great, we can see that we have actuall
 ```python
 for i, x_n in enumerate([x_0, x_1]):
     print(f"error for guess x_{i}:", euclidean_dist_to_truth(x_n))
+
 ```
 
     error for guess x_0: 1.1415926535897931
@@ -456,6 +461,7 @@ We can verify that this new guess again reduces our "error," which should encour
 ```python
 for i, x_n in enumerate([x_0, x_1, x_2]):
     print(f"error for guess x_{i}:", euclidean_dist_to_truth(x_n))
+
 ```
 
     error for guess x_0: 1.1415926535897931
@@ -501,12 +507,15 @@ $$
 
 We can try writing out the recursive algorithm as a piece-wise equation:  
 
+
 $$
 \begin{align*}
 \text{Let } x_0 := \text{initial guess, } \\\
-\text{For all natural numbers } n \ge 0 \text{, define }  x_{n+1} \text{ as:}
+\text{For all natural numbers } n \ge 0, \\\
+\text{Define }  x_{n+1} \text{ as:}
 \end{align*}
 $$
+
 $$
 x_{n+1} = \begin{cases}
         x_n & \text{if }\quad |\frac{f(x_n)}{f'(x_n)}| \leq 2\times 10^{-7} \\\
@@ -536,19 +545,19 @@ while True:
         np.abs(sympy.lambdify(x, y)(x_n) /
                sympy.lambdify(x, y.diff())(x_n))
         < 2e-7
-               )
+    )
     if stop_condition:
         print(f"Converged in {counter} steps.")
         break
     # 2.) If stopping condition not met, make a new guess
     x_n = x_n - (
-        # f(x_n) / 
+        # f(x_n) /
         sympy.lambdify(x, y)(x_n) /
         # f'(x_n)
         sympy.lambdify(x, y.diff())(x_n)
     )
     ################################################
-    # Update the counter  
+    # Update the counter
     counter += 1
 
 ```
@@ -651,10 +660,7 @@ f(x) =x^{5} + 8 x^{4} + 4 x^{3} - 2 x - 7
 $$
 What if we are asked to solve the following:
 $$
-\begin{align*}
-f(x)&=0 \quad where -5\leq x \leq 0\\\
-0 &=  x^{5} + 8 x^{4} + 4 x^{3} - 2 x - 7 \quad where -5\leq x \leq 0\\\
-\end{align*}
+f(x)=0 \quad \text{where} -5\leq x \leq 0\\\
 $$
 There is no formula that solves this. Even plugging the polynomial into `sympy` and running its solver, `sympy.solveset`, doesn't give a clear answer.
 
@@ -663,6 +669,7 @@ There is no formula that solves this. Even plugging the polynomial into `sympy` 
 x, y = sympy.symbols('x y')
 y = x**5 + 8*x**4 + 4*x**3 - 2*x-7
 y
+
 ```
 
 
@@ -675,12 +682,13 @@ $\displaystyle x^{5} + 8 x^{4} + 4 x^{3} - 2 x - 7$
 
 ```python
 print(sympy.solveset(y, x, sympy.Interval(-5, 0)))
+
 ```
 
     {CRootOf(x**5 + 8*x**4 + 4*x**3 - 2*x - 7, 1)}
     
 
-(where $\text{CRootOf}$ is an indexed complex root of the polynomial -- not an analytical solution)
+(where `CRootOf` is an indexed complex root of the polynomial -- not an analytical solution)
 
 We might proceed to visually inspect the function on this domain -- but it's even pretty hard to visually spot a root here!
 
@@ -723,19 +731,20 @@ while True:
         np.abs(sympy.lambdify(x, y)(x_n) /
                sympy.lambdify(x, y.diff())(x_n))
         < 2e-7
-               )
+    )
     if stop_condition:
         print(f"Converged in {counter} steps.")
         break
     # 2.) If stopping condition not met, make a new guess
     x_n = x_n - (
-        # f(x_n) / 
+        # f(x_n) /
         sympy.lambdify(x, y)(x_n) /
         # f'(x_n)
         sympy.lambdify(x, y.diff())(x_n)
     )
     ################################################
     counter += 1
+
 ```
 
     Guess 1: 0.000000  --- Error: 3.141592653589793
@@ -756,7 +765,8 @@ When we plot our best guess, $x_n$, we see that it is indeed the root of the fun
 ```python
 fig, ax = plt.subplots()
 
-ax.axvline(x_n, linestyle="--", color="tab:red", linewidth=2, label="Final Guess")
+ax.axvline(x_n, linestyle="--", color="tab:red",
+           linewidth=2, label="Final Guess")
 ax.legend()
 
 x_vec = np.linspace(-1.5, 0, 1000000)
@@ -765,6 +775,7 @@ ax.grid(alpha=.5)
 ax.plot(x_vec, sympy.lambdify(x, y)(x_vec))
 ax.set_title(f"$y={sympy.latex(y)}$")
 ax.axhline(0, color="black", alpha=.5);
+
 ```
 
 
@@ -778,14 +789,16 @@ We can also compare our answer to what `sympy` gets from numerically solving for
 
 ```python
 print("Newton's Method:", x_n)
+
 ```
 
-    Newton's Method: -1.1009529619409872
+    Newton's Method: -1.1009529852897284
     
 
 
 ```python
-print("Sympy's answer:",sympy.solveset(y, x, sympy.Interval(-5, 0)).evalf())
+print("Sympy's answer:", sympy.solveset(y, x, sympy.Interval(-5, 0)).evalf())
+
 ```
 
     Sympy's answer: {-1.10095296194099}
@@ -802,7 +815,8 @@ For visual intuition of this fact, consider the following plot, in which we visu
 ```python
 fig, ax = plt.subplots()
 
-ax.axvline(x_n, linestyle="--", color="tab:red", linewidth=2, label="Final Guess")
+ax.axvline(x_n, linestyle="--", color="tab:red",
+           linewidth=2, label="Final Guess")
 
 ax.grid(alpha=.5)
 ax.plot(x_vec, sympy.lambdify(x, y)(x_vec), label="$f(x)$")
@@ -810,6 +824,7 @@ ax.plot(x_vec, sympy.lambdify(x, y.integrate())(x_vec), label="$\int f(x) dx$")
 ax.legend()
 ax.set_ylim(-5, 7)
 ax.set_title(f"$\int ({sympy.latex(y)})dx$");
+
 ```
 
 
