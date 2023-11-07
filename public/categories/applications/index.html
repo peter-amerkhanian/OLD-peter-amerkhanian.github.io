@@ -1,6 +1,7 @@
 <!doctype html>
 <html lang="en"><head>
   <title>Applications</title>
+  <meta name="format-detection" content="telephone=no">
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta name="description" content="" />
@@ -41,21 +42,25 @@ if (!doNotTrack) {
       color: rgb(0, 0, 0);
     }
 
+     
     mjx-container {
       overflow-x: auto;
-      overflow-y: clip;
+      overflow-y: hidden;
       margin: 0.5em auto;
+
     }
-    .has-jax {
+     
+     
+     
+    .has-jax:not(table .has-jax) {
       overflow-x: auto;
-      overflow-y: clip;
-      margin: 0.5em auto;
-    }
+      overflow-y: hidden;
+      }
+
     
 
     .katex-display {
       overflow-x: auto;
-      overflow-y: clip;
       margin: 0.5em auto;
     }
     .katex-display {
@@ -147,8 +152,7 @@ if (!doNotTrack) {
             </h2>
             <p class="text-muted mb-1">
                 
-                    Data Scientist @ CA Department of Social Services
-UC Berkeley MPP &#39;23, BA &#39;16
+                    Data Scientist @ CA Department of Social Services. UC Berkeley MPP &#39;23, BA &#39;16
                 
             </p>
             <ul id="nav-links" class="list-inline mb-2">
