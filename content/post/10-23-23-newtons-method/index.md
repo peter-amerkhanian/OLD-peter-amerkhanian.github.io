@@ -63,8 +63,9 @@ $\displaystyle 4 \sin{\left(x \right)}$
 
 This is a problem with a known answer (you can google x-intercepts of $\sin(x)$ for a table), so it's not particularly useful to use Newton's Method here, but for our purposes it will be helpful that we can check our answer with the "right" one.
 \begin{align*}
-4 \sin{\left(x \right)} &= 0 \quad where \quad -5\leq x \leq -1\\\
-\sin{\left(x \right)} &= 0 \\\
+4 \sin(x) &= 0 \quad \text{where} \quad -5\leq x \leq -1\\\
+\sin(x) &= 0 \\\
+x &= \sin^{-1}(0) \\\
 x &= -\pi
 \end{align*}
 
