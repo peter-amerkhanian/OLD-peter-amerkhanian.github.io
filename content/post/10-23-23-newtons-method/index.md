@@ -292,10 +292,11 @@ y &= f'(x_0)(x - x_0) + f(x_0)
 \end{align*}
 $$
 Plugging in our values, we get:
+
 $$
 \begin{align*}
-y &\approx −1.6645873x + 1.6645873(-2) - 3.6371897\\\
-y &\approx −1.6645873x - 6.9663643\\\
+y &\approx −1.6645873x + 1.6645873(-2) - 3.6371897 \\\
+y &\approx −1.6645873x - 6.9663643 \\\
 \end{align*}
 $$  
 
