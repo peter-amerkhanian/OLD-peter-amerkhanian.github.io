@@ -295,7 +295,7 @@ Plugging in our values, we get:
 
 $$
 \begin{align*}
-y &\approx −1.66459x + 1.66459(-2) - 3.63719 \\\
+y &\approx −1.66459x + (1.66459)(-2) - 3.63719 \\\
 y &\approx −1.66459x - 6.966364 \\\
 \end{align*}
 $$  
