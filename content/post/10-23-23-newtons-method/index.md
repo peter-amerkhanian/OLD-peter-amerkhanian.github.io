@@ -280,8 +280,8 @@ Now, given each of these terms:
 |  Term (math)   | Value |
 | -------- | ------- |
 | $x_0$ (X, Last Guess)  | $= -2$   |
-| $f(x_0)$ (Y at $x_0$) | $\approx −3.6371897$     |
-| $f'(x_0)$ (Slope of tangent at $x_0$)   | $\approx −1.6645873$  |   
+| $f(x_0)$ (Y at $x_0$) | $\approx −3.63719$     |
+| $f'(x_0)$ (Slope of tangent at $x_0$)   | $\approx −1.66459$  |   
 
 We can proceed to find the full equation of the tangent line by writing out the point-slope form of a linear equation with slope $m=f'(x_0)$.
 $$
@@ -295,8 +295,8 @@ Plugging in our values, we get:
 
 $$
 \begin{align*}
-y &\approx −1.6645873x + 1.6645873(-2) - 3.6371897 \\\
-y &\approx −1.6645873x - 6.9663643 \\\
+y &\approx −1.66459x + 1.66459(-2) - 3.63719 \\\
+y &\approx −1.66459x - 6.966364 \\\
 \end{align*}
 $$  
 
