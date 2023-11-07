@@ -163,7 +163,7 @@ $$</p><p>I&rsquo;ll note that <code>sympy</code> is capable of doing all of thes
 f'(x_0) =  4*cos(2)
 [note: sympy converted x_0=-2 to x_0=2 because cos(-x)=cos(x)]
 f'(x_0) =  -1.66458734618857
-</code></pre><p>Now, given each of these terms:</p><table><thead><tr><th>Term (math)</th><th>Value</th></tr></thead><tbody><tr><td>$x_0$ (X, Last Guess)</td><td>$= -2$</td></tr><tr><td>$f(x_0)$ (Y at $x_0$)</td><td>$\approx −3.6371897$</td></tr><tr><td>$f&rsquo;(x_0)$ (Slope of tangent at $x_0$)</td><td>$\approx −1.6645873$</td></tr></tbody></table><p>We can proceed to find the full equation of the tangent line by writing out the point-slope form of a linear equation with slope $m=f&rsquo;(x_0)$.
+</code></pre><p>Now, given each of these terms:</p><table><thead><tr><th>Term (math)</th><th>Value</th></tr></thead><tbody><tr><td>$x_0$ (X, Last Guess)</td><td>$= -2$</td></tr><tr><td>$f(x_0)$ (Y at $x_0$)</td><td>$\approx −3.63719$</td></tr><tr><td>$f&rsquo;(x_0)$ (Slope of tangent at $x_0$)</td><td>$\approx −1.66459$</td></tr></tbody></table><p>We can proceed to find the full equation of the tangent line by writing out the point-slope form of a linear equation with slope $m=f&rsquo;(x_0)$.
 $$
 \begin{align*}
 (y - y_0) &= m(x - x_0) \\
@@ -173,8 +173,8 @@ y &= f&rsquo;(x_0)(x - x_0) + f(x_0)
 $$
 Plugging in our values, we get:</p><p>$$
 \begin{align*}
-y &\approx −1.6645873x + 1.6645873(-2) - 3.6371897 \\
-y &\approx −1.6645873x - 6.9663643 \\
+y &\approx −1.66459x + 1.66459(-2) - 3.63719 \\
+y &\approx −1.66459x - 6.966364 \\
 \end{align*}
 $$</p><p>We&rsquo;ll save that into a python function and plot it to make sure it does look like the tangent.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#ff79c6>def</span> <span style=color:#50fa7b>f_1</span>(x): <span style=color:#ff79c6>return</span> <span style=color:#ff79c6>-</span><span style=color:#bd93f9>1.6645873</span><span style=color:#ff79c6>*</span>x <span style=color:#ff79c6>-</span> <span style=color:#bd93f9>6.9663643</span>
 </span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span>fig, ax <span style=color:#ff79c6>=</span> base_plot(y, x, x_low<span style=color:#ff79c6>=-</span><span style=color:#bd93f9>5</span>, x_high<span style=color:#ff79c6>=-</span><span style=color:#bd93f9>1</span>)
