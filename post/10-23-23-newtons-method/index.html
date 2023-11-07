@@ -171,11 +171,10 @@ $$
 y &= f&rsquo;(x_0)(x - x_0) + f(x_0)
 \end{align*}
 $$
-Plugging in our values, we get:
-$$
+Plugging in our values, we get:</p><p>$$
 \begin{align*}
-y &\approx −1.6645873x + 1.6645873(-2) - 3.6371897\\
-y &\approx −1.6645873x - 6.9663643\\
+y &\approx −1.6645873x + 1.6645873(-2) - 3.6371897 \\
+y &\approx −1.6645873x - 6.9663643 \\
 \end{align*}
 $$</p><p>We&rsquo;ll save that into a python function and plot it to make sure it does look like the tangent.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#ff79c6>def</span> <span style=color:#50fa7b>f_1</span>(x): <span style=color:#ff79c6>return</span> <span style=color:#ff79c6>-</span><span style=color:#bd93f9>1.6645873</span><span style=color:#ff79c6>*</span>x <span style=color:#ff79c6>-</span> <span style=color:#bd93f9>6.9663643</span>
 </span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span>fig, ax <span style=color:#ff79c6>=</span> base_plot(y, x, x_low<span style=color:#ff79c6>=-</span><span style=color:#bd93f9>5</span>, x_high<span style=color:#ff79c6>=-</span><span style=color:#bd93f9>1</span>)
