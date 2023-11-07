@@ -11,8 +11,9 @@
 </span></span><span style=display:flex><span>y
 </span></span></code></pre></div><p>$\displaystyle 4 \sin{\left(x \right)}$</p><p>This is a problem with a known answer (you can google x-intercepts of $\sin(x)$ for a table), so it&rsquo;s not particularly useful to use Newton&rsquo;s Method here, but for our purposes it will be helpful that we can check our answer with the &ldquo;right&rdquo; one.
 \begin{align*}
-4 \sin{\left(x \right)} &= 0 \quad where \quad -5\leq x \leq -1\\
-\sin{\left(x \right)} &= 0 \\
+4 \sin(x) &= 0 \quad \text{where} \quad -5\leq x \leq -1\\
+\sin(x) &= 0 \\
+x &= \sin^{-1}(0) \\
 x &= -\pi
 \end{align*}</p><div style="padding:0 0 1em;color:darkred;font-weight:700"><details><summary>Utility functions</summary><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#ff79c6>def</span> <span style=color:#50fa7b>plot_f</span>(
 </span></span><span style=display:flex><span>        f: Callable[[<span style=color:#8be9fd;font-style:italic>float</span>], <span style=color:#8be9fd;font-style:italic>float</span>],
