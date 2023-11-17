@@ -30,8 +30,9 @@
                 </a>
             </h2>
             <p class="text-muted mb-1">
-                {{ if isset .Site.Params "header_subtitle" }}
-                    {{ .Site.Params.header_subtitle }}
+                {{ if isset .Site.Params "header_subtitle_one" }}
+                    {{ .Site.Params.header_subtitle_one }} <br>
+                    {{ .Site.Params.header_subtitle_two }}
                 {{ else }}
                     Your Creative Subtitle
                 {{ end }}
