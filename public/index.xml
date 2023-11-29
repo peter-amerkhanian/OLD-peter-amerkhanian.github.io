@@ -2,83 +2,83 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Home on Peter Amerkhanian</title>
-    <link>https://peter-amerkhanian.github.io/</link>
+    <link>peter-amerkhanian.com/</link>
     <description>Recent content in Home on Peter Amerkhanian</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>&amp;copy; 2023, Peter Amerkhanian</copyright>
-    <lastBuildDate>Fri, 03 Nov 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://peter-amerkhanian.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 03 Nov 2023 00:00:00 +0000</lastBuildDate><atom:link href="peter-amerkhanian.com/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Calc 1: Newton&#39;s Method From The Ground Up</title>
-      <link>https://peter-amerkhanian.github.io/post/10-23-23-newtons-method/</link>
+      <link>peter-amerkhanian.com/post/10-23-23-newtons-method/</link>
       <pubDate>Fri, 03 Nov 2023 00:00:00 +0000</pubDate>
       
-      <guid>https://peter-amerkhanian.github.io/post/10-23-23-newtons-method/</guid>
+      <guid>peter-amerkhanian.com/post/10-23-23-newtons-method/</guid>
       <description>import numpy as np import os import matplotlib.pyplot as plt import matplotlib import sympy import imageio from typing import Callable Newton&amp;rsquo;s Method for Finding Roots: What, How, and Why In the context of a Differential Calculus course, Newton&amp;rsquo;s Method, also referred to as The Newton-Raphson Method, seems to typically come up near the end of the semester, offering students a brief look into the world of &amp;ldquo;numerical methods&amp;rdquo; and how we might solve complex problems in the real world.</description>
     </item>
     
     <item>
       <title>Calc 1: Simple Constrained Optimization</title>
-      <link>https://peter-amerkhanian.github.io/post/7-16-23-optimization/</link>
+      <link>peter-amerkhanian.com/post/7-16-23-optimization/</link>
       <pubDate>Tue, 04 Jul 2023 00:00:00 +0000</pubDate>
       
-      <guid>https://peter-amerkhanian.github.io/post/7-16-23-optimization/</guid>
+      <guid>peter-amerkhanian.com/post/7-16-23-optimization/</guid>
       <description>import matplotlib.pyplot as plt from mpl_toolkits.mplot3d import Axes3D import numpy as np The following are my notes on a basic calculus 1 homework question. I liked the question a lot, so decided to write out it all out for my future use.
 Question: If 2000 square centimeters of material is available to make a box with a square base and an open top, what is the largest box that you can possibly create?</description>
     </item>
     
     <item>
       <title>Instrumental Variables (IV) Basics</title>
-      <link>https://peter-amerkhanian.github.io/post/instrumental-variables/</link>
+      <link>peter-amerkhanian.com/post/instrumental-variables/</link>
       <pubDate>Sat, 25 Mar 2023 00:00:00 +0000</pubDate>
       
-      <guid>https://peter-amerkhanian.github.io/post/instrumental-variables/</guid>
+      <guid>peter-amerkhanian.com/post/instrumental-variables/</guid>
       <description>Import statements# Wooldridge (2019) datasets import wooldridge as woo # Base scientific computing import numpy as np import pandas as pd import matplotlib.pyplot as plt # Stats packages import linearmodels.iv as iv from linearmodels.iv import IV2SLS import statsmodels.formula.api as smf import scipy as sp # Drawing DAGS import graphviz as gr The following are my notes on the use of instrumental variables for finding causal effects. These are largely notes on the following:</description>
     </item>
     
     <item>
       <title>An SIR Modeling Application in Python</title>
-      <link>https://peter-amerkhanian.github.io/post/sir-modeling/</link>
+      <link>peter-amerkhanian.com/post/sir-modeling/</link>
       <pubDate>Sun, 15 Jan 2023 00:00:00 +0000</pubDate>
       
-      <guid>https://peter-amerkhanian.github.io/post/sir-modeling/</guid>
+      <guid>peter-amerkhanian.com/post/sir-modeling/</guid>
       <description>The following is a memo that I prepared for Jesse Rothstein&amp;rsquo;s &amp;ldquo;Economic Policy for Pandemics&amp;rdquo; Course at Goldman. I&amp;rsquo;m posting it here because I think it presents a simple but effective implementation of the Susceptible, Infected, Recovered (SIR) Model in Python. This is all applied to the COVID-19 pandemic in an effort to produce a policy-relevant simulation of virus spread. Import statementsfrom datetime import datetime import matplotlib.pyplot as plt import numpy as np import pandas as pd import seaborn as sns from IPython.</description>
     </item>
     
     <item>
       <title>How to Add a &#39;Back to top&#39; Footer to Hugo Posts</title>
-      <link>https://peter-amerkhanian.github.io/post/hugo-footer/</link>
+      <link>peter-amerkhanian.com/post/hugo-footer/</link>
       <pubDate>Sun, 07 Aug 2022 12:38:11 -0700</pubDate>
       
-      <guid>https://peter-amerkhanian.github.io/post/hugo-footer/</guid>
+      <guid>peter-amerkhanian.com/post/hugo-footer/</guid>
       <description>This post will detail how to add a footer that says &amp;ldquo;Back to Top&amp;rdquo; on all of the posts in your Hugo site. This method involves taking advantage of Hugo&amp;rsquo;s &amp;ldquo;partials&amp;rdquo; feature, which allows you to add customizations to your Hugo page without directly altering your theme&amp;rsquo;s html. Partials are utilized in a hierarchical system, where Hugo sees if you have a custom file written for a given partial (e.g., your footer.</description>
     </item>
     
     <item>
       <title>Buy vs. Rent, A Financial Modeling Workflow in Python</title>
-      <link>https://peter-amerkhanian.github.io/post/rent-v-buy/</link>
+      <link>peter-amerkhanian.com/post/rent-v-buy/</link>
       <pubDate>Sat, 06 Aug 2022 14:14:01 -0700</pubDate>
       
-      <guid>https://peter-amerkhanian.github.io/post/rent-v-buy/</guid>
+      <guid>peter-amerkhanian.com/post/rent-v-buy/</guid>
       <description>Summary This post goes through the following exercises:
 Use numpy-financial to build a loan amortization calculator for a home mortgage Use said table as well as simulated home and stock equity returns over time to compare year-to-year wealth resulting from the following strategies: 1.) buying a residential living space 2.) renting one instead and investing the dollar amount that would have been your down-payment A Note on numpy-financial At one point in time, numpy, the popular Python numerical analysis library, included 10 specialized functions for financial analysis.</description>
     </item>
     
     <item>
       <title>Reliable PDF Scraping with tabula-py</title>
-      <link>https://peter-amerkhanian.github.io/post/pdf-scraper-tutorial/</link>
+      <link>peter-amerkhanian.com/post/pdf-scraper-tutorial/</link>
       <pubDate>Wed, 20 Jul 2022 09:27:34 -0700</pubDate>
       
-      <guid>https://peter-amerkhanian.github.io/post/pdf-scraper-tutorial/</guid>
+      <guid>peter-amerkhanian.com/post/pdf-scraper-tutorial/</guid>
       <description>Summary Use a combination of tabula&amp;rsquo;s read_pdf() function and pandas&amp;rsquo; various data manipulation functions in Python to accurately scrape .pdf files Prerequisites/Assumptions Windows 10 with administrator privileges (for setting environmental variables) Java SE Development Kit installed on your machine (download) set Java&amp;rsquo;s PATH environmental variable to point to the Java directory (see more here under &amp;ldquo;Get tabula-py working (Windows 10)&amp;rdquo;) Python version ~3.8 ish (I&amp;rsquo;m using Python 3.9.12 in Anaconda) Anaconda included packages - Pandas and NumPy Libraries maybe not included in Anaconda: requests, tabula-py Problem Narrative I&amp;rsquo;m interested in conducting a data analysis that involves the market value of single family homes in San Mateo County, California.</description>
     </item>
     
     <item>
       <title>Examining Mutual Fund Covariance in Python</title>
-      <link>https://peter-amerkhanian.github.io/post/fidelity-fund-covar/</link>
+      <link>peter-amerkhanian.com/post/fidelity-fund-covar/</link>
       <pubDate>Mon, 14 Mar 2022 00:00:00 +0000</pubDate>
       
-      <guid>https://peter-amerkhanian.github.io/post/fidelity-fund-covar/</guid>
+      <guid>peter-amerkhanian.com/post/fidelity-fund-covar/</guid>
       <description>import pandas as pd import numpy as np import regex as re import yfinance as yf import pickle import os import datetime import seaborn as sns from matplotlib.pyplot import figure This notebook is an attempt to look at how different low cost Fidelity funds covary. Please note that this notebook is solely for education purposes and is not financial advice.
 Data: fidelity_funds.xlsx 92 Fidelity funds that meet the following criteria: No Transaction Fees, No minimum investment below 0.</description>
     </item>

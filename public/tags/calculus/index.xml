@@ -2,18 +2,18 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Calculus on Peter Amerkhanian</title>
-    <link>https://peter-amerkhanian.github.io/tags/calculus/</link>
+    <link>peter-amerkhanian.com/tags/calculus/</link>
     <description>Recent content in Calculus on Peter Amerkhanian</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>&amp;copy; 2023, Peter Amerkhanian</copyright>
-    <lastBuildDate>Tue, 04 Jul 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://peter-amerkhanian.github.io/tags/calculus/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 04 Jul 2023 00:00:00 +0000</lastBuildDate><atom:link href="peter-amerkhanian.com/tags/calculus/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Calc 1: Simple Constrained Optimization</title>
-      <link>https://peter-amerkhanian.github.io/post/7-16-23-optimization/</link>
+      <link>peter-amerkhanian.com/post/7-16-23-optimization/</link>
       <pubDate>Tue, 04 Jul 2023 00:00:00 +0000</pubDate>
       
-      <guid>https://peter-amerkhanian.github.io/post/7-16-23-optimization/</guid>
+      <guid>peter-amerkhanian.com/post/7-16-23-optimization/</guid>
       <description>import matplotlib.pyplot as plt from mpl_toolkits.mplot3d import Axes3D import numpy as np The following are my notes on a basic calculus 1 homework question. I liked the question a lot, so decided to write out it all out for my future use.
 Question: If 2000 square centimeters of material is available to make a box with a square base and an open top, what is the largest box that you can possibly create?</description>
     </item>
