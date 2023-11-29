@@ -2,18 +2,18 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Econometrics on Peter Amerkhanian</title>
-    <link>peter-amerkhanian.com/tags/econometrics/</link>
+    <link>https://peter-amerkhanian.com/tags/econometrics/</link>
     <description>Recent content in Econometrics on Peter Amerkhanian</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>&amp;copy; 2023, Peter Amerkhanian</copyright>
-    <lastBuildDate>Sat, 25 Mar 2023 00:00:00 +0000</lastBuildDate><atom:link href="peter-amerkhanian.com/tags/econometrics/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 25 Mar 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://peter-amerkhanian.com/tags/econometrics/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Instrumental Variables (IV) Basics</title>
-      <link>peter-amerkhanian.com/post/instrumental-variables/</link>
+      <link>https://peter-amerkhanian.com/post/instrumental-variables/</link>
       <pubDate>Sat, 25 Mar 2023 00:00:00 +0000</pubDate>
       
-      <guid>peter-amerkhanian.com/post/instrumental-variables/</guid>
+      <guid>https://peter-amerkhanian.com/post/instrumental-variables/</guid>
       <description>Import statements# Wooldridge (2019) datasets import wooldridge as woo # Base scientific computing import numpy as np import pandas as pd import matplotlib.pyplot as plt # Stats packages import linearmodels.iv as iv from linearmodels.iv import IV2SLS import statsmodels.formula.api as smf import scipy as sp # Drawing DAGS import graphviz as gr The following are my notes on the use of instrumental variables for finding causal effects. These are largely notes on the following:</description>
     </item>
     
