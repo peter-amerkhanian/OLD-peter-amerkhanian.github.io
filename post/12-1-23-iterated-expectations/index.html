@@ -1,0 +1,178 @@
+<!doctype html><html lang=en><head><title>Probability: Iterated Expectations</title>
+<link rel=icon type=image/x-icon href=../../images/Peter_Amerkhanian_Headshot_square_lower_qual.jpg><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=description content><script type=text/javascript id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>MathJax={tex:{inlineMath:[["$","$"],["\\(","\\)"]],displayMath:[["$$","$$"],["\\[","\\]"]],processEscapes:!0,processEnvironments:!0},options:{skipHtmlTags:["script","noscript","style","textarea","pre"]}},window.addEventListener("load",e=>{document.querySelectorAll("mjx-container").forEach(function(e){e.parentElement.classList+="has-jax"})})</script><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script type=text/javascript id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><link rel=stylesheet href=../../css/theme.min.css><script async src="https://www.googletagmanager.com/gtag/js?id=G-V95HGLKTEB"></script><script>var doNotTrack=!1;if(!doNotTrack){window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag("js",new Date),gtag("config","G-V95HGLKTEB",{anonymize_ip:!1})}</script><style>body{font-size:110%}#content{max-width:750px}table{display:block;border:0;max-width:100%;margin:1em auto;overflow-x:auto;white-space:nowrap;text-align:left;color:#000}mjx-container{overflow-x:auto;overflow-y:hidden;margin:.5em auto}.has-jax:not(table .has-jax){overflow-x:auto;overflow-y:hidden}.katex-display{overflow-x:auto;margin:.5em auto}.katex-display{-webkit-font-smoothing:antialiased;background:inherit!important;border:none!important;font-size:100%}.simpletable{font-size:95%;border-collapse:collapse;width:100%}.simpletable th{border:1px solid #ddd;padding:.6em}.simpletable tbody tr{padding:0}.simpletable tbody td{border:1px solid #ddd;padding:.3em}.dataframe{font-size:85%;border-collapse:collapse;width:100%}.dataframe thead th{text-align:center!important}.dataframe td,.dataframe th{border:1px solid #ddd;padding:8px}.dataframe tbody tr{padding:.5em;border:1px solid #afafaf}.dataframe tbody tr:nth-child(even){background-color:#f2f2f2}.dataframe tr:hover{background-color:#ddd}.dataframe tbody tr th{padding:.5em}.dataframe th{background-color:#dfdfdf}</style></head><body><div id=content class=mx-auto><header class="container mt-sm-5 mt-4 mb-4 mt-xs-1"><div class=row><div class="col-sm-4 col-12 text-sm-right text-center pt-sm-4"><a href=../../ class=text-decoration-none><img id=home-image class=rounded-circle src=../../images/blog.jpg></a></div><div class="col-sm-8 col-12 text-sm-left text-center"><h2 class="m-0 mb-2 mt-4"><a href=../../ class=text-decoration-none>Peter Amerkhanian</a></h2><p class="text-muted mb-1">Data Scientist @ CA Department of Social Services<br>UC Berkeley MPP '23, BA '16</p><ul id=nav-links class="list-inline mb-2"><li class=list-inline-item><a class="badge badge-white" href=../../ title=About>About</a></li><li class=list-inline-item><a class="badge badge-white" href=../../post/ title=Blog>Blog</a></li></ul><ul id=nav-social class=list-inline><li class="list-inline-item mr-3"><a href=mailto:peteramerkhanian@berkeley.edu target=_blank><i class="fas fa-at fa-lg text-muted"></i></a></li><li class="list-inline-item mr-3"><a href=https://www.linkedin.com/in/peteramerkhanian/ target=_blank><i class="fab fa-linkedin-in fa-lg text-muted"></i></a></li><li class="list-inline-item mr-3"><a href=https://github.com/peter-amerkhanian target=_blank><i class="fab fa-github fa-lg text-muted"></i></a></li></ul></div></div><hr></header><div class=container><div class=pl-sm-2><div class=mb-3><h3 class=mb-0>Probability: Iterated Expectations</h3><small class=text-muted>Published December 1, 2023</small></div><article><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#ff79c6>import</span> pandas <span style=color:#ff79c6>as</span> pd
+</span></span><span style=display:flex><span><span style=color:#ff79c6>import</span> numpy <span style=color:#ff79c6>as</span> np
+</span></span></code></pre></div><p>I recently came across a list of <a href=https://twitter.com/causalinf/status/1259448663270658050>10 theorems/proofs</a> that you &ldquo;need to know&rdquo; if you do econometrics. These were compiled by <a href=https://econ.msu.edu/faculty/wooldridge/>Jeffrey Wooldridge</a>, an economist and textbook author whose introductory textbook has been fundamental to my interest in econometrics. As an exercise, I&rsquo;m working through these 10 items, compiling resources, textbook passages, and data exercises that I think can make them easier to understand. The first item I&rsquo;m trying to write my notes on is the Law of Iterated Expectations, but I&rsquo;ll be prefacing/augmenting the notes with some discussion of basic probability for completeness.</p><p>My core reference is <a href=https://projects.iq.harvard.edu/stat110/home><em>Introduction to Probability, Second Edition</em></a> By Joseph K. Blitzstein, Jessica Hwang.</p><hr><p>To start, I&rsquo;ll simulate some data.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#6272a4># Set a random seed for reproducability</span>
+</span></span><span style=display:flex><span>np<span style=color:#ff79c6>.</span>random<span style=color:#ff79c6>.</span>seed(<span style=color:#bd93f9>42</span>)
+</span></span><span style=display:flex><span><span style=color:#6272a4># Define the number of people in the dataset</span>
+</span></span><span style=display:flex><span>num_people <span style=color:#ff79c6>=</span> <span style=color:#bd93f9>100</span>
+</span></span><span style=display:flex><span><span style=color:#6272a4># Generate random ages - X ~ Uniform(min, max)</span>
+</span></span><span style=display:flex><span>ages <span style=color:#ff79c6>=</span> np<span style=color:#ff79c6>.</span>random<span style=color:#ff79c6>.</span>randint(<span style=color:#bd93f9>71</span>, <span style=color:#bd93f9>79</span>, num_people)
+</span></span><span style=display:flex><span><span style=color:#6272a4># Create DataFrame</span>
+</span></span><span style=display:flex><span>data <span style=color:#ff79c6>=</span> {<span style=color:#f1fa8c>&#39;Person_ID&#39;</span>: <span style=color:#8be9fd;font-style:italic>range</span>(<span style=color:#bd93f9>1</span>, num_people <span style=color:#ff79c6>+</span> <span style=color:#bd93f9>1</span>), <span style=color:#f1fa8c>&#39;Age&#39;</span>: ages}
+</span></span><span style=display:flex><span>people_df <span style=color:#ff79c6>=</span> pd<span style=color:#ff79c6>.</span>DataFrame(data)<span style=color:#ff79c6>.</span>set_index(<span style=color:#f1fa8c>&#34;Person_ID&#34;</span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>people_df<span style=color:#ff79c6>.</span>head()
+</span></span></code></pre></div><div><style scoped>.dataframe tbody tr th:only-of-type{vertical-align:middle}<pre><code>.dataframe tbody tr th{vertical-align:top}.dataframe thead th{text-align:right}</code></pre><p></style></p><table border=1 class=dataframe><thead><tr style=text-align:right><th></th><th>Age</th></tr><tr><th>Person_ID</th><th></th></tr></thead><tbody><tr><th>1</th><td>77</td></tr><tr><th>2</th><td>74</td></tr><tr><th>3</th><td>75</td></tr><tr><th>4</th><td>77</td></tr><tr><th>5</th><td>73</td></tr></tbody></table></div><p>Let&rsquo;s say that these data represent life spans, thus $\text{age}_i$ is an individual&rsquo;s lifespan, e.g. $\text{age}_2=$</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span>people_df<span style=color:#ff79c6>.</span>loc[<span style=color:#bd93f9>2</span>]
+</span></span></code></pre></div><pre><code>Age    74
+Name: 2, dtype: int32
+</code></pre><h2 id=expectation>Expectation</h2><p>The mean of a random variable, like age above, is also referred to as its &ldquo;expected value,&rdquo; denoted $E(\text{age})$.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span>people_df[<span style=color:#f1fa8c>&#39;Age&#39;</span>]<span style=color:#ff79c6>.</span>mean()
+</span></span></code></pre></div><pre><code>74.6
+</code></pre><p>The mean above is specifically called an <em>arithmetic mean</em>, defined mathematically as follows:<br>$$ \bar{x} = \frac{1}{n} \sum_i^n x_i$$</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span>(<span style=color:#bd93f9>1</span><span style=color:#ff79c6>/</span><span style=color:#8be9fd;font-style:italic>len</span>(people_df)) <span style=color:#ff79c6>*</span> people_df[<span style=color:#f1fa8c>&#39;Age&#39;</span>]<span style=color:#ff79c6>.</span>sum()
+</span></span></code></pre></div><pre><code>74.60000000000001
+</code></pre><p>But the arithmetic mean is just a special case of the more general weighted mean, defined as follows:</p><p>\begin{align*}
+\text{weighted-mean}(x) &= \sum_i^n x_i p_i \\
+\end{align*}</p><p>Where the weights, $p_1, p_2, &mldr;,p_n$ are non-negative numbers that sum to 1. We can see that the arithmetic mean is the specific case of the weighted mean where all weights are equal</p><p>\begin{align*}
+\text{If } [p_1=p_2=&mldr;=p_n] &\text{ And } [\sum_i^n p_i =1] \\
+\text{weighted-mean}(x) &= \sum_i^n x_i \frac{1}{n} \\
+\text{weighted-mean}(x) &= \frac{1}{n} \sum_i^n x_i = \bar{x} \\
+\end{align*}</p><p>We use the more general weighted mean when we define expectation.</p><blockquote><p>the expected value of $X$ is a weighted average of the possible values that
+$X$ can take on, weighted by their probabilities<br>&ndash; <cite>(Blitzstein & Wang, 2019)</cite></p></blockquote><p>More formally, given a random variable, $X$, with distinct possible values, $x_1, x_2, &mldr; x_n$, the <em>expected value</em> $X$ is defined as:</p><p>\begin{align*}
+E(X) = & x_1P(X = x_1) + \\
+&amp;x_2P(X = x_2) + \\
+&&mldr; + x_nP(X = x_n) \\
+= &\sum_{i=1}^n x_iP(X = x_i)
+\end{align*}</p><p>Now we&rsquo;ll demonstrate this formula on our data. It&rsquo;s useful here to move from our individual-level dataset, where each row is a person, to the following, where each row is a lifespan, which the probability that an individual has that lifespan.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span>prob_table <span style=color:#ff79c6>=</span> people_df[<span style=color:#f1fa8c>&#39;Age&#39;</span>]<span style=color:#ff79c6>.</span>value_counts(normalize<span style=color:#ff79c6>=</span><span style=color:#ff79c6>True</span>)
+</span></span><span style=display:flex><span>prob_table <span style=color:#ff79c6>=</span> prob_table<span style=color:#ff79c6>.</span>sort_index()
+</span></span><span style=display:flex><span>prob_table
+</span></span></code></pre></div><pre><code>71    0.08
+72    0.13
+73    0.11
+74    0.19
+75    0.12
+76    0.13
+77    0.13
+78    0.11
+Name: Age, dtype: float64
+</code></pre><p>Adapting the formula above to our data, we must solve the following:</p><p>\begin{align*}
+E(\text{Age}) = &\text{Age}_1P(\text{Age}=\text{Age}_1) + \\
+&\text{Age}_2P(\text{Age}=\text{Age}_2) + \\
+&&mldr; + \text{Age}_nP(\text{Age}=\text{Age}_n) \\
+= &\sum_{i=1}^n \text{Age}_iP(\text{Age}=\text{Age}_i)
+\end{align*}</p><p>Which we can do transparently using a for-loop:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span>summation <span style=color:#ff79c6>=</span> <span style=color:#bd93f9>0</span>
+</span></span><span style=display:flex><span><span style=color:#ff79c6>for</span> i <span style=color:#ff79c6>in</span> <span style=color:#8be9fd;font-style:italic>range</span>(<span style=color:#8be9fd;font-style:italic>len</span>(prob_table)):
+</span></span><span style=display:flex><span>  summation <span style=color:#ff79c6>+=</span> prob_table<span style=color:#ff79c6>.</span>index[i] <span style=color:#ff79c6>*</span> prob_table<span style=color:#ff79c6>.</span>values[i]
+</span></span><span style=display:flex><span>summation
+</span></span></code></pre></div><pre><code>74.60000000000001
+</code></pre><p>As a quick aside &ndash; this can also be expressed as the dot product of two vectors, where the dot product is defined as follows:</p><p>$$
+\begin{align*}
+\vec{\text{Age}}\cdot P(\vec{\text{Age}}) = &\text{Age}_1P(\text{Age}=\text{Age}_1) + \\
+&\text{Age}_2P(\text{Age}=\text{Age}_2) + \\
+&&mldr; + \text{Age}_3P(\text{Age}=\text{Age}_3)
+\end{align*}
+$$</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span>prob_table<span style=color:#ff79c6>.</span>index<span style=color:#ff79c6>.</span>values <span style=color:#ff79c6>@</span> prob_table<span style=color:#ff79c6>.</span>values
+</span></span></code></pre></div><pre><code>74.6
+</code></pre><p>Though we will stick to the summation notation paired with python for-loops for consistency</p><h2 id=conditional-expectation>Conditional Expectation</h2><p>We often have more than one variable available to us in an analysis. Below I simulate the variable gender:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span>np<span style=color:#ff79c6>.</span>random<span style=color:#ff79c6>.</span>seed(<span style=color:#bd93f9>45</span>)
+</span></span><span style=display:flex><span>people_df[<span style=color:#f1fa8c>&#39;Gender&#39;</span>] <span style=color:#ff79c6>=</span> np<span style=color:#ff79c6>.</span>random<span style=color:#ff79c6>.</span>choice([<span style=color:#f1fa8c>&#39;Female&#39;</span>, <span style=color:#f1fa8c>&#39;Male&#39;</span>], <span style=color:#8be9fd;font-style:italic>len</span>(people_df))
+</span></span><span style=display:flex><span>people_df<span style=color:#ff79c6>.</span>head()
+</span></span></code></pre></div><div><style scoped>.dataframe tbody tr th:only-of-type{vertical-align:middle}<pre><code>.dataframe tbody tr th{vertical-align:top}.dataframe thead th{text-align:right}</code></pre><p></style></p><table border=1 class=dataframe><thead><tr style=text-align:right><th></th><th>Age</th><th>Gender</th></tr><tr><th>Person_ID</th><th></th><th></th></tr></thead><tbody><tr><th>1</th><td>77</td><td>Male</td></tr><tr><th>2</th><td>74</td><td>Female</td></tr><tr><th>3</th><td>75</td><td>Male</td></tr><tr><th>4</th><td>77</td><td>Female</td></tr><tr><th>5</th><td>73</td><td>Female</td></tr></tbody></table></div><p>Each row in our dataset represents an individual person, and we now have access to both their gender and their life-span. It follows that we may be interested in how life-span varies across gender. In code, this entails a groupby operation, grouping on gender before calculting the mean age:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span>people_df<span style=color:#ff79c6>.</span>groupby(<span style=color:#f1fa8c>&#39;Gender&#39;</span>)[<span style=color:#f1fa8c>&#39;Age&#39;</span>]<span style=color:#ff79c6>.</span>mean()
+</span></span></code></pre></div><pre><code>Gender
+Female    74.672727
+Male      74.511111
+Name: Age, dtype: float64
+</code></pre><p>The code in this case resembles the formal notation of a conditional expectation:
+$E(\text{Age} \mid \text{Gender}=\text{Gender}_j)$, where each $\text{Gender}=\text{Gender}_j$ is a distinct event.</p><p>If we are interested specifically in the mean life-span given the event that gender is equal to male (a roundabout way of saying the average life-span for males in the data), we could calculate the following</p><p>$E(\text{Age} \mid \text{Gender}=\text{Male})$</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span>people_df<span style=color:#ff79c6>.</span>groupby(<span style=color:#f1fa8c>&#39;Gender&#39;</span>)[<span style=color:#f1fa8c>&#39;Age&#39;</span>]<span style=color:#ff79c6>.</span>mean()[<span style=color:#f1fa8c>&#39;Male&#39;</span>]
+</span></span></code></pre></div><pre><code>74.5111111111111
+</code></pre><p>These groupby operations in <code>pandas</code> obscure some of the conceptual stuff happening inside the conditional expectation, which we&rsquo;ll delve deeper into now.</p><p>So what exactly is the conditional expectation, $E(X \mid Y=y)$?</p><p>Before answering this, it will be useful to refresh the related concept of conditional probability:</p><blockquote><p>If $X=x$ and $Y=y$ are events with $P(Y=y)>0$, then the conditional probability of $X=x$ given $Y=y$ is denoted by $P(X=x \mid Y=y)$, defined as<br>$$
+P(X=x \mid Y=y) = \frac{P(X=x , Y=y)}{P(Y=y)}
+$$<br>&ndash; <cite>(Blitzstein & Wang, 2019)</cite></p></blockquote><p>This formula specifically describes the probability of the event, $X=x$, given the <em>evidence</em>, an observed event $Y=y$.</p><p>We want to shift to describing a mean conditional on that evidence, and we include that information via the weights in the expectation.</p><blockquote><p>Recall that the expectation $E(X)$ is a weighted average of the possible values of $X$, where the weights are the PMF values $P(X = x)$. After learning that an event $Y=y$ occurred, we want to <strong>use weights that have been updated to reflect this new information</strong>.<br>&ndash; <cite>(Blitzstein & Wang, 2019)</cite></p></blockquote><p>The key point here is that <strong>just the weights that each $x_i$ gets multiplied by will change</strong>, going from the probability $P(X=x)$ to the <strong>conditional probability $P(X=x \mid Y=y)$</strong>.</p><p>Armed with conditional probability formula above, we can define how to compute the conditional expected value
+\begin{align*}
+E(X \mid Y=y) &= \sum_{x} x P(X=x \mid Y=y) \\
+&= \sum_{x} x \frac{P(X=x , Y=y)}{P(Y=y)}
+\end{align*}</p><p>Returning to our example with data, we substitute terms to find the following:
+\begin{align*}
+E(\text{Age} \mid \text{Gender}=\text{Male}) &= \sum_{i=1}^n \text{Age}_iP(\text{Age}=\text{Age}_i \mid \text{Gender}=\text{Male}) \\
+&= \sum_{i=1}^n \text{Age}_i \frac{P(\text{Age}=\text{Age}_i, \text{Gender}=\text{Male})}{P(\text{Gender}=\text{Male})}
+\end{align*}</p><p>We can explicitly compute this with a for-loop in python, as we did for $E(X)$, but this time we will need to do a little up front work and define components we need for calculating the weights, $\frac{P(\text{Age}=\text{Age}_i, \text{Gender}=\text{Male})}{P(\text{Gender}=\text{Male})}$</p><h3 id=components>Components</h3><ol><li>The conditional probability distribution: $P(\text{Age}=\text{Age}_i, \text{Gender} = \text{Male})$</li><li>The probability of the event, $P(\text{Gender}=\text{Male})$</li></ol><p>Where 1.) is the following:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span>P_Age_Gender <span style=color:#ff79c6>=</span> pd<span style=color:#ff79c6>.</span>crosstab(people_df[<span style=color:#f1fa8c>&#39;Age&#39;</span>],
+</span></span><span style=display:flex><span>                           people_df[<span style=color:#f1fa8c>&#39;Gender&#39;</span>],
+</span></span><span style=display:flex><span>                           normalize<span style=color:#ff79c6>=</span><span style=color:#f1fa8c>&#39;all&#39;</span>)
+</span></span><span style=display:flex><span>P_Age_Gender[<span style=color:#f1fa8c>&#39;Male&#39;</span>]
+</span></span></code></pre></div><pre><code>Age
+71    0.03
+72    0.07
+73    0.05
+74    0.08
+75    0.07
+76    0.05
+77    0.06
+78    0.04
+Name: Male, dtype: float64
+</code></pre><p>and 2.) is:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span>P_Gender <span style=color:#ff79c6>=</span> people_df[<span style=color:#f1fa8c>&#39;Gender&#39;</span>]<span style=color:#ff79c6>.</span>value_counts(normalize<span style=color:#ff79c6>=</span><span style=color:#ff79c6>True</span>)
+</span></span><span style=display:flex><span>P_Gender<span style=color:#ff79c6>.</span>loc[<span style=color:#f1fa8c>&#39;Male&#39;</span>]
+</span></span></code></pre></div><pre><code>0.45
+</code></pre><p>With those two pieces, we&rsquo;ll convert the following into a for-loop:
+$$
+\sum_{i=1}^n \text{Age}_i \frac{P(\text{Age}=\text{Age}_i, \text{Gender}=\text{Male})}{P(\text{Gender}=\text{Male})}
+$$</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span>E_age_male <span style=color:#ff79c6>=</span> <span style=color:#bd93f9>0</span>
+</span></span><span style=display:flex><span>n <span style=color:#ff79c6>=</span> <span style=color:#8be9fd;font-style:italic>len</span>(P_Age_Gender[<span style=color:#f1fa8c>&#39;Male&#39;</span>])
+</span></span><span style=display:flex><span><span style=color:#ff79c6>for</span> i <span style=color:#ff79c6>in</span> <span style=color:#8be9fd;font-style:italic>range</span>(n):
+</span></span><span style=display:flex><span>  weight <span style=color:#ff79c6>=</span> P_Age_Gender[<span style=color:#f1fa8c>&#39;Male&#39;</span>]<span style=color:#ff79c6>.</span>values[i] <span style=color:#ff79c6>/</span> P_Gender<span style=color:#ff79c6>.</span>loc[<span style=color:#f1fa8c>&#39;Male&#39;</span>]
+</span></span><span style=display:flex><span>  E_age_male <span style=color:#ff79c6>+=</span> P_Age_Gender[<span style=color:#f1fa8c>&#39;Male&#39;</span>]<span style=color:#ff79c6>.</span>index[i] <span style=color:#ff79c6>*</span> weight
+</span></span><span style=display:flex><span>E_age_male
+</span></span></code></pre></div><pre><code>74.51111111111112
+</code></pre><p>We confirm that this is equal to the result of the more direct groupby:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span>people_df<span style=color:#ff79c6>.</span>groupby(<span style=color:#f1fa8c>&#39;Gender&#39;</span>)[<span style=color:#f1fa8c>&#39;Age&#39;</span>]<span style=color:#ff79c6>.</span>mean()[<span style=color:#f1fa8c>&#39;Male&#39;</span>]
+</span></span></code></pre></div><pre><code>74.5111111111111
+</code></pre><h2 id=the-law-of-iterated-expectations>The Law of Iterated Expectations</h2><p>The law of iterated expectations, also referred to as the law of total expectation, the tower property, Adam&rsquo;s law, or, my favorite, LIE, states the following:
+$$E(X) = E(E(X \mid Y))$$
+Which is to say, <strong>the weighted average of $X$ is equal to the weighted average of the weighted averages of $X$ conditional on each value of $Y$</strong>. This isn&rsquo;t a particularly useful sentence, so let&rsquo;s return to our example data. We plug in our values as follows:
+$$E(\text{Age}) = E(E(\text{Age} \mid \text{Gender}))$$
+Now it is useful to break this into some components that we&rsquo;ve seen before. We previously found
+$$
+E(\text{Age} \mid \text{Gender}=\text{Male}) = \sum_{i=1}^n \text{Age}_i \frac{P(\text{Age}=\text{Age}_i, \text{Gender}=\text{Male})}{P(\text{Gender}=\text{Male})}
+$$</p><p>Over all $\text{Gender}_j$, we have the more generalizable expression:
+$$
+E(\text{Age} \mid \text{Gender}=\text{Gender}_j)
+$$</p><p>Which can tell us about any gender, not just $\text{Gender}=\text{Male}$. This is equivalent to the expression:</p><p>$$
+\begin{align*}
+E(\text{Age} \mid \text{Gender} = \text{Gender}_j) = \sum_{i=1}^n \text{Age}_i \frac{P(\text{Age}=\text{Age}_i, \text{Gender}=\text{Gender}_j) }{P(\text{Gender}=\text{Gender}_j)}
+\end{align*}
+$$</p><p>Given this, let&rsquo;s return to the informal definition of the LIE, but break it into parts. The weighted average of $X$ is equal to:</p><ol><li>The weighted average of</li><li>the weighted averages of $X$ conditional on each value of $Y$".</li></ol><p>The expression above, $E(\text{Age} \mid \text{Gender}=\text{Gender}_j)$ is equivalent to 2.) &ldquo;the weighted averages of $X$ conditional on each value of $Y$.&rdquo;
+So what we need to do now is find the weighted average of that expression. We&rsquo;ll set up in the next few lines</p><p>\begin{align*}
+E(\text{Age}) &=E( \underbrace{E(\text{Age} \mid \text{Gender}=\text{Gender}_j)}_{\text{weighted averages conditional on each gender}} ) \\
+&=E(\sum_{i} \text{Age}_i \frac{P(\text{Age}=\text{Age}_i, \text{Gender}=\text{Gender}_j) }{P(\text{Gender}=\text{Gender}_j)}) \\
+\end{align*}</p><p>With that set up, we&rsquo;ll now write out the last weighted average explicitly. Note that the variation in $\text{Age}_i$ has been accounted for &ndash; we are now averaging over gender, $\text{Gender}_j$.</p><p>\begin{align*}
+&=\sum_j (\sum_{i} \text{Age}_i \frac{P(\text{Age}=\text{Age}_i, \text{Gender}=\text{Gender}_j) }{P(\text{Gender}=\text{Gender}_j)}) P(\text{Gender}=\text{Gender}_j) \\
+&=\sum_j \sum_{i} \text{Age}_i P(\text{Age}=\text{Age}_i, \text{Gender}=\text{Gender}_j) \\
+\end{align*}</p><p>Since $j$ only appears in one of these two terms, we can rewrite this as follows:</p><p>\begin{align*}
+&= \sum_{i} \text{Age}_i \sum_j P(\text{Age}=\text{Age}_i, \text{Gender}=\text{Gender}_j)
+\end{align*}</p><p>Here I&rsquo;ll pause, because the next steps can be clarified with code. $P(\text{Age}=\text{Age}_i, \text{Gender}=\text{Gender}_j)$ is the joint probability distribution of age and gender, and it helps to take a look at exactly what it is in pandas:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span>P_Age_Gender
+</span></span></code></pre></div><div><style scoped>.dataframe tbody tr th:only-of-type{vertical-align:middle}<pre><code>.dataframe tbody tr th{vertical-align:top}.dataframe thead th{text-align:right}</code></pre><p></style></p><table border=1 class=dataframe><thead><tr style=text-align:right><th>Gender</th><th>Female</th><th>Male</th></tr><tr><th>Age</th><th></th><th></th></tr></thead><tbody><tr><th>71</th><td>0.05</td><td>0.03</td></tr><tr><th>72</th><td>0.06</td><td>0.07</td></tr><tr><th>73</th><td>0.06</td><td>0.05</td></tr><tr><th>74</th><td>0.11</td><td>0.08</td></tr><tr><th>75</th><td>0.05</td><td>0.07</td></tr><tr><th>76</th><td>0.08</td><td>0.05</td></tr><tr><th>77</th><td>0.07</td><td>0.06</td></tr><tr><th>78</th><td>0.07</td><td>0.04</td></tr></tbody></table></div><p>Let&rsquo;s compute the summation of $P(\text{Age}=\text{Age}_i, \text{Gender}=\text{Gender}_j)$ over $\text{Gender}_j$ and see what we get.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span>P_Age_Gender[<span style=color:#f1fa8c>&#34;Male&#34;</span>] <span style=color:#ff79c6>+</span> P_Age_Gender[<span style=color:#f1fa8c>&#34;Female&#34;</span>]
+</span></span></code></pre></div><pre><code>Age
+71    0.08
+72    0.13
+73    0.11
+74    0.19
+75    0.12
+76    0.13
+77    0.13
+78    0.11
+dtype: float64
+</code></pre><p>Interestingly, that is the exact same thing we get if we simply compute the probability of each age, $P(\text{Age}=\text{Age}_i)$</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span>people_df[<span style=color:#f1fa8c>&#39;Age&#39;</span>]<span style=color:#ff79c6>.</span>value_counts(normalize<span style=color:#ff79c6>=</span><span style=color:#ff79c6>True</span>)<span style=color:#ff79c6>.</span>sort_index()
+</span></span></code></pre></div><pre><code>71    0.08
+72    0.13
+73    0.11
+74    0.19
+75    0.12
+76    0.13
+77    0.13
+78    0.11
+Name: Age, dtype: float64
+</code></pre><p>So when you sum $P(\text{Age}=\text{Age}_i, \text{Gender}=\text{Gender}_j)$ only over $\text{Gender}_j$, you&rsquo;re just left with $P(\text{Age}=\text{Age}_i)$. This result stems from the definition of the <em>Marginal PMF</em>:</p><blockquote><p>For the discrete random variables $X$ and $Y$, the marginal PMF of $X$ is:<br>$$P(X=x) = \sum_y P(X=x, Y=y)$$
+&ndash; <cite>(Blitzstein & Wang, 2019)</cite></p></blockquote><p>and with this definition in mind we can finish the proof for the LIE:
+$$
+\begin{align*}
+E(\text{Age}) &= \sum_{i} \text{Age}_i \sum_j P(\text{Age}=\text{Age}_i, \text{Gender}=\text{Gender}_j) \\
+&= \sum_{i} \text{Age}_i P(\text{Age}=\text{Age}_i) \\
+&= E(\text{Age})
+\end{align*}
+$$</p><p>We can directly show the last bit, $E(\text{Age}) = \sum_j \sum_{i} \text{Age}_i P(\text{Age}=\text{Age}_i, \text{Gender}=\text{Gender}_j)$ using the joint probability distribution object from before:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span>P_Age_Gender<span style=color:#ff79c6>.</span>head()
+</span></span></code></pre></div><div><style scoped>.dataframe tbody tr th:only-of-type{vertical-align:middle}<pre><code>.dataframe tbody tr th{vertical-align:top}.dataframe thead th{text-align:right}</code></pre><p></style></p><table border=1 class=dataframe><thead><tr style=text-align:right><th>Gender</th><th>Female</th><th>Male</th></tr><tr><th>Age</th><th></th><th></th></tr></thead><tbody><tr><th>71</th><td>0.05</td><td>0.03</td></tr><tr><th>72</th><td>0.06</td><td>0.07</td></tr><tr><th>73</th><td>0.06</td><td>0.05</td></tr><tr><th>74</th><td>0.11</td><td>0.08</td></tr><tr><th>75</th><td>0.05</td><td>0.07</td></tr></tbody></table></div><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span>(P_Age_Gender
+</span></span><span style=display:flex><span> <span style=color:#ff79c6>.</span>sum(axis<span style=color:#ff79c6>=</span><span style=color:#bd93f9>1</span>) <span style=color:#6272a4># sum over j</span>
+</span></span><span style=display:flex><span> <span style=color:#ff79c6>.</span>reset_index() <span style=color:#6272a4># bring out Age_i</span>
+</span></span><span style=display:flex><span> <span style=color:#ff79c6>.</span>product(axis<span style=color:#ff79c6>=</span><span style=color:#bd93f9>1</span>) <span style=color:#6272a4># Age_i * P(Age=Age_i)</span>
+</span></span><span style=display:flex><span> <span style=color:#ff79c6>.</span>sum() <span style=color:#6272a4># sum over i</span>
+</span></span><span style=display:flex><span> )
+</span></span></code></pre></div><pre><code>74.6
+</code></pre><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span>people_df[<span style=color:#f1fa8c>&#39;Age&#39;</span>]<span style=color:#ff79c6>.</span>mean()
+</span></span></code></pre></div><pre><code>74.6
+</code></pre></article></div></div></div><footer class="text-center pb-1"><p></p><p style=margin-top:3em;font-size:large><a href=#content><b>&uarr; Back to Top &uarr;</b></a></p><small class=text-muted>&copy; 2023, Peter Amerkhanian<br>Powered by <a href=https://gohugo.io/ target=_blank>Hugo</a>
+and <a href=https://github.com/austingebauer/devise target=_blank>Devise</a></small></footer></body></html>
