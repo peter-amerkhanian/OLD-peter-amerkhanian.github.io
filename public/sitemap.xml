@@ -2,28 +2,31 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>https://www.peter-amerkhanian.com/post/10-23-23-newtons-method/</loc>
-    <lastmod>2023-11-03T00:00:00+00:00</lastmod>
-  </url><url>
     <loc>https://www.peter-amerkhanian.com/categories/</loc>
-    <lastmod>2023-11-03T00:00:00+00:00</lastmod>
+    <lastmod>2023-12-01T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://www.peter-amerkhanian.com/</loc>
-    <lastmod>2023-11-03T00:00:00+00:00</lastmod>
+    <lastmod>2023-12-01T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://www.peter-amerkhanian.com/tags/math/</loc>
-    <lastmod>2023-11-03T00:00:00+00:00</lastmod>
+    <lastmod>2023-12-01T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://www.peter-amerkhanian.com/categories/math/</loc>
-    <lastmod>2023-11-03T00:00:00+00:00</lastmod>
+    <lastmod>2023-12-01T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://www.peter-amerkhanian.com/post/</loc>
-    <lastmod>2023-11-03T00:00:00+00:00</lastmod>
+    <lastmod>2023-12-01T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://www.peter-amerkhanian.com/post/12-1-23-iterated-expectations/</loc>
+    <lastmod>2023-12-01T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://www.peter-amerkhanian.com/tags/python/</loc>
-    <lastmod>2023-11-03T00:00:00+00:00</lastmod>
+    <lastmod>2023-12-01T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://www.peter-amerkhanian.com/tags/</loc>
+    <lastmod>2023-12-01T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://www.peter-amerkhanian.com/post/10-23-23-newtons-method/</loc>
     <lastmod>2023-11-03T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://www.peter-amerkhanian.com/post/7-16-23-optimization/</loc>
