@@ -16,6 +16,7 @@ import matplotlib
 import sympy
 import imageio
 from typing import Callable
+import seaborn as sns
 
 ```
 
@@ -710,12 +711,14 @@ x_n = 0
 tolerance = 1e-12
 counter = 1
 
+last = np.inf
 while True:
     # Disregard the following utility code
-    print(f"Guess {counter}:",
+    print("Guess {0:3}:".format(counter),
           str(round(float(x_n), 5)).ljust(8, '0'),
-          " --- Error:",
-          euclidean_dist_to_truth(x_n))
+          " --- Change:",
+          round(np.abs(float(x_n) - last), 8))
+    last = float(x_n)
     ################################################
     # The following is the code for newton's method
     # 1.) Check for the stopping condition,
@@ -740,16 +743,16 @@ while True:
 
 ```
 
-    Guess 1: 0.000000  --- Error: 3.141592653589793
-    Guess 2: -3.50000  --- Error: 0.3584073464102069
-    Guess 3: -2.44316  --- Error: 0.6984302043961392
-    Guess 4: -1.81481  --- Error: 1.3267800055437047
-    Guess 5: -1.41471  --- Error: 1.726886024726261
-    Guess 6: -1.19062  --- Error: 1.9509769810235635
-    Guess 7: -1.11070  --- Error: 2.0308902060887837
-    Guess 8: -1.10108  --- Error: 2.0405099013561894
-    Guess 9: -1.10095  --- Error: 2.0406396683000647
-    Guess 10: -1.10095  --- Error: 2.040639691648806
+    Guess   1: 0.000000  --- Change: inf
+    Guess   2: -3.50000  --- Change: 3.5
+    Guess   3: -2.44316  --- Change: 1.05683755
+    Guess   4: -1.81481  --- Change: 0.6283498
+    Guess   5: -1.41471  --- Change: 0.40010602
+    Guess   6: -1.19062  --- Change: 0.22409096
+    Guess   7: -1.11070  --- Change: 0.07991323
+    Guess   8: -1.10108  --- Change: 0.0096197
+    Guess   9: -1.10095  --- Change: 0.00012977
+    Guess  10: -1.10095  --- Change: 2e-08
     Converged in 10 steps.
     
 
