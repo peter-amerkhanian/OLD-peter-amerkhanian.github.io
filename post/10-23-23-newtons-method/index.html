@@ -6,6 +6,7 @@
 </span></span><span style=display:flex><span><span style=color:#ff79c6>import</span> sympy
 </span></span><span style=display:flex><span><span style=color:#ff79c6>import</span> imageio
 </span></span><span style=display:flex><span><span style=color:#ff79c6>from</span> typing <span style=color:#ff79c6>import</span> Callable
+</span></span><span style=display:flex><span><span style=color:#ff79c6>import</span> seaborn <span style=color:#ff79c6>as</span> sns
 </span></span></code></pre></div><h2 id=newtons-method-for-finding-roots-what-how-and-why>Newton&rsquo;s Method for Finding Roots: What, How, and Why</h2><p>In the context of a Differential Calculus course, <a href=https://en.wikipedia.org/wiki/Newton%27s_method#Applications>Newton&rsquo;s Method</a>, also referred to as The Newton-Raphson Method, seems to typically come up near the end of the semester, offering students a brief look into the world of &ldquo;numerical methods&rdquo; and how we might solve complex problems in the real world. I think that it&rsquo;s such a cool topic and first step from math into applied fields like statistics and optimization, that I wanted to write an extended blog post about it. The main purpose of this is to ensure that I always have personal reference materials for Newton&rsquo;s Method, but perhaps it can be helpful to other readers.</p><p>I draw on two key sources for thinking about Newton&rsquo;s Method:</p><ol><li><a href="https://en.wikipedia.org/w/index.php?title=Newton%27s_method&amp;oldid=1177135929.">“Newton’s Method.”</a> 2023. In Wikipedia</li><li>Strang, Gilbert, and Edwin Herman. 2016. <a href=https://openstax.org/books/calculus-volume-1/pages/4-9-newtons-method>Calculus Volume 1</a>. OpenStax College.</li></ol><h3 id=what-is-it>What is it</h3><blockquote><p>In many areas of pure and applied mathematics, we are interested in finding solutions to an equation of the form $f(x)=0$</p></blockquote><p>(Strang 2016)</p><p>Newton&rsquo;s Method is a numerical method that helps us solve $f(x)=0$.</p><p>There are many cases where we need to solve equations like that, but the application area I work in is statistics, so I jump to the case where we want to &ldquo;fit&rdquo; a line as close as possible to some set of data points, thus creating a model of a data-generating-process. The fitting process rests on getting the line as close to the data points as possible, thus minimizing error. If we can formulate error as a function, then we can minimize it &ndash; we differentiate it and set the derivative to 0, and solve $f&rsquo;(x)=0$. Therein lies the opportunity to apply Newton&rsquo;s Method to a real problem.</p><p>However, we&rsquo;ll take a step back from statistics and return to the domain of an introductory calculus course. Newton&rsquo;s Method is useful for finding the root &ndash; the x-intercept &ndash; of a function. We&rsquo;ll explore the method by walking through an example</p><h3 id=using-newtons-method-to-solve-a-simple-problem>Using Newton&rsquo;s Method to Solve a Simple Problem</h3><p>Say we are given the function $4\sin(x)$ and we want to find the x-intercept of the function with the domain $-5\leq x \leq -1$.</p><p>We&rsquo;ll first set this function up in <code>sympy</code>, a python library for symbolic computation.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span>x, y <span style=color:#ff79c6>=</span> sympy<span style=color:#ff79c6>.</span>symbols(<span style=color:#f1fa8c>&#39;x y&#39;</span>)
 </span></span><span style=display:flex><span>y <span style=color:#ff79c6>=</span> <span style=color:#bd93f9>4</span><span style=color:#ff79c6>*</span>sympy<span style=color:#ff79c6>.</span>sin(x)
 </span></span><span style=display:flex><span>y
@@ -388,12 +389,14 @@ There is no formula that solves this. Even plugging the polynomial into <code>sy
 </span></span><span style=display:flex><span>tolerance <span style=color:#ff79c6>=</span> <span style=color:#bd93f9>1e-12</span>
 </span></span><span style=display:flex><span>counter <span style=color:#ff79c6>=</span> <span style=color:#bd93f9>1</span>
 </span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>last <span style=color:#ff79c6>=</span> np<span style=color:#ff79c6>.</span>inf
 </span></span><span style=display:flex><span><span style=color:#ff79c6>while</span> <span style=color:#ff79c6>True</span>:
 </span></span><span style=display:flex><span>    <span style=color:#6272a4># Disregard the following utility code</span>
-</span></span><span style=display:flex><span>    <span style=color:#8be9fd;font-style:italic>print</span>(<span style=color:#f1fa8c>f</span><span style=color:#f1fa8c>&#34;Guess </span><span style=color:#f1fa8c>{</span>counter<span style=color:#f1fa8c>}</span><span style=color:#f1fa8c>:&#34;</span>,
+</span></span><span style=display:flex><span>    <span style=color:#8be9fd;font-style:italic>print</span>(<span style=color:#f1fa8c>&#34;Guess </span><span style=color:#f1fa8c>{0:3}</span><span style=color:#f1fa8c>:&#34;</span><span style=color:#ff79c6>.</span>format(counter),
 </span></span><span style=display:flex><span>          <span style=color:#8be9fd;font-style:italic>str</span>(<span style=color:#8be9fd;font-style:italic>round</span>(<span style=color:#8be9fd;font-style:italic>float</span>(x_n), <span style=color:#bd93f9>5</span>))<span style=color:#ff79c6>.</span>ljust(<span style=color:#bd93f9>8</span>, <span style=color:#f1fa8c>&#39;0&#39;</span>),
-</span></span><span style=display:flex><span>          <span style=color:#f1fa8c>&#34; --- Error:&#34;</span>,
-</span></span><span style=display:flex><span>          euclidean_dist_to_truth(x_n))
+</span></span><span style=display:flex><span>          <span style=color:#f1fa8c>&#34; --- Change:&#34;</span>,
+</span></span><span style=display:flex><span>          <span style=color:#8be9fd;font-style:italic>round</span>(np<span style=color:#ff79c6>.</span>abs(<span style=color:#8be9fd;font-style:italic>float</span>(x_n) <span style=color:#ff79c6>-</span> last), <span style=color:#bd93f9>8</span>))
+</span></span><span style=display:flex><span>    last <span style=color:#ff79c6>=</span> <span style=color:#8be9fd;font-style:italic>float</span>(x_n)
 </span></span><span style=display:flex><span>    <span style=color:#6272a4>################################################</span>
 </span></span><span style=display:flex><span>    <span style=color:#6272a4># The following is the code for newton&#39;s method</span>
 </span></span><span style=display:flex><span>    <span style=color:#6272a4># 1.) Check for the stopping condition,</span>
@@ -415,16 +418,16 @@ There is no formula that solves this. Even plugging the polynomial into <code>sy
 </span></span><span style=display:flex><span>    )
 </span></span><span style=display:flex><span>    <span style=color:#6272a4>################################################</span>
 </span></span><span style=display:flex><span>    counter <span style=color:#ff79c6>+=</span> <span style=color:#bd93f9>1</span>
-</span></span></code></pre></div><pre><code>Guess 1: 0.000000  --- Error: 3.141592653589793
-Guess 2: -3.50000  --- Error: 0.3584073464102069
-Guess 3: -2.44316  --- Error: 0.6984302043961392
-Guess 4: -1.81481  --- Error: 1.3267800055437047
-Guess 5: -1.41471  --- Error: 1.726886024726261
-Guess 6: -1.19062  --- Error: 1.9509769810235635
-Guess 7: -1.11070  --- Error: 2.0308902060887837
-Guess 8: -1.10108  --- Error: 2.0405099013561894
-Guess 9: -1.10095  --- Error: 2.0406396683000647
-Guess 10: -1.10095  --- Error: 2.040639691648806
+</span></span></code></pre></div><pre><code>Guess   1: 0.000000  --- Change: inf
+Guess   2: -3.50000  --- Change: 3.5
+Guess   3: -2.44316  --- Change: 1.05683755
+Guess   4: -1.81481  --- Change: 0.6283498
+Guess   5: -1.41471  --- Change: 0.40010602
+Guess   6: -1.19062  --- Change: 0.22409096
+Guess   7: -1.11070  --- Change: 0.07991323
+Guess   8: -1.10108  --- Change: 0.0096197
+Guess   9: -1.10095  --- Change: 0.00012977
+Guess  10: -1.10095  --- Change: 2e-08
 Converged in 10 steps.
 </code></pre><p>When we plot our best guess, $x_n$, we see that it is indeed the root of the function.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span>fig, ax <span style=color:#ff79c6>=</span> plt<span style=color:#ff79c6>.</span>subplots()
 </span></span><span style=display:flex><span>
