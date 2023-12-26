@@ -19,36 +19,13 @@
   {{ end }}
 
   {{ template "_internal/google_analytics.html" . }}
-  <script>
-    document.addEventListener("DOMContentLoaded", function() {
-      var headings = document.querySelectorAll('article h1, article h2, article h3, article h4, article h5, article h6');
-
-      headings.forEach(function(heading) {
-        var anchor = document.createElement('a');
-        anchor.href = '#top';
-        anchor.textContent = ' ↑ ';
-        anchor.style.textDecoration = 'none';
-        anchor.style.marginLeft = '5px';
-        anchor.style.color = 'black';
-        anchor.style.fontSize = 'small';
-
-        anchor.addEventListener('click', function(event) {
-          event.preventDefault();
-          window.scrollTo({ top: 0, behavior: 'smooth' });
-        });
-
-        heading.appendChild(anchor);
-      });
-    });
-  </script>
-
 
 
   <style>
     body { font-size: 110%; }
 
     #content {
-    max-width: 950px;
+    max-width: 65%;
 }
 
     table {
@@ -153,22 +130,31 @@
       background-color: #dfdfdf;
 
     }
-
-    .sticky-container {
-      position: relative;
-      width: 100%;
-      height: 400px; /* Set the height of the parent container */
-      background-color: #f0f0f0;
-    }
-
     .sticky-element {
-      position: fixed;
-      top: 50%;
-      left: 0;
-      transform: translateY(-50%);
-      padding: 10px;
-      background-color: #d7d7d7;
-      color: #fff;
+      font-size: 80%;
+      position: sticky;
+      top: 0;
+      float: right;
+      width: 210px;
+      padding-top: 10px;
+      padding-left: 12px;
+      box-sizing: border-box;
+    }
+    .sticky-element ol {
+      /* Styles for the ordered list inside .sticky-element */
+      padding-left: 1rem;
+    }
+    ol ol {
+      list-style-type: lower-alpha;
+    }
+    ol ol ol {
+      list-style-type: decimal;
+    }
+    @media (max-width: 760px) {
+      /* Hide the element on screens with a maximum width of 767px (typical for mobile devices) */
+      .sticky-element {
+        display: none;
+      }
     }
     
   </style>

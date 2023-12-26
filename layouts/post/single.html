@@ -1,5 +1,31 @@
 {{ define "main" }}
+<div class="row">
+  <div class="col-md-2">
+    <!-- Content for the first column goes here -->
+    {{ if (gt .WordCount 400 )}}
+      <div class="sticky-element">
+        <a href="#top"><b>{{ .Title }}</b></a>
+          {{ .TableOfContents }}
+      </div>
+      {{ end }}
+  </div>
+  <div class="col-md-10">
+    <!-- Content for the second column goes here -->
+    <div class="pl-sm-2">
+      <div class="mb-3">
+          <h3 class="mb-0">{{ .Title }}</h3>
+          {{ if .Params.Subtitle }}
+          <h5>{{ .Params.Subtitle }}</h5>
+          {{ end }}
+          <small class="text-muted">Published {{ .Date.Format "January 2, 2006"  }}</small>
+      </div>
+      <article>
+          {{ .Content }}
+      </article>
 
+  </div>
+  </div>
+</div>
     <div class="pl-sm-2">
         <div class="mb-3">
             <h3 class="mb-0">{{ .Title }}</h3>
@@ -7,20 +33,7 @@
             <h5>{{ .Params.Subtitle }}</h5>
             {{ end }}
             <small class="text-muted">Published {{ .Date.Format "January 2, 2006"  }}</small>
-            {{ if (gt .WordCount 400 )}}
-            
-              <div class="sticky-element">
-                <nav>
-                  {{ .TableOfContents }}
-                </nav>
-              </div>
-              <nav>
-                {{ .TableOfContents }}
-              </nav>
-            {{ end }}
         </div>
-        
-
         <article>
             {{ .Content }}
         </article>
