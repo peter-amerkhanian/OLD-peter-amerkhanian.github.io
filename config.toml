@@ -24,6 +24,7 @@ copyright = "&copy; 2023, Peter Amerkhanian"
     title = "Blog"
     url = "/post/"
     weight = -100
+    
 
 [markup]
   [markup.goldmark]
@@ -44,9 +45,10 @@ copyright = "&copy; 2023, Peter Amerkhanian"
     style = 'dracula'
     tabWidth = 4
   [markup.tableOfContents]
-    startLevel = 3
-    endLevel = 5
+    startLevel = 2
+    endLevel = 3
     ordered = true
+
   
 # Configuration Features
 [params]

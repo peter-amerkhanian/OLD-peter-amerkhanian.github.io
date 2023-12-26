@@ -2,7 +2,7 @@
 title: "Instrumental Variables (IV) Basics"
 date: 2023-03-25
 draft: false
-categories: ['Notes on Methods',]
+categories: ["Metrics"]
 tags: ['Econometrics', 'Python', 'Causal Inference']
 math: true
 ---
@@ -33,7 +33,8 @@ I'm writing this mostly for my own future reference, but hope it might be helpfu
 
 ## Why IV?
 
-### IV versus RCTs
+### Pros and Cons
+#### IV versus RCTs
 What do we do if we cannot run an experiment and block all "back-door" paths by conditioning on observed variables?
 - One answer: get better/more complete data
 - But that's often not possible.
@@ -41,7 +42,7 @@ In particular, if we are worried about selection -- namely that people select di
 
 A "natural experiment" leverages variation in the treatment that is random with respect to potential outcomes (e.g. there is no selection on un-observables) and occurs without research intervention.
 
-### IV versus other quasi-experiments
+#### IV versus other quasi-experiments
 Like most quasi-experimental methods, IV gives us access to a "long regression model" -- one without omitted variables -- without having to actually observe those omitted variables (we only have access to the "short regression model").  
 
 (Wooldridge 2019) introduces IV after fixed effects and panel data models -- in my view more intuitive causal models. The following is a useful comparison of IV to panel data methods from (Wooldridge 2019):
@@ -56,7 +57,7 @@ Thus, unlike fixed effects (FE) models, IV can be used with cross sectional data
 The big takeaway as I see it is that, like FE, IV can remove omitted variable bias, specifically selection bias in impact evaluation. FE can also remove omitted variable bias, but only for variables that are fixed in time, and FE can only evaluate the impact of variables that vary over time. IV can remove bias from variables that vary with time (in a panel data setting) and can evaluate the impact of time-fixed variables. Let's see how this looks with actual data....
 
 
-# What's the causal effect of schooling on wages?
+## What's the causal effect of schooling on wages?
 I'll load some data included in (Wooldridge 2019)  -- originally from the [Young Men's Cohort of the
 National Longitudinal Survey (NLS)](https://www.bls.gov/nls/original-cohorts/older-and-young-men.htm) but pre-processed for students.
 
@@ -250,7 +251,7 @@ wage.head()
 
 
 
-## Using OLS
+### Using OLS
 
 I estimate the regression, $log(wage) = \beta_0 + \beta_1 educ + u$, which should tell me the effect of education on wages. The results are as follows:
 
@@ -322,7 +323,7 @@ g
 
 Note that the dashed lines represent unobserved relationships (Cunningham 2021)
 
-## Using IV
+### Using IV
 To fix this, I can try using instrumental variables as outlined in (Wooldridge 2019):
 > **In order to obtain consistent estimators of $\beta_0$ and $\beta_1$ when x and u are correlated, we need some
 additional information.**  
@@ -337,7 +338,7 @@ The information comes by way of a new variable that satisfies certain properties
 
 
 
-### IV 1 - Number of Siblings
+#### IV 1 - Number of Siblings
 In my case, I might hypothesize that the number of siblings that a person in this dataset has is not related to unobervables like location, race, parental income, etc. (this is probably tenuous). If I accepted that as true, I can directly test (2) via regression or correlation test
 
 
@@ -468,7 +469,7 @@ results_iv.summary
 I'll note from (Wooldridge 2019) regarding the negative R^2 value:  
 > [When using IV], the **R-squared has no natural interpretation** [...] If our goal was to produce the largest R-squared, we would always use OLS. IV methods are intended to provide better estimates of the ceteris paribus effect of x on y when x and u are correlated; goodness-of-fit is not a factor
 
-### IV 2 - Birth Order
+#### IV 2 - Birth Order
 I'll try this whole process again with a different instrument, this time birth order (where one is a first born child and so on).  
 I believe that birth order and educational attainment might be negatively correlated -- namely that the later-birthed children in a family obtain fewer years of education. This could be due to budget contraints for the family. I regress `educ` on `brthord` and do find negative linear relationship:
 
@@ -574,9 +575,9 @@ results_iv.summary
 
 This yields 0.1306, a similar estimate as when I used sibling count as an instument (0.1224). Again, this is more than double the OLS estimate, but it would be nice if the first stage were stronger, and I don't feel so confident about the instrument exogeneity assumption (I think birth order might be correlated with income with the error term, and I think birth order might be correlated with wages via mechanisms other than education -- like getting more attention from your parents or something).   
 
-# IV Calculation Notes
+### Calculation Notes
 As notes, I'll write out some of the equations of IV to shed some more light on what it is. Note that all of these "by hand" calculations will return incorrect standard errors.
-## IV as two stage least squares  
+#### IV as two stage least squares  
 1. Estimate the following:
 $$ \hat{educ} = \pi_0 + \pi_1 brthord $$
 2. Then use the predicted values of $\hat{educ}$ as the explanatory variable
@@ -612,7 +613,7 @@ smf.ols("lwage ~ educ_hat", data=iv_subset).fit().summary().tables[1]
 
 
 
-### IV as the ratio of reduced form and first stage estimates
+#### IV as the ratio of reduced form and first stage estimates
 $ATE_{IV} = \dfrac{\text{Reduced Form}} 
 {\text{1st Stage}}$  
 
@@ -637,7 +638,7 @@ iv_est
 
 
 
-# Multiple regresssion IV
+### Multiple regresssion IV
 Let's say we're given the following multiple regression equation:  
 $$y_1 = \beta_0 + \beta_1 y_2 + \beta_2 z_1 + u_1 $$  
 We are interested in the effect of $y_2$ on $y_1$, thus we want to estimate $\beta_1$. Let's also say that I know that there is omitted variable bias on $y_2$ - thus $\text{Cov}(y_2, u_1) \neq 0 $. OLS  estimates will be biased. IV is appropriate here, but the instrument cannot also be used as a covariate in the equation (thus $z_1$ cannot be an intrument). **I'll need to find a different instrument which I'll call $z_2$**. Wooldridge explains some of the requirements for this instrument as follows:
@@ -649,7 +650,7 @@ $$y_2 = \pi_0 + \pi_1 z_1 + \pi_2 z_2 + v_2$$
 That equation is the "reduced form" equation, which describes the first stage of IV estimation (using the instrument to predict the explanatory variable $y_2$). As is typical in IV, the identifying assumption is that $\pi_2 \neq 0$, or in words, that $z_2$ is still correlated with $y_2$ after "partialing out"/holding constant $z_1$ (note that $\pi_1$ can be zero, it doesn't matter). (Wooldridge 2019) also mentions the following extra assumption:  
 > A minor additional assumption is that there are no perfect linear relationships among the exogenous variables; this is analogous to the assumption of no perfect collinearity in the context of OLS.
 
-## What happens when an instrument is collinear with a covariate?  
+#### What happens when an instrument is collinear with a covariate?  
 That last bit about perfect linear relationships can seem like an afterthought, but it comes up in an example from (Wooldridge 2019) in this data. Supose I again want to use birth order as an instrument, but this time in a multiple regression model where sibling number is also included. The following DAG describes my model:
 
 

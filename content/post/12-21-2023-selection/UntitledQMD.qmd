@@ -1,0 +1,14 @@
+---
+title: "ok"
+date: 2023-11-03
+draft: false
+categories: ['Math']
+tags: ['R', 'Math']
+math: true
+output: github_document
+---
+
+```{r}
+library(tidyverse)
+```
+

@@ -18,22 +18,23 @@ import datetime
 import seaborn as sns
 from matplotlib.pyplot import figure
 ```
+## Setup
 This notebook is an attempt to look at how different low cost Fidelity funds covary. Please note that this notebook is solely for education purposes and is not financial advice.
-#### Data:
+### Data:
 - `fidelity_funds.xlsx` 92 Fidelity funds that meet the following criteria:
     - No Transaction Fees, No minimum investment
     - below 0.75% net expense ratio
 - `yfinance` API call that gathers historic returns for each fund
 
-#### Question:
+### Question:
 A typical investing strategy is to seek assets that are in some way [countercyclical](https://www.investopedia.com/terms/c/countercyclicalstock.asp#:~:text=Counter%2Dcyclical%20stocks%20refer%20to,cyclical%20stocks%20will%20do%20well.) so as to mitigate portfolio risk during economic downturns. A retail investor seeking to create a portfolio with some inverse correlation between assets might seek to purchase some combination of low cost stock and bond funds to this end. Given this, I'm curious which Fidelity funds (Fidelity being one of the more popular retail brokerages) are the most countercyclical to stocks, or, which are most inversely correlated with the returns of a major stock index - in this case the S&P500. More broadly, I seek to answer whether it's even possible to have a portfolio purely of low-cost Fidelity funds that has meaningful inverse correlation between investments if the S&P500 is a central part of the portfolio.
 
-#### Methods:
+### Methods:
 I take the daily historical returns (in percent change) of a group of Fidelity funds (criteria defined above) and calculate the correlation coefficient, $\rho_i$ between each fund and a baseline fund, `"FXAIX"`, which is the Fidelity fund that seeks to mimic the S&P500.
 
 For statistical testing, I compute 95% confidence intervals of each $\rho_{i}$ via bootstrapping and sort those values by their $97.5\\%$ value
 
-### Data Processing - `fidelity_funds.xlsx`
+## Data Processing - `fidelity_funds.xlsx`
 
 
 ```python
@@ -190,7 +191,7 @@ funds_df_raw["Ticker"] = (funds_df_raw["Name"]
 funds_df = funds_df_raw.dropna(subset=["YTD (Daily)"])
 ```
 
-### Data Retrieval from `yfinance`
+## Data Retrieval from `yfinance`
 This script returns comprehensive historical data via *Yahoo Finance* for each fund, then saves that data as a `Pickle` object. If the data has already been retrieved, the script will display the date/time of the last retrieval.
 
 
@@ -238,7 +239,7 @@ t = pd.concat(
     axis=1)
 ```
 
-### Population Results
+## Results
 The following are the 5 Fidelity funds that are most uncorrelated with FXAIX, as measured by $\rho_i$ computed from all available data.
 
 
