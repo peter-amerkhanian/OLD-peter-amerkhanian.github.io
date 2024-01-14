@@ -53,11 +53,12 @@ if (!doNotTrack) {
 </script>
 
 
+
   <style>
     body { font-size: 110%; }
 
     #content {
-    max-width: 750px;
+    max-width: 850px;
 }
 
     table {
@@ -71,6 +72,8 @@ if (!doNotTrack) {
       color: rgb(0, 0, 0);
     }
 
+
+
      
     mjx-container {
       overflow-x: auto;
@@ -81,11 +84,12 @@ if (!doNotTrack) {
     }
      
      
+
      
-    .has-jax:not(table .has-jax) {
-      overflow-x: auto;
-      overflow-y: hidden;
-      }
+    .has-jax:not(table .has-jax):not(li.has-jax) {
+    overflow-x: auto;
+    overflow-y: hidden;
+}
 
     
 
@@ -132,6 +136,7 @@ if (!doNotTrack) {
       border: 1px solid #ddd;
       padding: 8px;
     }
+  
 
     .dataframe tbody tr {
       padding: 0.5em;
@@ -155,6 +160,33 @@ if (!doNotTrack) {
       background-color: #dfdfdf;
 
     }
+    .sticky-element {
+      font-size: 80%;
+      position: sticky;
+      top: 0;
+      float: right;
+      width: 200px;
+      padding-top: 10px;
+      padding-left: 12px;
+      box-sizing: border-box;
+    }
+    .sticky-element ol {
+       
+      padding-left: 1rem;
+    }
+    ol ol {
+      list-style-type: lower-alpha;
+    }
+    ol ol ol {
+      list-style-type: decimal;
+    }
+    @media (max-width: 760px) {
+       
+      .sticky-element {
+        display: none;
+      }
+    }
+    
   </style>
 </head><body>
         <div id="content" class="mx-auto"><header class="container mt-sm-5 mt-4 mb-4 mt-xs-1">
@@ -224,15 +256,37 @@ if (!doNotTrack) {
     <hr />
 </header>
 <div class="container">
+<div class="row">
+  <div class="col-md-2">
+    
+    
+      <div class="sticky-element">
+        <a href="#top"><b>An SIR Modeling Application in Python</b></a>
+          <nav id="TableOfContents">
+  <ol>
+    <li><a href="#the-policy-problem">The Policy Problem</a></li>
+    <li><a href="#the-simple-sir-model">The Simple SIR Model</a>
+      <ol>
+        <li><a href="#groups-parameters-and-assumptions">Groups, Parameters, and Assumptions</a></li>
+        <li><a href="#the-basic-model">The Basic Model</a></li>
+        <li><a href="#possible-policy-responses">Possible Policy Responses</a></li>
+      </ol>
+    </li>
+  </ol>
+</nav>
+      </div>
+      
+  </div>
+  <div class="col-md-10">
+    
     <div class="pl-sm-2">
-        <div class="mb-3">
-            <h3 class="mb-0">An SIR Modeling Application in Python</h3>
-            
-            <small class="text-muted">Published January 15, 2023</small>
-        </div>
-
-        <article>
-            <p>The following is a memo that I prepared for Jesse Rothstein&rsquo;s &ldquo;Economic Policy for Pandemics&rdquo; Course at Goldman. I&rsquo;m posting it here because I think it presents a simple but effective implementation of the Susceptible, Infected, Recovered (SIR) Model in Python. This is all applied to the COVID-19 pandemic in an effort to produce a policy-relevant simulation of virus spread.
+      <div class="mb-3">
+          <h3 class="mb-0">An SIR Modeling Application in Python</h3>
+          
+          <small class="text-muted">Published January 15, 2023</small>
+      </div>
+      <article>
+          <p>The following is a memo that I prepared for Jesse Rothstein&rsquo;s &ldquo;Economic Policy for Pandemics&rdquo; Course at Goldman. I&rsquo;m posting it here because I think it presents a simple but effective implementation of the Susceptible, Infected, Recovered (SIR) Model in Python. This is all applied to the COVID-19 pandemic in an effort to produce a policy-relevant simulation of virus spread.
 <div style="
 padding: 0em 0em 1em 0em;
 color: darkred;
@@ -707,8 +761,11 @@ In this scenario, I find that lockdowns lead to
 </div>
 <!-- BIBLIOGRAPHY END -->
 
-        </article>
-    </div>
+      </article>
+
+  </div>
+  </div>
+</div>
 
     
 

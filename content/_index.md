@@ -3,9 +3,9 @@ title: Home
 ---
 
 #### About &nbsp;<i class="fa fa-user"></i>
-I'm currently a Data Scientist at The California Department of Social Services, where I work on implementing  computational methods in department operations.  
-- I'm passionate about progressive social policy and equitable growth.  
-- I'm skilled in policy analysis, statistical program evaluation, machine learning, and various computational methods. 
+I'm currently a Data Scientist at The California Department of Social Services, where I work on implementing  computational methods in department operations.    
+- I'm skilled in policy analysis, data engineering, program evaluation, machine learning, and various computational methods.
+- I'm passionate about public service
 
 You can reach me by email at [peteramerkhanian@berkeley.edu](mailto:peteramerkhanian@berkeley.edu). You can also connect with me on [Linkedin](https://www.linkedin.com/in/peteramerkhanian/) and [Github](https://github.com/peter-amerkhanian).
 

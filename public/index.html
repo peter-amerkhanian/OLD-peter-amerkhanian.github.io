@@ -30,11 +30,12 @@ if (!doNotTrack) {
 </script>
 
 
+
   <style>
     body { font-size: 110%; }
 
     #content {
-    max-width: 750px;
+    max-width: 850px;
 }
 
     table {
@@ -48,6 +49,8 @@ if (!doNotTrack) {
       color: rgb(0, 0, 0);
     }
 
+
+
      
     mjx-container {
       overflow-x: auto;
@@ -58,11 +61,12 @@ if (!doNotTrack) {
     }
      
      
+
      
-    .has-jax:not(table .has-jax) {
-      overflow-x: auto;
-      overflow-y: hidden;
-      }
+    .has-jax:not(table .has-jax):not(li.has-jax) {
+    overflow-x: auto;
+    overflow-y: hidden;
+}
 
     
 
@@ -109,6 +113,7 @@ if (!doNotTrack) {
       border: 1px solid #ddd;
       padding: 8px;
     }
+  
 
     .dataframe tbody tr {
       padding: 0.5em;
@@ -132,6 +137,33 @@ if (!doNotTrack) {
       background-color: #dfdfdf;
 
     }
+    .sticky-element {
+      font-size: 80%;
+      position: sticky;
+      top: 0;
+      float: right;
+      width: 200px;
+      padding-top: 10px;
+      padding-left: 12px;
+      box-sizing: border-box;
+    }
+    .sticky-element ol {
+       
+      padding-left: 1rem;
+    }
+    ol ol {
+      list-style-type: lower-alpha;
+    }
+    ol ol ol {
+      list-style-type: decimal;
+    }
+    @media (max-width: 760px) {
+       
+      .sticky-element {
+        display: none;
+      }
+    }
+    
   </style>
 </head><body>
         <div id="content" class="mx-auto"><header class="container mt-sm-5 mt-4 mb-4 mt-xs-1">
@@ -207,8 +239,8 @@ if (!doNotTrack) {
             <h4 id="about-nbspi-classfa-fa-useri">About  <i class="fa fa-user"></i></h4>
 <p>I&rsquo;m currently a Data Scientist at The California Department of Social Services, where I work on implementing  computational methods in department operations.</p>
 <ul>
-<li>I&rsquo;m passionate about progressive social policy and equitable growth.</li>
-<li>I&rsquo;m skilled in policy analysis, statistical program evaluation, machine learning, and various computational methods.</li>
+<li>I&rsquo;m skilled in policy analysis, data engineering, program evaluation, machine learning, and various computational methods.</li>
+<li>I&rsquo;m passionate about public service</li>
 </ul>
 <p>You can reach me by email at <a href="mailto:peteramerkhanian@berkeley.edu">peteramerkhanian@berkeley.edu</a>. You can also connect with me on <a href="https://www.linkedin.com/in/peteramerkhanian/">Linkedin</a> and <a href="https://github.com/peter-amerkhanian">Github</a>.</p>
 <h4 id="past-projects--nbspi-classfa-fa-book-openi">Past Projects   <i class="fa fa-book-open"></i></h4>

@@ -1,6 +1,8 @@
 <!doctype html>
 <html lang="en"><head>
   <title>Hugo</title>
+  
+  <link rel="icon" type="image/x-icon" href="../../images/Peter_Amerkhanian_Headshot_square_lower_qual.jpg">
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta name="description" content="" />
@@ -27,11 +29,18 @@ if (!doNotTrack) {
 </script>
 
 
+
   <style>
+    body { font-size: 110%; }
+
+    #content {
+    max-width: 850px;
+}
+
     table {
       display: block;
-      max-width: -moz-fit-content;
-      max-width: fit-content;
+      border: 0;
+      max-width: 100%;
       margin: 1em auto;
       overflow-x: auto;
       white-space: nowrap;
@@ -39,11 +48,37 @@ if (!doNotTrack) {
       color: rgb(0, 0, 0);
     }
 
+
+
+     
+    mjx-container {
+      overflow-x: auto;
+      overflow-y: hidden;
+    }
+    mjx-math {
+      margin: .1em auto;
+    }
+     
+     
+
+     
+    .has-jax:not(table .has-jax):not(li.has-jax) {
+    overflow-x: auto;
+    overflow-y: hidden;
+}
+
+    
+
     .katex-display {
       overflow-x: auto;
-      overflow-y: clip;
       margin: 0.5em auto;
     }
+    .katex-display {
+    -webkit-font-smoothing: antialiased;
+    background: inherit !important;
+    border: none !important;
+    font-size: 100%;
+}
     .simpletable {
       font-size: 95%;
       border-collapse: collapse;
@@ -77,6 +112,7 @@ if (!doNotTrack) {
       border: 1px solid #ddd;
       padding: 8px;
     }
+  
 
     .dataframe tbody tr {
       padding: 0.5em;
@@ -100,6 +136,33 @@ if (!doNotTrack) {
       background-color: #dfdfdf;
 
     }
+    .sticky-element {
+      font-size: 80%;
+      position: sticky;
+      top: 0;
+      float: right;
+      width: 200px;
+      padding-top: 10px;
+      padding-left: 12px;
+      box-sizing: border-box;
+    }
+    .sticky-element ol {
+       
+      padding-left: 1rem;
+    }
+    ol ol {
+      list-style-type: lower-alpha;
+    }
+    ol ol ol {
+      list-style-type: decimal;
+    }
+    @media (max-width: 760px) {
+       
+      .sticky-element {
+        display: none;
+      }
+    }
+    
   </style>
 </head><body>
         <div id="content" class="mx-auto"><header class="container mt-sm-5 mt-4 mb-4 mt-xs-1">
@@ -127,7 +190,8 @@ if (!doNotTrack) {
             </h2>
             <p class="text-muted mb-1">
                 
-                    MPP &#39;23 @ UC Berkeley Goldman School
+                    Data Scientist @ CA Department of Social Services <br>
+                    UC Berkeley MPP &#39;23, BA &#39;16
                 
             </p>
             <ul id="nav-links" class="list-inline mb-2">
@@ -162,12 +226,6 @@ if (!doNotTrack) {
                         </a>
                     </li>
                 
-                    <li class="list-inline-item mr-3">
-                        <a href="https://peter-amerkhanian.github.io/documents/Amerkhanian_Peter_Resume.pdf" target="_blank">
-                            <i class="fas fa-file-alt fa-lg text-muted"></i>
-                        </a>
-                    </li>
-                
             </ul>
         </div>
     </div>
@@ -186,7 +244,7 @@ if (!doNotTrack) {
                 </time>
             
             <a href="../../post/hugo-footer/">
-                How to Add a &#39;Back to top&#39; Footer to Your Hugo Posts
+                How to Add a &#39;Back to top&#39; Footer to Hugo Posts
             </a>
         </li>
         

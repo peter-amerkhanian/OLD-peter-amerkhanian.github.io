@@ -53,11 +53,12 @@ if (!doNotTrack) {
 </script>
 
 
+
   <style>
     body { font-size: 110%; }
 
     #content {
-    max-width: 750px;
+    max-width: 850px;
 }
 
     table {
@@ -71,6 +72,8 @@ if (!doNotTrack) {
       color: rgb(0, 0, 0);
     }
 
+
+
      
     mjx-container {
       overflow-x: auto;
@@ -81,11 +84,12 @@ if (!doNotTrack) {
     }
      
      
+
      
-    .has-jax:not(table .has-jax) {
-      overflow-x: auto;
-      overflow-y: hidden;
-      }
+    .has-jax:not(table .has-jax):not(li.has-jax) {
+    overflow-x: auto;
+    overflow-y: hidden;
+}
 
     
 
@@ -132,6 +136,7 @@ if (!doNotTrack) {
       border: 1px solid #ddd;
       padding: 8px;
     }
+  
 
     .dataframe tbody tr {
       padding: 0.5em;
@@ -155,6 +160,33 @@ if (!doNotTrack) {
       background-color: #dfdfdf;
 
     }
+    .sticky-element {
+      font-size: 80%;
+      position: sticky;
+      top: 0;
+      float: right;
+      width: 200px;
+      padding-top: 10px;
+      padding-left: 12px;
+      box-sizing: border-box;
+    }
+    .sticky-element ol {
+       
+      padding-left: 1rem;
+    }
+    ol ol {
+      list-style-type: lower-alpha;
+    }
+    ol ol ol {
+      list-style-type: decimal;
+    }
+    @media (max-width: 760px) {
+       
+      .sticky-element {
+        display: none;
+      }
+    }
+    
   </style>
 </head><body>
         <div id="content" class="mx-auto"><header class="container mt-sm-5 mt-4 mb-4 mt-xs-1">
@@ -224,15 +256,37 @@ if (!doNotTrack) {
     <hr />
 </header>
 <div class="container">
+<div class="row">
+  <div class="col-md-2">
+    
+    
+      <div class="sticky-element">
+        <a href="#top"><b>Calc 1: Newton&#39;s Method From The Ground Up</b></a>
+          <nav id="TableOfContents">
+  <ol>
+    <li><a href="#newtons-method-for-finding-roots-what-how-and-why">Newton&rsquo;s Method for Finding Roots: What, How, and Why</a>
+      <ol>
+        <li><a href="#what-is-it">What is it</a></li>
+        <li><a href="#using-newtons-method-to-solve-a-simple-problem">Using Newton&rsquo;s Method to Solve a Simple Problem</a></li>
+        <li><a href="#using-newtons-method-to-solve-a-real-problem">Using Newton&rsquo;s Method to Solve a Real Problem</a></li>
+      </ol>
+    </li>
+    <li><a href="#newtons-method-as-optimization">Newton&rsquo;s Method as Optimization</a></li>
+  </ol>
+</nav>
+      </div>
+      
+  </div>
+  <div class="col-md-10">
+    
     <div class="pl-sm-2">
-        <div class="mb-3">
-            <h3 class="mb-0">Calc 1: Newton&#39;s Method From The Ground Up</h3>
-            
-            <small class="text-muted">Published November 3, 2023</small>
-        </div>
-
-        <article>
-            <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff79c6">import</span> numpy <span style="color:#ff79c6">as</span> np
+      <div class="mb-3">
+          <h3 class="mb-0">Calc 1: Newton&#39;s Method From The Ground Up</h3>
+          
+          <small class="text-muted">Published November 3, 2023</small>
+      </div>
+      <article>
+          <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff79c6">import</span> numpy <span style="color:#ff79c6">as</span> np
 </span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> os
 </span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> matplotlib.pyplot <span style="color:#ff79c6">as</span> plt
 </span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> matplotlib
@@ -838,8 +892,11 @@ x_{n+1} = x_n -\frac{f&rsquo;(x_n)}{f&rsquo;&rsquo;(x_n)}
 \end{align*}
 $$</p>
 
-        </article>
-    </div>
+      </article>
+
+  </div>
+  </div>
+</div>
 
     
 

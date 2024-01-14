@@ -29,11 +29,12 @@ if (!doNotTrack) {
 </script>
 
 
+
   <style>
     body { font-size: 110%; }
 
     #content {
-    max-width: 750px;
+    max-width: 850px;
 }
 
     table {
@@ -47,6 +48,8 @@ if (!doNotTrack) {
       color: rgb(0, 0, 0);
     }
 
+
+
      
     mjx-container {
       overflow-x: auto;
@@ -57,11 +60,12 @@ if (!doNotTrack) {
     }
      
      
+
      
-    .has-jax:not(table .has-jax) {
-      overflow-x: auto;
-      overflow-y: hidden;
-      }
+    .has-jax:not(table .has-jax):not(li.has-jax) {
+    overflow-x: auto;
+    overflow-y: hidden;
+}
 
     
 
@@ -108,6 +112,7 @@ if (!doNotTrack) {
       border: 1px solid #ddd;
       padding: 8px;
     }
+  
 
     .dataframe tbody tr {
       padding: 0.5em;
@@ -131,6 +136,33 @@ if (!doNotTrack) {
       background-color: #dfdfdf;
 
     }
+    .sticky-element {
+      font-size: 80%;
+      position: sticky;
+      top: 0;
+      float: right;
+      width: 200px;
+      padding-top: 10px;
+      padding-left: 12px;
+      box-sizing: border-box;
+    }
+    .sticky-element ol {
+       
+      padding-left: 1rem;
+    }
+    ol ol {
+      list-style-type: lower-alpha;
+    }
+    ol ol ol {
+      list-style-type: decimal;
+    }
+    @media (max-width: 760px) {
+       
+      .sticky-element {
+        display: none;
+      }
+    }
+    
   </style>
 </head><body>
         <div id="content" class="mx-auto"><header class="container mt-sm-5 mt-4 mb-4 mt-xs-1">
@@ -200,15 +232,26 @@ if (!doNotTrack) {
     <hr />
 </header>
 <div class="container">
+<div class="row">
+  <div class="col-md-2">
+    
+    
+      <div class="sticky-element">
+        <a href="#top"><b>How to Add a &#39;Back to top&#39; Footer to Hugo Posts</b></a>
+          <nav id="TableOfContents"></nav>
+      </div>
+      
+  </div>
+  <div class="col-md-10">
+    
     <div class="pl-sm-2">
-        <div class="mb-3">
-            <h3 class="mb-0">How to Add a &#39;Back to top&#39; Footer to Hugo Posts</h3>
-            
-            <small class="text-muted">Published August 7, 2022</small>
-        </div>
-
-        <article>
-            <p>This post will detail how to add a footer that says &ldquo;Back to Top&rdquo; on all of the posts in your Hugo site. This method involves taking advantage of Hugo&rsquo;s &ldquo;partials&rdquo; feature, which allows you to add customizations to your Hugo page without directly altering your theme&rsquo;s html. Partials are utilized in a hierarchical system, where Hugo sees if you have a custom file written for a given partial (e.g., your <code>footer.html</code>), and if not,renders the partial included in your theme. <a href="https://gohugo.io/templates/partials/">Hugo docs</a> explain the partials hierarchy as follows:</p>
+      <div class="mb-3">
+          <h3 class="mb-0">How to Add a &#39;Back to top&#39; Footer to Hugo Posts</h3>
+          
+          <small class="text-muted">Published August 7, 2022</small>
+      </div>
+      <article>
+          <p>This post will detail how to add a footer that says &ldquo;Back to Top&rdquo; on all of the posts in your Hugo site. This method involves taking advantage of Hugo&rsquo;s &ldquo;partials&rdquo; feature, which allows you to add customizations to your Hugo page without directly altering your theme&rsquo;s html. Partials are utilized in a hierarchical system, where Hugo sees if you have a custom file written for a given partial (e.g., your <code>footer.html</code>), and if not,renders the partial included in your theme. <a href="https://gohugo.io/templates/partials/">Hugo docs</a> explain the partials hierarchy as follows:</p>
 <blockquote>
 <p>Partial templates—like single page templates and list page templates—have a specific lookup order. However, partials are simpler in that Hugo will only check in two places:</p>
 <ul>
@@ -318,8 +361,11 @@ if (!doNotTrack) {
 </span></span><span style="display:flex;"><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16</span><span>&lt;/<span style="color:#ff79c6">footer</span>&gt;
 </span></span></code></pre></div><p>The footer for blog posts just contains some dead space and the &ldquo;Back to Top&rdquo; text wrapped in up arrows. At this point you can save and test it out on your local development server. You can see what mine looks like fully rendered at the bottom of this page.</p>
 
-        </article>
-    </div>
+      </article>
+
+  </div>
+  </div>
+</div>
 
     
 

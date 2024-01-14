@@ -53,11 +53,12 @@ if (!doNotTrack) {
 </script>
 
 
+
   <style>
     body { font-size: 110%; }
 
     #content {
-    max-width: 750px;
+    max-width: 850px;
 }
 
     table {
@@ -71,6 +72,8 @@ if (!doNotTrack) {
       color: rgb(0, 0, 0);
     }
 
+
+
      
     mjx-container {
       overflow-x: auto;
@@ -81,11 +84,12 @@ if (!doNotTrack) {
     }
      
      
+
      
-    .has-jax:not(table .has-jax) {
-      overflow-x: auto;
-      overflow-y: hidden;
-      }
+    .has-jax:not(table .has-jax):not(li.has-jax) {
+    overflow-x: auto;
+    overflow-y: hidden;
+}
 
     
 
@@ -132,6 +136,7 @@ if (!doNotTrack) {
       border: 1px solid #ddd;
       padding: 8px;
     }
+  
 
     .dataframe tbody tr {
       padding: 0.5em;
@@ -155,6 +160,33 @@ if (!doNotTrack) {
       background-color: #dfdfdf;
 
     }
+    .sticky-element {
+      font-size: 80%;
+      position: sticky;
+      top: 0;
+      float: right;
+      width: 200px;
+      padding-top: 10px;
+      padding-left: 12px;
+      box-sizing: border-box;
+    }
+    .sticky-element ol {
+       
+      padding-left: 1rem;
+    }
+    ol ol {
+      list-style-type: lower-alpha;
+    }
+    ol ol ol {
+      list-style-type: decimal;
+    }
+    @media (max-width: 760px) {
+       
+      .sticky-element {
+        display: none;
+      }
+    }
+    
   </style>
 </head><body>
         <div id="content" class="mx-auto"><header class="container mt-sm-5 mt-4 mb-4 mt-xs-1">
@@ -224,15 +256,42 @@ if (!doNotTrack) {
     <hr />
 </header>
 <div class="container">
+<div class="row">
+  <div class="col-md-2">
+    
+    
+      <div class="sticky-element">
+        <a href="#top"><b>Instrumental Variables (IV) Basics</b></a>
+          <nav id="TableOfContents">
+  <ol>
+    <li><a href="#why-iv">Why IV?</a>
+      <ol>
+        <li><a href="#pros-and-cons">Pros and Cons</a></li>
+      </ol>
+    </li>
+    <li><a href="#whats-the-causal-effect-of-schooling-on-wages">What&rsquo;s the causal effect of schooling on wages?</a>
+      <ol>
+        <li><a href="#using-ols">Using OLS</a></li>
+        <li><a href="#using-iv">Using IV</a></li>
+        <li><a href="#calculation-notes">Calculation Notes</a></li>
+        <li><a href="#multiple-regresssion-iv">Multiple regresssion IV</a></li>
+      </ol>
+    </li>
+  </ol>
+</nav>
+      </div>
+      
+  </div>
+  <div class="col-md-10">
+    
     <div class="pl-sm-2">
-        <div class="mb-3">
-            <h3 class="mb-0">Instrumental Variables (IV) Basics</h3>
-            
-            <small class="text-muted">Published March 25, 2023</small>
-        </div>
-
-        <article>
-            <div style="
+      <div class="mb-3">
+          <h3 class="mb-0">Instrumental Variables (IV) Basics</h3>
+          
+          <small class="text-muted">Published March 25, 2023</small>
+      </div>
+      <article>
+          <div style="
 padding: 0em 0em 1em 0em;
 color: darkred;
 font-weight: bold;
@@ -263,7 +322,8 @@ font-weight: bold;
 </ul>
 <p>I&rsquo;m writing this mostly for my own future reference, but hope it might be helpful to others.</p>
 <h2 id="why-iv">Why IV?</h2>
-<h3 id="iv-versus-rcts">IV versus RCTs</h3>
+<h3 id="pros-and-cons">Pros and Cons</h3>
+<h4 id="iv-versus-rcts">IV versus RCTs</h4>
 <p>What do we do if we cannot run an experiment and block all &ldquo;back-door&rdquo; paths by conditioning on observed variables?</p>
 <ul>
 <li>One answer: get better/more complete data</li>
@@ -271,7 +331,7 @@ font-weight: bold;
 In particular, if we are worried about selection &ndash; namely that people select different &ldquo;treatment&rdquo; based on anticipated effects &ndash; that isn&rsquo;t measurable, we cannot simply get better data.</li>
 </ul>
 <p>A &ldquo;natural experiment&rdquo; leverages variation in the treatment that is random with respect to potential outcomes (e.g. there is no selection on un-observables) and occurs without research intervention.</p>
-<h3 id="iv-versus-other-quasi-experiments">IV versus other quasi-experiments</h3>
+<h4 id="iv-versus-other-quasi-experiments">IV versus other quasi-experiments</h4>
 <p>Like most quasi-experimental methods, IV gives us access to a &ldquo;long regression model&rdquo; &ndash; one without omitted variables &ndash; without having to actually observe those omitted variables (we only have access to the &ldquo;short regression model&rdquo;).</p>
 <p>(Wooldridge 2019) introduces IV after fixed effects and panel data models &ndash; in my view more intuitive causal models. The following is a useful comparison of IV to panel data methods from (Wooldridge 2019):</p>
 <blockquote>
@@ -283,7 +343,7 @@ effect of a variable that does not change over time</strong>: first differencing
 </blockquote>
 <p>Thus, unlike fixed effects (FE) models, IV can be used with cross sectional data. Also unlike FE, IV allows us to examine the effects of time-fixed variables.</p>
 <p>The big takeaway as I see it is that, like FE, IV can remove omitted variable bias, specifically selection bias in impact evaluation. FE can also remove omitted variable bias, but only for variables that are fixed in time, and FE can only evaluate the impact of variables that vary over time. IV can remove bias from variables that vary with time (in a panel data setting) and can evaluate the impact of time-fixed variables. Let&rsquo;s see how this looks with actual data&hellip;.</p>
-<h1 id="whats-the-causal-effect-of-schooling-on-wages">What&rsquo;s the causal effect of schooling on wages?</h1>
+<h2 id="whats-the-causal-effect-of-schooling-on-wages">What&rsquo;s the causal effect of schooling on wages?</h2>
 <p>I&rsquo;ll load some data included in (Wooldridge 2019)  &ndash; originally from the <a href="https://www.bls.gov/nls/original-cohorts/older-and-young-men.htm">Young Men&rsquo;s Cohort of the
 National Longitudinal Survey (NLS)</a> but pre-processed for students.</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>woo<span style="color:#ff79c6">.</span>dataWoo(<span style="color:#f1fa8c">&#34;wage2&#34;</span>, description<span style="color:#ff79c6">=</span><span style="color:#ff79c6">True</span>)
@@ -461,7 +521,7 @@ of which I used just the data for 1980.
   </tbody>
 </table>
 </div>
-<h2 id="using-ols">Using OLS</h2>
+<h3 id="using-ols">Using OLS</h3>
 <p>I estimate the regression, $log(wage) = \beta_0 + \beta_1 educ + u$, which should tell me the effect of education on wages. The results are as follows:</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>(smf<span style="color:#ff79c6">.</span>ols(<span style="color:#f1fa8c">&#34;lwage ~ educ&#34;</span>,
 </span></span><span style="display:flex;"><span>         data<span style="color:#ff79c6">=</span>wage)
@@ -496,7 +556,7 @@ of which I used just the data for 1980.
 </span></span><span style="display:flex;"><span>g
 </span></span></code></pre></div><p><img src="images/output_10_0.svg" alt="svg"></p>
 <p>Note that the dashed lines represent unobserved relationships (Cunningham 2021)</p>
-<h2 id="using-iv">Using IV</h2>
+<h3 id="using-iv">Using IV</h3>
 <p>To fix this, I can try using instrumental variables as outlined in (Wooldridge 2019):</p>
 <blockquote>
 <p><strong>In order to obtain consistent estimators of $\beta_0$ and $\beta_1$ when x and u are correlated, we need some
@@ -509,7 +569,7 @@ The information comes by way of a new variable that satisfies certain properties
 <p>Then, <strong>we call z an instrumental variable for x, or sometimes simply an instrument for x</strong></p>
 </blockquote>
 <p>(1) above satisifies &ldquo;instrument exogeneity,&rdquo; meaning that the instrument, z, is exogenous. (2) satisfies &ldquo;instrument relevance,&rdquo; meaning that z is relevant for explaining variation in x &ndash; this is sometimes referred to as the <strong>first stage</strong>. (2) is explicitly testable, whereas (1) is unfortunately not testable. Justifying (1) typically relys on theoretical rather than empirical arguments, <strong>unless $z$ is something that was randomly assigned, in which case (1) is proven.</strong></p>
-<h3 id="iv-1---number-of-siblings">IV 1 - Number of Siblings</h3>
+<h4 id="iv-1---number-of-siblings">IV 1 - Number of Siblings</h4>
 <p>In my case, I might hypothesize that the number of siblings that a person in this dataset has is not related to unobervables like location, race, parental income, etc. (this is probably tenuous). If I accepted that as true, I can directly test (2) via regression or correlation test</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>smf<span style="color:#ff79c6">.</span>ols(<span style="color:#f1fa8c">&#34;educ ~ sibs&#34;</span>, data<span style="color:#ff79c6">=</span>wage)<span style="color:#ff79c6">.</span>fit()<span style="color:#ff79c6">.</span>summary()<span style="color:#ff79c6">.</span>tables[<span style="color:#bd93f9">1</span>]
 </span></span></code></pre></div><table class="simpletable">
@@ -586,7 +646,7 @@ The information comes by way of a new variable that satisfies certain properties
 <blockquote>
 <p>[When using IV], the <strong>R-squared has no natural interpretation</strong> [&hellip;] If our goal was to produce the largest R-squared, we would always use OLS. IV methods are intended to provide better estimates of the ceteris paribus effect of x on y when x and u are correlated; goodness-of-fit is not a factor</p>
 </blockquote>
-<h3 id="iv-2---birth-order">IV 2 - Birth Order</h3>
+<h4 id="iv-2---birth-order">IV 2 - Birth Order</h4>
 <p>I&rsquo;ll try this whole process again with a different instrument, this time birth order (where one is a first born child and so on).<br>
 I believe that birth order and educational attainment might be negatively correlated &ndash; namely that the later-birthed children in a family obtain fewer years of education. This could be due to budget contraints for the family. I regress <code>educ</code> on <code>brthord</code> and do find negative linear relationship:</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#6272a4"># Note - birth order has missing values</span>
@@ -655,9 +715,9 @@ I believe that birth order and educational attainment might be negatively correl
 </tr>
 </table>
 <p>This yields 0.1306, a similar estimate as when I used sibling count as an instument (0.1224). Again, this is more than double the OLS estimate, but it would be nice if the first stage were stronger, and I don&rsquo;t feel so confident about the instrument exogeneity assumption (I think birth order might be correlated with income with the error term, and I think birth order might be correlated with wages via mechanisms other than education &ndash; like getting more attention from your parents or something).</p>
-<h1 id="iv-calculation-notes">IV Calculation Notes</h1>
+<h3 id="calculation-notes">Calculation Notes</h3>
 <p>As notes, I&rsquo;ll write out some of the equations of IV to shed some more light on what it is. Note that all of these &ldquo;by hand&rdquo; calculations will return incorrect standard errors.</p>
-<h2 id="iv-as-two-stage-least-squares">IV as two stage least squares</h2>
+<h4 id="iv-as-two-stage-least-squares">IV as two stage least squares</h4>
 <ol>
 <li>Estimate the following:
 $$ \hat{educ} = \pi_0 + \pi_1 brthord $$</li>
@@ -680,7 +740,7 @@ $$ log(wage) = \beta_0 + \beta_1 \hat{educ} $$</li>
   <th>educ_hat</th>  <td>    0.1306</td> <td>    0.031</td> <td>    4.178</td> <td> 0.000</td> <td>    0.069</td> <td>    0.192</td>
 </tr>
 </table>
-<h3 id="iv-as-the-ratio-of-reduced-form-and-first-stage-estimates">IV as the ratio of reduced form and first stage estimates</h3>
+<h4 id="iv-as-the-ratio-of-reduced-form-and-first-stage-estimates">IV as the ratio of reduced form and first stage estimates</h4>
 <p>$ATE_{IV} = \dfrac{\text{Reduced Form}}
 {\text{1st Stage}}$</p>
 <p>(or in longer terms: $\kappa = \dfrac{\text{Reduced Form}}{\text{1st Stage}} = \dfrac{Cov(Y_i, Z_i)/V(Z_i)}{Cov(T_i, Z_i)/V(Z_i)} = \dfrac{Cov(Y_i, Z_i)}{Cov(T_i, Z_i)}$)</p>
@@ -694,7 +754,7 @@ $$ log(wage) = \beta_0 + \beta_1 \hat{educ} $$</li>
 </span></span><span style="display:flex;"><span>iv_est
 </span></span></code></pre></div><pre><code>0.13064482653341536
 </code></pre>
-<h1 id="multiple-regresssion-iv">Multiple regresssion IV</h1>
+<h3 id="multiple-regresssion-iv">Multiple regresssion IV</h3>
 <p>Let&rsquo;s say we&rsquo;re given the following multiple regression equation:<br>
 $$y_1 = \beta_0 + \beta_1 y_2 + \beta_2 z_1 + u_1 $$<br>
 We are interested in the effect of $y_2$ on $y_1$, thus we want to estimate $\beta_1$. Let&rsquo;s also say that I know that there is omitted variable bias on $y_2$ - thus $\text{Cov}(y_2, u_1) \neq 0 $. OLS  estimates will be biased. IV is appropriate here, but the instrument cannot also be used as a covariate in the equation (thus $z_1$ cannot be an intrument). <strong>I&rsquo;ll need to find a different instrument which I&rsquo;ll call $z_2$</strong>. Wooldridge explains some of the requirements for this instrument as follows:</p>
@@ -706,7 +766,7 @@ $$y_2 = \pi_0 + \pi_1 z_1 + \pi_2 z_2 + v_2$$</p>
 <blockquote>
 <p>A minor additional assumption is that there are no perfect linear relationships among the exogenous variables; this is analogous to the assumption of no perfect collinearity in the context of OLS.</p>
 </blockquote>
-<h2 id="what-happens-when-an-instrument-is-collinear-with-a-covariate">What happens when an instrument is collinear with a covariate?</h2>
+<h4 id="what-happens-when-an-instrument-is-collinear-with-a-covariate">What happens when an instrument is collinear with a covariate?</h4>
 <p>That last bit about perfect linear relationships can seem like an afterthought, but it comes up in an example from (Wooldridge 2019) in this data. Supose I again want to use birth order as an instrument, but this time in a multiple regression model where sibling number is also included. The following DAG describes my model:</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>g <span style="color:#ff79c6">=</span> gr<span style="color:#ff79c6">.</span>Digraph()
 </span></span><span style="display:flex;"><span>sib_ <span style="color:#ff79c6">=</span> <span style="color:#f1fa8c">&#39;# siblings&#39;</span>
@@ -796,8 +856,11 @@ $$y_2 = \pi_0 + \pi_1 z_1 + \pi_2 z_2 + v_2$$</p>
 <a id="2">[2]</a> Alves, Matheus Facure. Causal Inference for the Brave and True. Online, 2022.<br>
 <a id="3">[3]</a> Cunningham, Scott. Causal Inference Mixtape. Online, 2021.</p>
 
-        </article>
-    </div>
+      </article>
+
+  </div>
+  </div>
+</div>
 
     
 

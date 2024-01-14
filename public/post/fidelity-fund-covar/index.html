@@ -53,11 +53,12 @@ if (!doNotTrack) {
 </script>
 
 
+
   <style>
     body { font-size: 110%; }
 
     #content {
-    max-width: 750px;
+    max-width: 850px;
 }
 
     table {
@@ -71,6 +72,8 @@ if (!doNotTrack) {
       color: rgb(0, 0, 0);
     }
 
+
+
      
     mjx-container {
       overflow-x: auto;
@@ -81,11 +84,12 @@ if (!doNotTrack) {
     }
      
      
+
      
-    .has-jax:not(table .has-jax) {
-      overflow-x: auto;
-      overflow-y: hidden;
-      }
+    .has-jax:not(table .has-jax):not(li.has-jax) {
+    overflow-x: auto;
+    overflow-y: hidden;
+}
 
     
 
@@ -132,6 +136,7 @@ if (!doNotTrack) {
       border: 1px solid #ddd;
       padding: 8px;
     }
+  
 
     .dataframe tbody tr {
       padding: 0.5em;
@@ -155,6 +160,33 @@ if (!doNotTrack) {
       background-color: #dfdfdf;
 
     }
+    .sticky-element {
+      font-size: 80%;
+      position: sticky;
+      top: 0;
+      float: right;
+      width: 200px;
+      padding-top: 10px;
+      padding-left: 12px;
+      box-sizing: border-box;
+    }
+    .sticky-element ol {
+       
+      padding-left: 1rem;
+    }
+    ol ol {
+      list-style-type: lower-alpha;
+    }
+    ol ol ol {
+      list-style-type: decimal;
+    }
+    @media (max-width: 760px) {
+       
+      .sticky-element {
+        display: none;
+      }
+    }
+    
   </style>
 </head><body>
         <div id="content" class="mx-auto"><header class="container mt-sm-5 mt-4 mb-4 mt-xs-1">
@@ -224,15 +256,48 @@ if (!doNotTrack) {
     <hr />
 </header>
 <div class="container">
+<div class="row">
+  <div class="col-md-2">
+    
+    
+      <div class="sticky-element">
+        <a href="#top"><b>Examining Mutual Fund Covariance in Python</b></a>
+          <nav id="TableOfContents">
+  <ol>
+    <li><a href="#setup">Setup</a>
+      <ol>
+        <li><a href="#data">Data:</a></li>
+        <li><a href="#question">Question:</a></li>
+        <li><a href="#methods">Methods:</a></li>
+      </ol>
+    </li>
+    <li><a href="#data-processing---fidelity_fundsxlsx">Data Processing - <code>fidelity_funds.xlsx</code></a></li>
+    <li><a href="#data-retrieval-from-yfinance">Data Retrieval from <code>yfinance</code></a>
+      <ol>
+        <li><a href="#processing-yfinance-data">Processing <code>yfinance</code> data</a></li>
+      </ol>
+    </li>
+    <li><a href="#results">Results</a>
+      <ol>
+        <li><a href="#bootstrap-code">Bootstrap Code</a></li>
+        <li><a href="#bootstrap-results">Bootstrap Results</a></li>
+      </ol>
+    </li>
+  </ol>
+</nav>
+      </div>
+      
+  </div>
+  <div class="col-md-10">
+    
     <div class="pl-sm-2">
-        <div class="mb-3">
-            <h3 class="mb-0">Examining Mutual Fund Covariance in Python</h3>
-            
-            <small class="text-muted">Published March 14, 2022</small>
-        </div>
-
-        <article>
-            <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff79c6">import</span> pandas <span style="color:#ff79c6">as</span> pd
+      <div class="mb-3">
+          <h3 class="mb-0">Examining Mutual Fund Covariance in Python</h3>
+          
+          <small class="text-muted">Published March 14, 2022</small>
+      </div>
+      <article>
+          <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff79c6">import</span> pandas <span style="color:#ff79c6">as</span> pd
 </span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> numpy <span style="color:#ff79c6">as</span> np
 </span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> regex <span style="color:#ff79c6">as</span> re
 </span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> yfinance <span style="color:#ff79c6">as</span> yf
@@ -241,8 +306,9 @@ if (!doNotTrack) {
 </span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> datetime
 </span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> seaborn <span style="color:#ff79c6">as</span> sns
 </span></span><span style="display:flex;"><span><span style="color:#ff79c6">from</span> matplotlib.pyplot <span style="color:#ff79c6">import</span> figure
-</span></span></code></pre></div><p>This notebook is an attempt to look at how different low cost Fidelity funds covary. Please note that this notebook is solely for education purposes and is not financial advice.</p>
-<h4 id="data">Data:</h4>
+</span></span></code></pre></div><h2 id="setup">Setup</h2>
+<p>This notebook is an attempt to look at how different low cost Fidelity funds covary. Please note that this notebook is solely for education purposes and is not financial advice.</p>
+<h3 id="data">Data:</h3>
 <ul>
 <li><code>fidelity_funds.xlsx</code> 92 Fidelity funds that meet the following criteria:
 <ul>
@@ -252,12 +318,12 @@ if (!doNotTrack) {
 </li>
 <li><code>yfinance</code> API call that gathers historic returns for each fund</li>
 </ul>
-<h4 id="question">Question:</h4>
+<h3 id="question">Question:</h3>
 <p>A typical investing strategy is to seek assets that are in some way <a href="https://www.investopedia.com/terms/c/countercyclicalstock.asp#:~:text=Counter%2Dcyclical%20stocks%20refer%20to,cyclical%20stocks%20will%20do%20well.">countercyclical</a> so as to mitigate portfolio risk during economic downturns. A retail investor seeking to create a portfolio with some inverse correlation between assets might seek to purchase some combination of low cost stock and bond funds to this end. Given this, I&rsquo;m curious which Fidelity funds (Fidelity being one of the more popular retail brokerages) are the most countercyclical to stocks, or, which are most inversely correlated with the returns of a major stock index - in this case the S&amp;P500. More broadly, I seek to answer whether it&rsquo;s even possible to have a portfolio purely of low-cost Fidelity funds that has meaningful inverse correlation between investments if the S&amp;P500 is a central part of the portfolio.</p>
-<h4 id="methods">Methods:</h4>
+<h3 id="methods">Methods:</h3>
 <p>I take the daily historical returns (in percent change) of a group of Fidelity funds (criteria defined above) and calculate the correlation coefficient, $\rho_i$ between each fund and a baseline fund, <code>&quot;FXAIX&quot;</code>, which is the Fidelity fund that seeks to mimic the S&amp;P500.</p>
 <p>For statistical testing, I compute 95% confidence intervals of each $\rho_{i}$ via bootstrapping and sort those values by their $97.5\%$ value</p>
-<h3 id="data-processing---fidelity_fundsxlsx">Data Processing - <code>fidelity_funds.xlsx</code></h3>
+<h2 id="data-processing---fidelity_fundsxlsx">Data Processing - <code>fidelity_funds.xlsx</code></h2>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>funds_df_raw <span style="color:#ff79c6">=</span> pd<span style="color:#ff79c6">.</span>read_excel(<span style="color:#f1fa8c">&#34;fidelity_funds.xlsx&#34;</span>)
 </span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>funds_df_raw<span style="color:#ff79c6">.</span>head()
 </span></span></code></pre></div><div>
@@ -390,7 +456,7 @@ if (!doNotTrack) {
 </span></span><span style="display:flex;"><span>                          <span style="color:#ff79c6">.</span>astype(<span style="color:#8be9fd;font-style:italic">str</span>))
 </span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#6272a4"># Drop any row without performance data from this year</span>
 </span></span><span style="display:flex;"><span>funds_df <span style="color:#ff79c6">=</span> funds_df_raw<span style="color:#ff79c6">.</span>dropna(subset<span style="color:#ff79c6">=</span>[<span style="color:#f1fa8c">&#34;YTD (Daily)&#34;</span>])
-</span></span></code></pre></div><h3 id="data-retrieval-from-yfinance">Data Retrieval from <code>yfinance</code></h3>
+</span></span></code></pre></div><h2 id="data-retrieval-from-yfinance">Data Retrieval from <code>yfinance</code></h2>
 <p>This script returns comprehensive historical data via <em>Yahoo Finance</em> for each fund, then saves that data as a <code>Pickle</code> object. If the data has already been retrieved, the script will display the date/time of the last retrieval.</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff79c6">if</span> os<span style="color:#ff79c6">.</span>path<span style="color:#ff79c6">.</span>exists(<span style="color:#f1fa8c">&#39;fidelity_funds.pickle&#39;</span>):
 </span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">print</span>(<span style="color:#f1fa8c">&#34;Fidelity fund info already retrieved @&#34;</span>, 
@@ -419,7 +485,7 @@ if (!doNotTrack) {
 </span></span><span style="display:flex;"><span>    [df[[<span style="color:#f1fa8c">&#34;Pct_Change&#34;</span>]]<span style="color:#ff79c6">.</span>rename(columns<span style="color:#ff79c6">=</span>{<span style="color:#f1fa8c">&#34;Pct_Change&#34;</span>: name})
 </span></span><span style="display:flex;"><span>     <span style="color:#ff79c6">for</span> name, df <span style="color:#ff79c6">in</span> stocks<span style="color:#ff79c6">.</span>items()], 
 </span></span><span style="display:flex;"><span>    axis<span style="color:#ff79c6">=</span><span style="color:#bd93f9">1</span>)
-</span></span></code></pre></div><h3 id="population-results">Population Results</h3>
+</span></span></code></pre></div><h2 id="results">Results</h2>
 <p>The following are the 5 Fidelity funds that are most uncorrelated with FXAIX, as measured by $\rho_i$ computed from all available data.</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>figure(figsize<span style="color:#ff79c6">=</span>(<span style="color:#bd93f9">8</span>, <span style="color:#bd93f9">6</span>), dpi<span style="color:#ff79c6">=</span><span style="color:#bd93f9">80</span>)
 </span></span><span style="display:flex;"><span>t_no_na <span style="color:#ff79c6">=</span> t<span style="color:#ff79c6">.</span>dropna(thresh<span style="color:#ff79c6">=</span><span style="color:#bd93f9">30</span>)
@@ -600,8 +666,11 @@ $H_A: \min(\rho) \leq 0$</p>
 </table>
 </div>
 
-        </article>
-    </div>
+      </article>
+
+  </div>
+  </div>
+</div>
 
     
 

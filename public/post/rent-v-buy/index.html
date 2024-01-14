@@ -53,11 +53,12 @@ if (!doNotTrack) {
 </script>
 
 
+
   <style>
     body { font-size: 110%; }
 
     #content {
-    max-width: 750px;
+    max-width: 850px;
 }
 
     table {
@@ -71,6 +72,8 @@ if (!doNotTrack) {
       color: rgb(0, 0, 0);
     }
 
+
+
      
     mjx-container {
       overflow-x: auto;
@@ -81,11 +84,12 @@ if (!doNotTrack) {
     }
      
      
+
      
-    .has-jax:not(table .has-jax) {
-      overflow-x: auto;
-      overflow-y: hidden;
-      }
+    .has-jax:not(table .has-jax):not(li.has-jax) {
+    overflow-x: auto;
+    overflow-y: hidden;
+}
 
     
 
@@ -132,6 +136,7 @@ if (!doNotTrack) {
       border: 1px solid #ddd;
       padding: 8px;
     }
+  
 
     .dataframe tbody tr {
       padding: 0.5em;
@@ -155,6 +160,33 @@ if (!doNotTrack) {
       background-color: #dfdfdf;
 
     }
+    .sticky-element {
+      font-size: 80%;
+      position: sticky;
+      top: 0;
+      float: right;
+      width: 200px;
+      padding-top: 10px;
+      padding-left: 12px;
+      box-sizing: border-box;
+    }
+    .sticky-element ol {
+       
+      padding-left: 1rem;
+    }
+    ol ol {
+      list-style-type: lower-alpha;
+    }
+    ol ol ol {
+      list-style-type: decimal;
+    }
+    @media (max-width: 760px) {
+       
+      .sticky-element {
+        display: none;
+      }
+    }
+    
   </style>
 </head><body>
         <div id="content" class="mx-auto"><header class="container mt-sm-5 mt-4 mb-4 mt-xs-1">
@@ -224,15 +256,41 @@ if (!doNotTrack) {
     <hr />
 </header>
 <div class="container">
+<div class="row">
+  <div class="col-md-2">
+    
+    
+      <div class="sticky-element">
+        <a href="#top"><b>Buy vs. Rent, A Financial Modeling Workflow in Python</b></a>
+          <nav id="TableOfContents">
+  <ol>
+    <li>
+      <ol>
+        <li><a href="#summary">Summary</a></li>
+        <li><a href="#a-note-on-numpy-financial">A Note on <code>numpy-financial</code></a></li>
+        <li><a href="#environmentpackages">Environment/Packages</a></li>
+        <li><a href="#definining-constants">Definining Constants</a></li>
+        <li><a href="#defining-random-variables">Defining Random Variables</a></li>
+        <li><a href="#ownership-table">Ownership Table</a></li>
+        <li><a href="#rental-table">Rental Table</a></li>
+        <li><a href="#results">Results</a></li>
+      </ol>
+    </li>
+  </ol>
+</nav>
+      </div>
+      
+  </div>
+  <div class="col-md-10">
+    
     <div class="pl-sm-2">
-        <div class="mb-3">
-            <h3 class="mb-0">Buy vs. Rent, A Financial Modeling Workflow in Python</h3>
-            
-            <small class="text-muted">Published August 6, 2022</small>
-        </div>
-
-        <article>
-            <h3 id="summary">Summary</h3>
+      <div class="mb-3">
+          <h3 class="mb-0">Buy vs. Rent, A Financial Modeling Workflow in Python</h3>
+          
+          <small class="text-muted">Published August 6, 2022</small>
+      </div>
+      <article>
+          <h3 id="summary">Summary</h3>
 <p>This post goes through the following exercises:</p>
 <ul>
 <li>Use <code>numpy-financial</code> to build a <a href="https://en.wikipedia.org/wiki/Amortization_calculator">loan amortization calculator</a> for a home mortgage</li>
@@ -769,8 +827,11 @@ Renter after 1 years: 115865.99
 </code></pre>
 <p>A possible takeaway here is that, as long as you can be confident you&rsquo;ll be able to hold onto the house for more than a year, it&rsquo;s probably better to purchase it. Uncertainty estimates would be useful here, and could be obtained by running the simulation under a wide variety of randomly generated market conditions.</p>
 
-        </article>
-    </div>
+      </article>
+
+  </div>
+  </div>
+</div>
 
     
 

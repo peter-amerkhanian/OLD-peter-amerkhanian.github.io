@@ -79,7 +79,7 @@ Use numpy-financial to build a loan amortization calculator for a home mortgage 
       <pubDate>Mon, 14 Mar 2022 00:00:00 +0000</pubDate>
       
       <guid>https://peter-amerkhanian.com/post/fidelity-fund-covar/</guid>
-      <description>import pandas as pd import numpy as np import regex as re import yfinance as yf import pickle import os import datetime import seaborn as sns from matplotlib.pyplot import figure This notebook is an attempt to look at how different low cost Fidelity funds covary. Please note that this notebook is solely for education purposes and is not financial advice.
+      <description>import pandas as pd import numpy as np import regex as re import yfinance as yf import pickle import os import datetime import seaborn as sns from matplotlib.pyplot import figure Setup This notebook is an attempt to look at how different low cost Fidelity funds covary. Please note that this notebook is solely for education purposes and is not financial advice.
 Data: fidelity_funds.xlsx 92 Fidelity funds that meet the following criteria: No Transaction Fees, No minimum investment below 0.</description>
     </item>
     
